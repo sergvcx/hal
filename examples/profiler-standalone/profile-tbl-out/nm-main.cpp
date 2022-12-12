@@ -58,7 +58,7 @@ PROFILER_TRACE(1024);
 
 
 int  main(){
-
+ int t = clock();
 	
 	//float d=4.4;
 	//printf("%f \n",d);

@@ -21,12 +21,11 @@ int main()
 	printf("switch off all leds\n");
 	halLed(0x0);
 	halSleep(1000);
-	
 	for(int led=0; led<halLedCount(); led++){
 		halLedOn(led);
 		halSleep(100);
 	}
-	
+	//return 8;
 	
 	for(int led=0; led<halLedCount(); led++){
 		halLedOff(led);
