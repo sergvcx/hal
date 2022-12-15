@@ -34,7 +34,7 @@
 #   ARFLAGS         - librarian flags of (libr/linker)
 #
 
-ROOT             = ..
+ROOT             := ..
 ifeq ($(OS),Windows_NT)
 nmc4vars_win.mk:
 	-copy "$(NMC_GCC_TOOLPATH)\nmc4-ide\include\nmc4vars_win.mk" nmc4vars_win.mk
@@ -148,7 +148,17 @@ $(TMP_DIR)/%.o: %.s
 	$(AS) $(ASFLAGS) $(<) -o$(@) $(ERRECHO)
 
 #========================== Visual Studio build ===================	
+cmake-gen:
+	if exist build rmdir /Q /S build
+	mkdir build
+	cd build &&	cmake ..
 
+cmake-build:
+ifdef DEBUG
+	cd build &&	cmake --build . --config Debug
+else
+	cd build &&	cmake --build . --config Release
+endif 
 	
 vs2005: 
 	premake5 vs2005
