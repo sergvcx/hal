@@ -40,9 +40,12 @@
 
 #ifdef __NM__
 #define sizeof32(t) sizeof(t)
+#define sizeof64(t) (sizeof(t)/2)
+//#define malloc32(size_int32) malloc(size_int32)
 #else
 #define sizeof32(t) (sizeof(t)/4)
-
+#define sizeof64(t) (sizeof(t)/4/2)
+//#define malloc32(size_int32) malloc(size_int32*4)
 #endif
 
 
@@ -147,11 +150,26 @@ struct int8x8{
 #endif
 };*/
 
+//#ifdef __NM__
+//	typedef void nm8s;
+//#else
+//	typedef signed char nm8s;
+//#endif
+
 #ifdef __NM__
-	typedef void nm8s;
+#ifdef __cplusplus
+	typedef struct {
+		virtual void func() = 0;
+	} nm8s;
 #else
-	typedef signed char nm8s;
+	typedef void nm8s;
 #endif
+
+#else
+	typedef char nm8s;
+#endif
+
+	
 
 //typedef signed char nm8s;
 //typedef void nm8s;
@@ -177,7 +195,8 @@ struct int8x8{
 		\~
 	\~	\f$[-2^6,\ldots,+2^6-1]=[-64,\ldots,+63]\f$
 	*/
-typedef signed char nm8s7b;
+//typedef signed char nm8s7b;
+	typedef nm8s nm8s7b;
 /*struct int7in8x8{
 #ifdef __NM__
 	unsigned long items;
@@ -207,11 +226,26 @@ struct int16x4{
 };
 */
 
+//#ifdef __NM__
+//typedef void nm16s;
+//#else
+//typedef signed short nm16s;
+//#endif
+
 #ifdef __NM__
-typedef void nm16s;
+#ifdef __cplusplus
+typedef struct {
+	virtual void func() = 0;
+} nm16s;
 #else
-typedef signed short nm16s;
+typedef void nm16s;
 #endif
+
+#else
+typedef short nm16s;
+#endif
+
+
 
 
 
@@ -231,6 +265,7 @@ typedef signed short nm16s;
 
 
 typedef nm16s nm16s15b;
+
 
 
 struct int15in16x4{
@@ -427,7 +462,7 @@ typedef nm4u nm4u3b;
 		\~
 	\~	\f$[0,\ldots,+2^7-1]=[0,\ldots,127]\f$
 	*/
-typedef unsigned char nm8u7b;
+typedef  nm8u nm8u7b;
 //-----------------------------------------------------------------------------
     /**
 	\ingroup nmvectype
@@ -830,6 +865,8 @@ typedef UINT64 uint63b;
 	\~	\f$[0,\ldots,2^{64}-1]\f$
 	*/
 typedef nm64u uint64b;
+
+
 
 
 //=============================================================================
@@ -1356,7 +1393,7 @@ typedef unsigned long long uint64;
 typedef unsigned int uint32;
 #endif
 
-
+typedef nm64sc int64sc;
 typedef uint64 fifo64;
 typedef uint32 fseq32;
 
