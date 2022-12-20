@@ -2,7 +2,7 @@
 #define LINK_OUTPUT 0
 #define LINK_INPUT 1
 
-typedef void LinkCallback();
+typedef void (*LinkCallback)();
 
 ///У процессора nm6407 у каждой процессорной системы есть по три линка(в сумме выхоидт 6). 
 ///На плате mc12101 наружу выходит 4 линка, LINK0 и LINK1 процессорной системы NMPU0 (Выводы X5 и X6), 
