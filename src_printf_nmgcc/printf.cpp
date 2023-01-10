@@ -42,41 +42,41 @@ extern "C"
 		//  Это должно лежать в разделяемой памяти с определенным смещением
 		//  относительно начала секций
 		//  модифицируются только с платы
-		volatile int boardOutServBuf[ b2hBufSize ]; //  .rpc_services.bss +0
+		volatile int boardOutServBuf[ b2hBufSize ]; //  .hal_rpc_services.bss +0
 		//  модифицируются только с хоста
-		volatile int backBuffer[ backBufferSize ];  //  .rpc_services.bss +b2hBufSize
+		volatile int backBuffer[ backBufferSize ];  //  .hal_rpc_services.bss +b2hBufSize
 	};
 
-	INSECTION(".rpc_services.bss") RPC_send_region volatile rpcBuff_;
+	INSECTION(".hal_rpc_services.bss") RPC_send_region volatile rpcBuff_;
 
 
 	struct RPC_control_region
 	{
 		//  модифицируются только с платы
-		int boardSend;               //  пакеты  //  .rpc_services +0
-		volatile int* sended;  //  слова   //  .rpc_services +1
-		volatile int* sendMostDistant;      //  .rpc_services +2    //используется при возврате в начало буфера
-		volatile int nm_io_debug;                    // пc//  .rpc_services +3
+		int boardSend;               //  пакеты  //  .hal_rpc_services +0
+		volatile int* sended;  //  слова   //  .hal_rpc_services +1
+		volatile int* sendMostDistant;      //  .hal_rpc_services +2    //используется при возврате в начало буфера
+		volatile int nm_io_debug;                    // пc//  .hal_rpc_services +3
 		//  модифицируются только с хоста
-		volatile int hostReceive;                    // п //  .rpc_services +4
-		volatile int* sendConfirmed;   // с //  .rpc_services +5
+		volatile int hostReceive;                    // п //  .hal_rpc_services +4
+		volatile int* sendConfirmed;   // с //  .hal_rpc_services +5
 		//  модифицируется отовсюду
-		volatile int backBufferReady;		       //   //  .rpc_services +6
-		volatile int nm_io_debug_back;               // пc//  .rpc_services +7
+		volatile int backBufferReady;		       //   //  .hal_rpc_services +6
+		volatile int nm_io_debug_back;               // пc//  .hal_rpc_services +7
 	};
 
-	INSECTION(".rpc_services") RPC_control_region volatile rpcr_=
+	INSECTION(".hal_rpc_services") RPC_control_region volatile rpcr_=
 	{
-			0,               //  пакеты  //  .rpc_services +0
-			rpcBuff_.boardOutServBuf,  //  слова   //  .rpc_services +1
-			rpcBuff_.boardOutServBuf,      //  .rpc_services +2    //используется при возврате в начало буфера
-			0,                    // пc//  .rpc_services +3
+			0,               //  пакеты  //  .hal_rpc_services +0
+			rpcBuff_.boardOutServBuf,  //  слова   //  .hal_rpc_services +1
+			rpcBuff_.boardOutServBuf,      //  .hal_rpc_services +2    //используется при возврате в начало буфера
+			0,                    // пc//  .hal_rpc_services +3
 			//  модифицируются только с хоста
-			0,                    // п //  .rpc_services +4
-			rpcBuff_.boardOutServBuf,   // с //  .rpc_services +5
+			0,                    // п //  .hal_rpc_services +4
+			rpcBuff_.boardOutServBuf,   // с //  .hal_rpc_services +5
 			//  модифицируется отовсюду
-			0,		       //   //  .rpc_services +6
-			0               // пc//  .rpc_services +7
+			0,		       //   //  .hal_rpc_services +6
+			0               // пc//  .hal_rpc_services +7
 	};
 
 };	//extern "C"
@@ -98,7 +98,7 @@ INSECTION(".text_printf") static void __attribute__((optimize("O0"))) makeMsgHea
 
 INSECTION(".text_printf") void __attribute__((optimize("O0"))) dummy_(){}
 
-INSECTION(".rpc_services") bool volatile incomplete_= false;
+INSECTION(".hal_rpc_services") bool volatile incomplete_= false;
 
 INSECTION(".text_printf") int* __attribute__((optimize("O0"))) beginMessage_()
 {

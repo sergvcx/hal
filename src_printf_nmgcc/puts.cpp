@@ -6,7 +6,7 @@ void completeMessage_( NM_IO_ServiceID id, int size );
 
 extern "C" int puts_( const char* str );
 
-extern "C" int puts( const char* str )
+extern "C" int hal_puts( const char* str )
 {
     char* buf= (char*)beginMessage_();
 	int i;

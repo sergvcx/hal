@@ -139,7 +139,7 @@ NM_IO_Service::NM_IO_Service( const char* fName, PL_Access* access,
         ELF_SCN *scn;
         for( scn= elf->NextScn(0); scn!=0; scn = elf->NextScn(scn) ) {
             Elf32_Shdr *shdr = scn->GetShdr();
-            if ( strcmp( scn->GetName(), ".rpc_services" )==0 ){
+            if ( strcmp( scn->GetName(), ".hal_rpc_services" )==0 ){
                 //  адрес и размер на плате
                 datSecAddr= shdr->sh_addr;
                 datSecSize= shdr->sh_size/4;
@@ -148,7 +148,7 @@ NM_IO_Service::NM_IO_Service( const char* fName, PL_Access* access,
 					ready|= 1;
 				}
             }
-            if ( strcmp( scn->GetName(), ".rpc_services.bss" )==0 ){
+            if ( strcmp( scn->GetName(), ".hal_rpc_services.bss" )==0 ){
                 //  адрес и размер на плате
                 bssSecAddr= shdr->sh_addr;
                 bssSecSize= shdr->sh_size/4;
@@ -175,7 +175,7 @@ NM_IO_Service::NM_IO_Service( const char* fName, PL_Access* access,
 	}
 	else{
 		valid= false;
-		//throw( "can't start NM_IO_Service - no .rpc_services section" );
+		//throw( "can't start NM_IO_Service - no .hal_rpc_services section" );
 	}
 }
 
@@ -233,11 +233,11 @@ NM_IO_Service::dispatch()
         proceed= !letsShutDown;
         int* bsStatus= readStatus();
         //  модифицируются только с платы+ (sended - bssSecAddr)
-        const int& boardSend=      bsStatus[0];       //  .rpc_services +0
+        const int& boardSend=      bsStatus[0];       //  .hal_rpc_services +0
         if ( hostReceive==boardSend )
             continue;   //  ничего нового
-        const int& sended=         bsStatus[1];       //  .rpc_services +1
-        const int& sendMostDistant=bsStatus[2];       //  .rpc_services +2
+        const int& sended=         bsStatus[1];       //  .hal_rpc_services +1
+        const int& sendMostDistant=bsStatus[2];       //  .hal_rpc_services +2
         //assert( ((boardSend&0xffff0000) ==0) && ((sended&0xfff00000) ==0x10000000));
 #if NM_SERV_DBG
         if ( sended!=sendConfirmed ){
@@ -250,10 +250,10 @@ NM_IO_Service::dispatch()
         }
 #endif
         //  модифицируются только с хоста
-        assert ( hostReceive   ==bsStatus[4]); //  .rpc_services +4
-        assert ( sendConfirmed ==bsStatus[5]); //  .rpc_services +5
+        assert ( hostReceive   ==bsStatus[4]); //  .hal_rpc_services +4
+        assert ( sendConfirmed ==bsStatus[5]); //  .hal_rpc_services +5
         //  забираем данные с платы
-        int& test=         bsStatus[3];       //  .rpc_services +3
+        int& test=         bsStatus[3];       //  .hal_rpc_services +3
         PL_Word r;
         int* hostBuf= bsBuf;
         if ( sended< sendConfirmed ){
@@ -269,7 +269,7 @@ NM_IO_Service::dispatch()
             }
             sendConfirmed= bssSecAddr;
         }
-        volatile int& backBufferReady=bsStatus[6];       //  .rpc_services +6
+        volatile int& backBufferReady=bsStatus[6];       //  .hal_rpc_services +6
         //  читаем от sendedOld до sended
         int words= sended- sendConfirmed;
         if (words){

@@ -36,25 +36,25 @@ extern "C"
 
     int vsprintf( char *dst, const char* format, va_list args );
 
-#pragma data_section ".rpc_services"
+#pragma data_section ".hal_rpc_services"
 //  Это должно лежать в разделяемой памяти с определенным смещением
 //  относительно начала секций
 //  модифицируются только с платы
-volatile int boardOutServBuf[ b2hBufSize ]; //  .rpc_services.bss +0
+volatile int boardOutServBuf[ b2hBufSize ]; //  .hal_rpc_services.bss +0
 //  модифицируются только с хоста
-volatile int backBuffer[ backBufferSize ];  //  .rpc_services.bss +b2hBufSize
+volatile int backBuffer[ backBufferSize ];  //  .hal_rpc_services.bss +b2hBufSize
 
 //  модифицируются только с платы
-volatile int boardSend=0;               //  пакеты  //  .rpc_services +0 
-volatile int* sended= boardOutServBuf;  //  слова   //  .rpc_services +1 
-volatile int* sendMostDistant=boardOutServBuf;      //  .rpc_services +2    //используется при возврате в начало буфера
-volatile int nm_io_debug=0;                    // пc//  .rpc_services +3 
+volatile int boardSend=0;               //  пакеты  //  .hal_rpc_services +0 
+volatile int* sended= boardOutServBuf;  //  слова   //  .hal_rpc_services +1 
+volatile int* sendMostDistant=boardOutServBuf;      //  .hal_rpc_services +2    //используется при возврате в начало буфера
+volatile int nm_io_debug=0;                    // пc//  .hal_rpc_services +3 
 //  модифицируются только с хоста
-volatile int hostReceive=0;                    // п //  .rpc_services +4 
-volatile int* sendConfirmed=boardOutServBuf;   // с //  .rpc_services +5
+volatile int hostReceive=0;                    // п //  .hal_rpc_services +4 
+volatile int* sendConfirmed=boardOutServBuf;   // с //  .hal_rpc_services +5
 //  модифицируется отовсюду
-volatile int backBufferReady= 0;		       //   //  .rpc_services +6 
-volatile int nm_io_debug_back=0;               // пc//  .rpc_services +7 
+volatile int backBufferReady= 0;		       //   //  .hal_rpc_services +6 
+volatile int nm_io_debug_back=0;               // пc//  .hal_rpc_services +7 
 #pragma default_data_section 
 };
 
