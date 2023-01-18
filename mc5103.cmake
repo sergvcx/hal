@@ -39,7 +39,7 @@ target_include_directories(${host_name} PUBLIC
 	${CMAKE_CURRENT_LIST_DIR}/include 
 	$ENV{MC5103}/libload 
 	${CMAKE_CURRENT_LIST_DIR}/src/io/host_io)
-target_compile_definitions(${host_name} PUBLIC NM6405 $<$<CONFIG:Debug>:DEBUG> <$<CONFIG:Release>:NDEBUG>)
+target_compile_definitions(${host_name} PUBLIC NM6405 $<$<CONFIG:Debug>:DEBUG> $<$<CONFIG:Release>:NDEBUG>)
 
 
 add_custom_target(${target_name} make -C ${CMAKE_CURRENT_LIST_DIR}/make/mc5103 nmcgcc $<$<CONFIG:Debug>:DEBUG=y>
