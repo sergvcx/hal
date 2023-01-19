@@ -62,9 +62,11 @@ PROJECT  = hal-mc12101
 TMP_DIR  = $(CONFIGURATION)
 OUT_DIR  = $(ROOT)/lib
 TARGET          = $(OUT_DIR)/lib$(PROJECT).a
-CC       		= nmc-g++
+CC       		= nmc-gcc
+CPP       		= nmc-g++
 AS              = asm 				 
 AR              = nmc-ar
+CCFLAGS 		= -O2 -Wall -m$(ARCH) -c
 CXXFLAGS 		= -std=c++11 -O2 -Wall -m$(ARCH) -c
 ASFLAGS         = -$(ARCH) -nm2ms  $(INC_DIRS) -split_sir -W-111 -W-109
 ARFLAGS         = rcs $(TARGET)
@@ -127,7 +129,7 @@ legacy:
 #	$(CC) ../src_printf_nmcpp/printf.c $(INC_DIRS) $(CXXFLAGS) -o$(TMP_DIR)/printf.o 
 
 $(TMP_DIR)/printf.o: ../src_printf_nmgcc/printf.cpp
-	$(CC) -std=c++11 -O0 -Wall -m$(ARCH) -c $(<) -o$(@) $(INC_DIRS) $(ERRECHO) 
+	$(CPP) -std=c++11 -O0 -Wall -m$(ARCH) -c $(<) -o$(@) $(INC_DIRS) $(ERRECHO) 
 
 $(TMP_DIR):
 	-mkdir "$(@)"
@@ -136,11 +138,11 @@ $(OUT_DIR):
 	-mkdir "$(@)"
 	
 $(TMP_DIR)/%.o: %.c
-	$(CC) $(CXXFLAGS) $(<) -o$(@) $(INC_DIRS) $(ERRECHO)
+	$(CC) $(CCFLAGS) $(<) -o$(@) $(INC_DIRS) $(ERRECHO)
 
 	
 $(TMP_DIR)/%.o: %.cpp 
-	$(CC) $(CXXFLAGS) $(<) -o$(@) $(INC_DIRS) $(ERRECHO)
+	$(CPP) $(CXXFLAGS) $(<) -o$(@) $(INC_DIRS) $(ERRECHO)
 
 $(TMP_DIR)/%.o: %.asm 
 	$(AS) $(ASFLAGS) $(<) -o$(@) $(ERRECHO)

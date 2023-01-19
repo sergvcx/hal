@@ -16,3 +16,4 @@ Debug/
 *.a
 *.lib
 *.map
+nmc4vars_win.mk
