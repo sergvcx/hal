@@ -58,7 +58,7 @@ add_custom_target(${target_name} make -C ${CMAKE_CURRENT_LIST_DIR}/make/mc12101 
 # 	-G ${nm_generator}
 # 	COMMENT "Building nm part"
 # 	VERBATIM)
-add_custom_target(${target_name} ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build --config $<CONFIG>)
+#add_custom_target(${target_name} ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build --config $<CONFIG>)
 
 set_target_properties(${target_name} PROPERTIES ADDITIONAL_CLEAN_FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal-mc12101.a)  #not working
 
