@@ -1,5 +1,6 @@
 set(host_name hal-mc7601)
 set(target_name hal-mc7601-nm)
+set(nm_generator Ninja)
 
 file(GLOB target_sources 
 	src/target/1879vya1ya/*.cpp
@@ -42,8 +43,15 @@ target_include_directories(${host_name} PUBLIC
 target_compile_definitions(${host_name} PUBLIC NM6405 $<$<CONFIG:Debug>:DEBUG> $<$<CONFIG:Release>:NDEBUG>)
 
 
-add_custom_target(${target_name} make -C ${CMAKE_CURRENT_LIST_DIR}/make/mc7601 nmcgcc $<$<CONFIG:Debug>:DEBUG=y>
-	SOURCES ${target_sources})
+execute_process(
+	COMMAND ${CMAKE_COMMAND} 
+	-B ${CMAKE_CURRENT_LIST_DIR}/make/mc7601/build 
+	${CMAKE_CURRENT_LIST_DIR}/make/mc7601 
+	#-DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_LIST_DIR}/nmc-gcc-compile.cmake
+	-G ${nm_generator}
+	COMMENT "Building nm part")
+add_custom_target(${target_name} $ENV{NMC_GCC_TOOLPATH}/nmc4cmd.bat
+	COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc7601/build )
 
 set_target_properties(${target_name} PROPERTIES ADDITIONAL_CLEAN_FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal-mc7601.a)  #not working
 

@@ -8,20 +8,20 @@ file(TO_NATIVE_PATH  $ENV{NMC_GCC_TOOLPATH}/nmc4-ide/bin path_bin)
 file(TO_NATIVE_PATH  $ENV{NMC_GCC_TOOLPATH}/nmc4-ide/lib path_lib)
 LIST(APPEND CMAKE_PROGRAM_PATH ${path_bin} ${path_lib})
 
-set(PROJECT hal_mc12101_nm)
+set(PROJECT hal_mc5103_nm)
 project(${PROJECT} C CXX ASM)
 
-set(ARCH nmc4)
+set(ARCH nmc3)
 
 
 file(GLOB SOURCES 
-	${ROOT}/src/target/1879vm6ya/*.asm
-	${ROOT}/src/target/1879vm6ya/*.c
-	${ROOT}/src/target/1879vm6ya/*.cpp	
-	${ROOT}/src/target/1879vm6ya/*.s
-	${ROOT}/src/target/1879vm6ya/*.S
-	${ROOT}/src/target/1879vm6ya/*.mlb
-	${ROOT}/src/target/1879vm6ya/*.h
+	${ROOT}/src/target/1879vm5ya/*.asm
+	${ROOT}/src/target/1879vm5ya/*.c
+	${ROOT}/src/target/1879vm5ya/*.cpp	
+	${ROOT}/src/target/1879vm5ya/*.s
+	${ROOT}/src/target/1879vm5ya/*.S
+	${ROOT}/src/target/1879vm5ya/*.mlb
+	${ROOT}/src/target/1879vm5ya/*.h
 	${ROOT}/src/ringbuffer/*.cpp  
 	${ROOT}/src/ringbuffer/*.c
 	${ROOT}/src/ringbuffer/*.asm	

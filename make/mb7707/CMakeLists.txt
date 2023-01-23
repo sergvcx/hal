@@ -2,26 +2,26 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
 set(ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
 set(CMAKE_TOOLCHAIN_FILE "${ROOT}/nmc-gcc-compile.cmake")
-#execute_process(COMMAND ${ROOT}/script.bat)
 set(ENV{GCC_EXEC_PREFIX} /cygdrive/D/Module/NMC-SDK/nmc4-ide/lib/gcc/)
 file(TO_NATIVE_PATH  $ENV{NMC_GCC_TOOLPATH}/nmc4-ide/bin path_bin)
 file(TO_NATIVE_PATH  $ENV{NMC_GCC_TOOLPATH}/nmc4-ide/lib path_lib)
 LIST(APPEND CMAKE_PROGRAM_PATH ${path_bin} ${path_lib})
 
-set(PROJECT hal_mc12101_nm)
+set(PROJECT hal_mb7707_nm)
+
 project(${PROJECT} C CXX ASM)
 
-set(ARCH nmc4)
+set(ARCH nmc3)
 
 
 file(GLOB SOURCES 
-	${ROOT}/src/target/1879vm6ya/*.asm
-	${ROOT}/src/target/1879vm6ya/*.c
-	${ROOT}/src/target/1879vm6ya/*.cpp	
-	${ROOT}/src/target/1879vm6ya/*.s
-	${ROOT}/src/target/1879vm6ya/*.S
-	${ROOT}/src/target/1879vm6ya/*.mlb
-	${ROOT}/src/target/1879vm6ya/*.h
+	${ROOT}/src/target/1879hb1ya/*.asm
+	${ROOT}/src/target/1879hb1ya/*.c
+	${ROOT}/src/target/1879hb1ya/*.cpp	
+	${ROOT}/src/target/1879hb1ya/*.s
+	${ROOT}/src/target/1879hb1ya/*.S
+	${ROOT}/src/target/1879hb1ya/*.mlb
+	${ROOT}/src/target/1879hb1ya/*.h
 	${ROOT}/src/ringbuffer/*.cpp  
 	${ROOT}/src/ringbuffer/*.c
 	${ROOT}/src/ringbuffer/*.asm	
@@ -36,6 +36,8 @@ file(GLOB SOURCES
 	${ROOT}/src/target/nmc_all/*.S
 	${ROOT}/src/target/nmc_all/*.mlb
 	${ROOT}/src/target/nmc_all/*.h
+	#${ROOT}/src/io/printf_nmcpp/*.c
+	#${ROOT}/src/io/printf_nmcpp/*.h
 	)
 add_library(${PROJECT} STATIC ${SOURCES})
 
@@ -49,7 +51,6 @@ foreach(file ${SOURCES})
 		list(APPEND s_files ${file})
 	endif()
 endforeach()
-
 
 set_target_properties(${PROJECT}
 	PROPERTIES 
@@ -68,4 +69,5 @@ target_compile_options(${PROJECT} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>)
 target_compile_options(${PROJECT} PUBLIC $<$<COMPILE_LANGUAGE:C>:-std=c99>)
 target_compile_options(${PROJECT} PUBLIC $<$<CONFIG:DEBUG>:-g>)
 set_source_files_properties(${ROOT}/src_printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
-target_include_directories(${PROJECT} PUBLIC ${ROOT}/include ${ROOT}/src/target/1879vm6ya)
+target_include_directories(${PROJECT} PUBLIC ${ROOT}/include $ENV{MB7707}/libload ${ROOT}/src/target/1879hb1ya ) #${ROOT}/src/io/printf_nmcpp)
+

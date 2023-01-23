@@ -55,10 +55,6 @@ if(UNIX)
 	target_compile_options(${host_name} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 endif()
 
-ifdef(WIN32)
-add_custom_target(${target_name} make -C ${CMAKE_CURRENT_LIST_DIR}/make/mc12101 nmcgcc $<$<CONFIG:Debug>:DEBUG=y> 
-	SOURCES ${target_sources})
-else()
 execute_process(
 	COMMAND ${CMAKE_COMMAND} 
 	-B ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build 
@@ -66,11 +62,8 @@ execute_process(
 	#-DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_LIST_DIR}/nmc-gcc-compile.cmake
 	-G ${nm_generator}
 	COMMENT "Building nm part")
-add_custom_target(${target_name} ${CMAKE_COMMAND} 
-	--build ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build 
-	#--config $<CONFIG>
-	)
-endif()
+add_custom_target(${target_name} $ENV{NMC_GCC_TOOLPATH}/nmc4cmd.bat
+	COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build )
 
 set_target_properties(${target_name} PROPERTIES ADDITIONAL_CLEAN_FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal-mc12101.a)  #not working
 
