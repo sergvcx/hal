@@ -14,11 +14,20 @@
 #include <iostream>
 
 //	–ассчитываем на использование любой библиотеки загрузки и обмена
+#ifdef _WIN32
 typedef unsigned long PL_Word;
 typedef unsigned long PL_Addr;
+#else
+typedef __u32 PL_Word;
+typedef __u32 PL_Addr;
+#endif
 struct PL_Access;
 
 //	END #include "mc5101load.h"
+#ifndef WIN32 // or something like that...
+#define __stdcall
+#endif
+
 
 class NM_IO_Service
 {

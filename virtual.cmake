@@ -20,4 +20,4 @@ set_target_properties(${lib_name}
 target_include_directories(${lib_name} PUBLIC 
 	${CMAKE_CURRENT_LIST_DIR}/include 
 	$ENV{NMPP}/include )
-target_compile_definitions(${lib_name} PUBLIC VIRTUAL_BOARD $<$<CONFIG:Debug>:DEBUG> <$<CONFIG:Release>:NDEBUG>)
+target_compile_definitions(${lib_name} PUBLIC VIRTUAL_BOARD $<$<CONFIG:Debug>:DEBUG> $<$<CONFIG:Release>:NDEBUG>)

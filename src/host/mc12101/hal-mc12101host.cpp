@@ -2,6 +2,8 @@
 #include <stdio.h>
 //#include "hal_host.h"
 #include "sleep.h"
+#include <cstring>
+#include <cstdarg>
 
 #ifndef SILENT
 #include "nm_io_host.h"
@@ -185,7 +187,10 @@ int halGetResult(unsigned long* returnCode, int processor=0){
 		PL_GetStatus(access[processor],&status);
 		halSleep(500);
 	}
-	return PL_GetResult(access[processor], returnCode);
+	PL_Word result;
+	int error = PL_GetResult(access[processor], &result);
+	returnCode[0] = result;
+	return error;
 }
 
 

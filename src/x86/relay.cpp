@@ -1,3 +1,4 @@
+#ifdef _WIN32
 #include <windows.h>
 #include <stdlib.h>
 #include <iostream>
@@ -149,3 +150,5 @@ BOOL halResetRelay(char* PortName, int relay, int delay)
     CloseComPort(ComPort);
     return 0;
 }
+
+#endif //_WIN32
