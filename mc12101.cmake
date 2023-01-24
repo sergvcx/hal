@@ -1,5 +1,6 @@
-set(host_name hal-mc12101)
-set(target_name hal-mc12101-nm)
+set(board mc12101)
+set(host_name hal-${board}-host)
+set(target_name hal_${board})
 set(nm_generator Ninja)
 
 
@@ -24,17 +25,17 @@ file(GLOB target_sources
 	src/target/nmc_all/*.S
 	src/target/nmc_all/*.s
 	src/ringbuffer/*.*
-	include/*.h
 	make/mc12101/Makefile
 	${CMAKE_CURRENT_LIST_FILE})
+file(GLOB target_headers include/*.h)
 
 file(GLOB host_sources 
 	src/host/mc12101/*.*
 	src/x86/*.*
 	src/ringbuffer/*.*
-	include/*.h
 	#src/io/host_io/*.*
 	${CMAKE_CURRENT_LIST_FILE})
+file(GLOB host_headers include/*.h)
 
 
 add_library(${host_name} STATIC ${host_sources})
@@ -46,14 +47,18 @@ set_target_properties(${host_name}
 	ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_LIST_DIR}/lib
 	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_LIST_DIR}/lib)
 target_include_directories(${host_name} PUBLIC 
-	${CMAKE_CURRENT_LIST_DIR}/include 
-	$ENV{MC12101}/include 
-	${CMAKE_CURRENT_LIST_DIR}/src/io/host_io
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  	$<INSTALL_INTERFACE:include> 
+  	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/io/host_io>
+	$ENV{MC12101}/include 	
 	)
 target_compile_definitions(${host_name} PUBLIC NM6405 $<$<CONFIG:Debug>:DEBUG> $<$<CONFIG:Release>:NDEBUG>)
 if(UNIX)
 	target_compile_options(${host_name} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 endif()
+set_target_properties(${host_name} PROPERTIES 
+	PUBLIC_HEADER "${host_headers}"
+	)  
 
 execute_process(
 	COMMAND ${CMAKE_COMMAND} 
@@ -63,13 +68,34 @@ execute_process(
 	-G ${nm_generator}
 	COMMENT "Building nm part")
 if(WIN32)
-	add_custom_target(${target_name} $ENV{NMC_GCC_TOOLPATH}/nmc4cmd.bat
+	add_custom_target(${target_name}_build $ENV{NMC_GCC_TOOLPATH}/nmc4cmd.bat
 		COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build )
 else()
-	add_custom_target(${target_name} COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build )
+	add_custom_target(${target_name}_build COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build )
 endif()
 
-set_target_properties(${target_name} PROPERTIES ADDITIONAL_CLEAN_FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal-mc12101.a)  #not working
+# include(make/mc12101/hal_mc12101.cmake)
+# add_dependencies(${target_name} ${target_name}_build)
 
-add_dependencies(${host_name} ${target_name})
+add_library(${target_name} INTERFACE ${target_sources} ${target_headers})
+add_dependencies(${target_name} ${target_name}_build)
 
+
+set_target_properties(${target_name} PROPERTIES 
+	ADDITIONAL_CLEAN_FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal-${board}.a #not working
+	PUBLIC_HEADER "${target_headers}"
+	)  
+
+add_dependencies(${host_name} ${target_name}_build)
+
+install(FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal_${board}.a
+#		EXPORT hal
+		DESTINATION lib)
+
+install(TARGETS ${host_name}
+#		EXPORT hal
+		COMPONENT hal_${board}
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION lib
+		LIBRARY DESTINATION lib
+		PUBLIC_HEADER DESTINATION include)

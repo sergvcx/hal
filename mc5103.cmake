@@ -1,5 +1,6 @@
-set(host_name hal-mc5103)
-set(target_name hal-mc5103-nm)
+set(board mc5103)
+set(host_name hal-${board}-host)
+set(target_name hal-${board})
 set(nm_generator Ninja)
 
 file(GLOB TARGET_SOURCES 
@@ -16,17 +17,17 @@ file(GLOB TARGET_SOURCES
 	src/target/nmc_all/*.S
 	src/target/nmc_all/*.s
 	src/ringbuffer/*.*
-	include/*.h
 	make/mc5103/Makefile
 	${CMAKE_CURRENT_LIST_FILE})
+file(GLOB target_headers include/*.h)
 
 file(GLOB HOST_SOURCES 
 	src/host/mc5103/*.*
 	src/x86/*.*
 	src/ringbuffer/*.*
-	include/*.h
 	src/io/host_io/*.*
 	${CMAKE_CURRENT_LIST_FILE})
+file(GLOB host_headers include/*.h)
 
 
 add_library(${host_name} STATIC ${HOST_SOURCES})
@@ -41,6 +42,9 @@ target_include_directories(${host_name} PUBLIC
 	$ENV{MC5103}/libload 
 	${CMAKE_CURRENT_LIST_DIR}/src/io/host_io)
 target_compile_definitions(${host_name} PUBLIC NM6405 $<$<CONFIG:Debug>:DEBUG> $<$<CONFIG:Release>:NDEBUG>)
+set_target_properties(${host_name} PROPERTIES 
+	PUBLIC_HEADER "${host_headers}"
+	)  
 
 
 execute_process(
@@ -51,12 +55,29 @@ execute_process(
 	-G ${nm_generator}
 	COMMENT "Building nm part")
 if(WIN32)
-	add_custom_target(${target_name} $ENV{NMC_GCC_TOOLPATH}/nmc4cmd.bat
+	add_custom_target(${target_name}_build $ENV{NMC_GCC_TOOLPATH}/nmc4cmd.bat
 		COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc5103/build )
 else()
-	add_custom_target(${target_name} COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc5103/build )
+	add_custom_target(${target_name}_build COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc5103/build )
 endif()
+add_library(${target_name} INTERFACE ${target_sources} ${target_headers})
+add_dependencies(${target_name} ${target_name}_build)
 
-set_target_properties(${target_name} PROPERTIES ADDITIONAL_CLEAN_FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal-mc5103.a)  #not working
+set_target_properties(${target_name} PROPERTIES 
+	ADDITIONAL_CLEAN_FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal-${board}.a #not working
+	PUBLIC_HEADER "${target_headers}"
+	)  
 
 add_dependencies(${host_name} ${target_name})
+
+install(FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal_${board}.a
+#		EXPORT hal
+		DESTINATION lib)
+
+install(TARGETS ${host_name}
+#		EXPORT hal
+		COMPONENT hal_${board}
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION lib
+		LIBRARY DESTINATION lib
+		PUBLIC_HEADER DESTINATION include)

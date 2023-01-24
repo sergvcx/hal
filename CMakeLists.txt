@@ -8,6 +8,16 @@ if(NOT PLATFORMS)
 endif()
 
 project(hal C CXX)
+# install(EXPORT hal
+#   FILE hal-export.cmake
+#   DESTINATION lib/cmake/hal
+# )
+
+if(WIN32)
+	set(CMAKE_INSTALL_PREFIX "C:/Program Files/Module/${PROJECT_NAME}")
+elseif(UNIX)
+	set(CMAKE_INSTALL_PREFIX "/usr/local")
+endif()
 
 if(mc12101 IN_LIST PLATFORMS)
 	include(${CMAKE_CURRENT_LIST_DIR}/mc12101.cmake)
@@ -33,3 +43,5 @@ if(virtual IN_LIST PLATFORMS)
 	include(${CMAKE_CURRENT_LIST_DIR}/virtual.cmake)
 	message(STATUS "VIRTUAL include")
 endif()
+
+#include(CPacking.cmake)

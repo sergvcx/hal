@@ -8,7 +8,7 @@ file(TO_NATIVE_PATH  $ENV{NMC_GCC_TOOLPATH}/nmc4-ide/bin path_bin)
 file(TO_NATIVE_PATH  $ENV{NMC_GCC_TOOLPATH}/nmc4-ide/lib path_lib)
 LIST(APPEND CMAKE_PROGRAM_PATH ${path_bin} ${path_lib})
 
-set(PROJECT hal_mc12101_nm)
+set(PROJECT hal_mc12101)
 project(${PROJECT} C CXX ASM)
 
 set(ARCH nmc4)
@@ -69,3 +69,16 @@ target_compile_options(${PROJECT} PUBLIC $<$<COMPILE_LANGUAGE:C>:-std=c99>)
 target_compile_options(${PROJECT} PUBLIC $<$<CONFIG:DEBUG>:-g>)
 set_source_files_properties(${ROOT}/src_printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
 target_include_directories(${PROJECT} PUBLIC ${ROOT}/include ${ROOT}/src/target/1879vm6ya)
+
+# export(TARGETS ${PROJECT}
+# 	FILE ${CMAKE_CURRENT_LIST_DIR}/${PROJECT}.cmake)
+
+# install(TARGETS ${PROJECT}
+# 			EXPORT hal
+# 			COMPONENT hal_mc12101
+# 			RUNTIME DESTINATION bin
+# 			ARCHIVE DESTINATION lib
+# 			LIBRARY DESTINATION lib
+# 			PUBLIC_HEADER DESTINATION include
+# 			)
+

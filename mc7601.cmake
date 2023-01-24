@@ -1,5 +1,6 @@
-set(host_name hal-mc7601)
-set(target_name hal-mc7601-nm)
+set(board mc7601)
+set(host_name hal-${board}-host)
+set(target_name hal-${board})
 set(nm_generator Ninja)
 
 file(GLOB target_sources 
@@ -16,17 +17,18 @@ file(GLOB target_sources
 	src/target/nmc_all/*.S
 	src/target/nmc_all/*.s
 	src/ringbuffer/*.*
-	include/*.h
 	make/mc7601/Makefile
 	${CMAKE_CURRENT_LIST_FILE})
+file(GLOB target_headers include/*.h)
+
 
 file(GLOB host_sources 
 	src/host/mc7601/*.*
 	src/x86/*.*
 	src/ringbuffer/*.*
-	include/*.h
 	src/io/host_io/*.*
 	${CMAKE_CURRENT_LIST_FILE})
+file(GLOB host_headers include/*.h)
 
 
 add_library(${host_name} STATIC ${host_sources})
@@ -41,6 +43,10 @@ target_include_directories(${host_name} PUBLIC
 	$ENV{MC7601}/libload 
 	${CMAKE_CURRENT_LIST_DIR}/src/io/host_io)
 target_compile_definitions(${host_name} PUBLIC NM6405 $<$<CONFIG:Debug>:DEBUG> $<$<CONFIG:Release>:NDEBUG>)
+set_target_properties(${host_name} PROPERTIES 
+	PUBLIC_HEADER "${host_headers}"
+	)  
+
 
 
 execute_process(
@@ -52,12 +58,28 @@ execute_process(
 	COMMENT "Building nm part")
 
 if(WIN32)
-	add_custom_target(${target_name} $ENV{NMC_GCC_TOOLPATH}/nmc4cmd.bat
+	add_custom_target(${target_name}_build $ENV{NMC_GCC_TOOLPATH}/nmc4cmd.bat
 		COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc7601/build )
 else()
-	add_custom_target(${target_name} COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc7601/build )
+	add_custom_target(${target_name}_build COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc7601/build )
 endif()
+add_library(${target_name} INTERFACE ${target_sources} ${target_headers})
+add_dependencies(${target_name} ${target_name}_build)
 
-set_target_properties(${target_name} PROPERTIES ADDITIONAL_CLEAN_FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal-mc7601.a)  #not working
-
+set_target_properties(${target_name} PROPERTIES 
+	ADDITIONAL_CLEAN_FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal-${board}.a #not working
+	PUBLIC_HEADER "${target_headers}"
+	)  
 add_dependencies(${host_name} ${target_name})
+
+install(FILES ${CMAKE_CURRENT_LIST_DIR}/lib/libhal_${board}.a
+#		EXPORT hal
+		DESTINATION lib)
+
+install(TARGETS ${host_name}
+#		EXPORT hal
+		COMPONENT hal_${board}
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION lib
+		LIBRARY DESTINATION lib
+		PUBLIC_HEADER DESTINATION include)

@@ -8,7 +8,7 @@ file(TO_NATIVE_PATH  $ENV{NMC_GCC_TOOLPATH}/nmc4-ide/bin path_bin)
 file(TO_NATIVE_PATH  $ENV{NMC_GCC_TOOLPATH}/nmc4-ide/lib path_lib)
 LIST(APPEND CMAKE_PROGRAM_PATH ${path_bin} ${path_lib})
 
-set(PROJECT hal_mc5103_nm)
+set(PROJECT hal_mc5103)
 project(${PROJECT} C CXX ASM)
 
 set(ARCH nmc3)
