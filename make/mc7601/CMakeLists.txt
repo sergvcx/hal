@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 set(ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
 set(CMAKE_TOOLCHAIN_FILE "${ROOT}/nmc-gcc-compile.cmake")
 set(board mc7601)
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 
 project(hal_${board} 
 	LANGUAGES C CXX ASM 
@@ -60,7 +61,9 @@ set_target_properties(hal_${board}
 target_include_directories(hal_${board} 
 	PUBLIC 
 		"$<BUILD_INTERFACE:${ROOT}/include>"
-		"$<INSTALL_INTERFACE:include>")
+		"$<INSTALL_INTERFACE:include>"
+	PRIVATE
+		${ROOT}/src/target/1879vm6ya)
 add_nmc_compiler_type_option("${sources}")
 target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-m${ARCH};-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
 target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-O2;-Wall;-m${ARCH}>)
@@ -68,6 +71,5 @@ target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>
 target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:C>:-std=c99>)
 target_compile_options(hal_${board} PUBLIC $<$<CONFIG:DEBUG>:-g>)
 set_source_files_properties(${ROOT}/src_printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
-target_include_directories(hal_${board} PUBLIC ${ROOT}/include ${ROOT}/src/target/1879vm6ya)
 
 install_board_rules(${board} ${ROOT}/cmake/hal_${board}-config.cmake.in)

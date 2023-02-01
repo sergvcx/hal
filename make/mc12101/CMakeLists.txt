@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 set(ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
 set(CMAKE_TOOLCHAIN_FILE "${ROOT}/nmc-gcc-compile.cmake")
 set(board mc12101)
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 
 project(hal_${board} 
 	LANGUAGES C CXX ASM 
@@ -19,6 +20,7 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
 include(CMakePackageConfigHelpers)
 include(${ROOT}/cmake/utils.cmake)
 option(HAL_${board}_INSTALL "Generate target for installing hal_${board}" ${is_top_level})
+message(STATUS ${HAL_${board}_INSTALL})
 
 set(ARCH nmc4)
 

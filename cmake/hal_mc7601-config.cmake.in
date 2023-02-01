@@ -1,0 +1,6 @@
+set(HAL_MC7601_VERSION x.y.z)
+
+@PACKAGE_INIT@
+
+check_required_components(hal_mc7601)
+message("-- Found hal_mc7601 (version ${${CMAKE_FIND_PACKAGE_NAME}_VERSION})")

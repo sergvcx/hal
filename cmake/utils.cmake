@@ -8,7 +8,7 @@ LIST(APPEND CMAKE_PROGRAM_PATH ${path_bin} ${path_lib})
 
 macro(install_board_rules board config_template)
 	string(TOUPPER ${board} BOARD)
-	if(HAL_${BOARD}_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
+	if(HAL_${board}_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
 		configure_package_config_file(${config_template} hal_${board}-config.cmake
 	    	INSTALL_DESTINATION "${CMAKE_CURRENT_LIST_DIR}")
 		write_basic_package_version_file(hal_${board}-config-version.cmake

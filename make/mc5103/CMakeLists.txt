@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 set(ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
 set(CMAKE_TOOLCHAIN_FILE "${ROOT}/nmc-gcc-compile.cmake")
 set(board mc5103)
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 
 project(hal_${board} 
 	LANGUAGES C CXX ASM 
@@ -67,7 +68,9 @@ add_nmc_compiler_type_option("${sources}")
 target_include_directories(hal_${board} 
 	PUBLIC 
 		"$<BUILD_INTERFACE:${ROOT}/include>"
-		"$<INSTALL_INTERFACE:include>" #install-prefix/include		
+		"$<INSTALL_INTERFACE:include>" #install-prefix/include
+	PRIVATE
+		${ROOT}/src/target/1879vm6ya
 	)
 target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-m${ARCH};-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
 target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-O2;-Wall;-m${ARCH}>)
