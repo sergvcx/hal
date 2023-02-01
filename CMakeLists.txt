@@ -1,17 +1,16 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
 
+
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 
 if(NOT PLATFORMS)
 	set(PLATFORMS mc12101 mb7707 mc5103 mc7601 virtual)
 endif()
 
-project(hal C CXX)
-# install(EXPORT hal
-#   FILE hal-export.cmake
-#   DESTINATION lib/cmake/hal
-# )
+project(hal 
+	LANGUAGES C CXX
+	VERSION 0.1.0)
 
 if(WIN32)
 	set(CMAKE_INSTALL_PREFIX "C:/Program Files/Module/${PROJECT_NAME}")

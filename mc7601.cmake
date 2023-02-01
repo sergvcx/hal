@@ -26,7 +26,7 @@ file(GLOB host_sources
 	src/host/mc7601/*.*
 	src/x86/*.*
 	src/ringbuffer/*.*
-	src/io/host_io/*.*
+	#src/host/host_io/*.*
 	${CMAKE_CURRENT_LIST_FILE})
 file(GLOB host_headers include/*.h)
 

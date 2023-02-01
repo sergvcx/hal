@@ -2,19 +2,30 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
 set(ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
 set(CMAKE_TOOLCHAIN_FILE "${ROOT}/nmc-gcc-compile.cmake")
-#execute_process(COMMAND ${ROOT}/script.bat)
-set(ENV{GCC_EXEC_PREFIX} /cygdrive/D/Module/NMC-SDK/nmc4-ide/lib/gcc/)
-file(TO_NATIVE_PATH  $ENV{NMC_GCC_TOOLPATH}/nmc4-ide/bin path_bin)
-file(TO_NATIVE_PATH  $ENV{NMC_GCC_TOOLPATH}/nmc4-ide/lib path_lib)
-LIST(APPEND CMAKE_PROGRAM_PATH ${path_bin} ${path_lib})
+set(board mc5103)
 
-set(PROJECT hal_mc5103)
-project(${PROJECT} C CXX ASM)
+project(hal_${board} 
+	LANGUAGES C CXX ASM 
+	DESCRIPTION "Hal library for ${board}"
+	VERSION 0.1.0)
+
+add_library(hal_${board} STATIC)
+add_library(hal::hal_${board} ALIAS hal_${board})
+
+string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
+    is_top_level)
+
+include(CMakePackageConfigHelpers)
+include(${ROOT}/cmake/utils.cmake)
+option(HAL_${board}_INSTALL "Generate target for installing hal_${board}" ${is_top_level})
 
 set(ARCH nmc3)
 
-
-file(GLOB SOURCES 
+file(GLOB public_headers 
+	${ROOT}/include/*.h
+	${ROOT}/include/*.mlb)
+file(GLOB sources 
+	${public_headers}
 	${ROOT}/src/target/1879vm5ya/*.asm
 	${ROOT}/src/target/1879vm5ya/*.c
 	${ROOT}/src/target/1879vm5ya/*.cpp	
@@ -37,35 +48,32 @@ file(GLOB SOURCES
 	${ROOT}/src/target/nmc_all/*.mlb
 	${ROOT}/src/target/nmc_all/*.h
 	)
-add_library(${PROJECT} STATIC ${SOURCES})
-
-foreach(file ${SOURCES})
-	get_filename_component(extension ${file} EXT)
-	if(extension STREQUAL .asm)
-		list(APPEND asm_files ${file})
-	elseif(extension STREQUAL .S)
-		list(APPEND s_files ${file})
-	elseif(extension STREQUAL .s)
-		list(APPEND s_files ${file})
-	endif()
-endforeach()
 
 
-set_target_properties(${PROJECT}
+target_sources(hal_${board} PRIVATE ${sources})
+
+set_target_properties(hal_${board}
 	PROPERTIES 
 	LINKER_LANGUAGE CXX
 	ARCHIVE_OUTPUT_DIRECTORY ${ROOT}/lib
 	ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${ROOT}/lib
 	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${ROOT}/lib
+	PUBLIC_HEADER "${public_headers}"
+	SOVERSION ${PROJECT_VERSION_MAJOR}
+	VERSION ${PROJECT_VERSION}
 	)
 
-set_source_files_properties( ${asm_files} PROPERTY COMPILE_FLAGS "-mmas" )
-set_source_files_properties( ${s_files}   PROPERTY COMPILE_FLAGS "-mgas" )
-
-target_compile_options(${PROJECT} PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-m${ARCH};-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
-target_compile_options(${PROJECT} PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-O2;-Wall;-m${ARCH}>)
-target_compile_options(${PROJECT} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>)
-target_compile_options(${PROJECT} PUBLIC $<$<COMPILE_LANGUAGE:C>:-std=c99>)
-target_compile_options(${PROJECT} PUBLIC $<$<CONFIG:DEBUG>:-g>)
+add_nmc_compiler_type_option("${sources}")
+target_include_directories(hal_${board} 
+	PUBLIC 
+		"$<BUILD_INTERFACE:${ROOT}/include>"
+		"$<INSTALL_INTERFACE:include>" #install-prefix/include		
+	)
+target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-m${ARCH};-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
+target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-O2;-Wall;-m${ARCH}>)
+target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>)
+target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:C>:-std=c99>)
+target_compile_options(hal_${board} PUBLIC $<$<CONFIG:DEBUG>:-g>)
 set_source_files_properties(${ROOT}/src_printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
-target_include_directories(${PROJECT} PUBLIC ${ROOT}/include ${ROOT}/src/target/1879vm6ya)
+
+install_board_rules(${board} ${ROOT}/cmake/hal_${board}-config.cmake.in)
