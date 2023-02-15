@@ -45,7 +45,7 @@ target_include_directories(${host_name} PUBLIC
   	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/io/host_io>
 	$ENV{MC12101}/include 	
 	)
-target_compile_definitions(${host_name} PUBLIC NM6405 $<$<CONFIG:Debug>:DEBUG> $<$<CONFIG:Release>:NDEBUG>)
+target_compile_definitions(${host_name} PUBLIC NM6405 $<$<CONFIG:Debug>:DEBUG> $<$<CONFIG:Release>:NDEBUG> SILENT)
 if(UNIX)
 	target_compile_options(${host_name} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 endif()
@@ -60,10 +60,10 @@ execute_process(
 	COMMENT "Building nm part")
 include(make/mc12101/hal_mc12101-targets.cmake)
 if(WIN32)
-	add_custom_target(${target_name}_build $ENV{NMC_GCC_TOOLPATH}/nmc4cmd.bat
+	add_custom_target(${target_name}_build ALL $ENV{NMC_GCC_TOOLPATH}/nmc4cmd.bat
 		COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build )
 else()
-	add_custom_target(${target_name}_build COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build )
+	add_custom_target(${target_name}_build ALL COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build )
 endif()
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/make/mc12101/build)
 #find_package(hal_mc12101 REQUIRED)
