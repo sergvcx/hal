@@ -44,12 +44,14 @@ INSECTION(".text_hal") int halSync(int val,int processor){
 	SyncBuf& syncro= halSyncro;
 	if (procNo==0){
 		while(syncro.writeCounter[0]>syncro.readCounter[0]){
+			//printf("%d,%d,%d,%d\n", syncro.writeCounter[0], syncro.readCounter[0], syncro.writeCounter[1], syncro.readCounter[1]);
 			halSleep(1);
 		}
 		syncro.sync0=val;
 		syncro.writeCounter[0]++;
 
 		while(syncro.readCounter[1]==syncro.writeCounter[1]){
+			//printf("%d,%d,%d,%d\n", syncro.writeCounter[0], syncro.readCounter[0], syncro.writeCounter[1], syncro.readCounter[1]);
 			halSleep(1);
 		}
 		sync=syncro.sync1;
@@ -58,12 +60,14 @@ INSECTION(".text_hal") int halSync(int val,int processor){
 	else if (procNo==1){
 
 		while(syncro.writeCounter[1]>syncro.readCounter[1]){
+			//printf("%d,%d,%d,%d\n", syncro.writeCounter[0], syncro.readCounter[0], syncro.writeCounter[1], syncro.readCounter[1]);
 			halSleep(1);
 		}
 		syncro.sync1=val;
 		syncro.writeCounter[1]++;
 
 		while(syncro.readCounter[0]==syncro.writeCounter[0]){
+			//printf("%d,%d,%d,%d\n", syncro.writeCounter[0], syncro.readCounter[0], syncro.writeCounter[1], syncro.readCounter[1]);
 			halSleep(1);
 		}
 		sync=syncro.sync0;

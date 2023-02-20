@@ -1,45 +1,50 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
-
-
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
-
-if(NOT PLATFORMS)
-	set(PLATFORMS mc12101 mb7707 mc5103 mc7601 virtual)
-endif()
-
 project(hal 
 	LANGUAGES C CXX
 	VERSION 0.1.0)
 
-if(WIN32)
-	set(CMAKE_INSTALL_PREFIX "C:/Program Files/Module/${PROJECT_NAME}")
-elseif(UNIX)
-	set(CMAKE_INSTALL_PREFIX "/usr/local")
-endif()
 
-if(mc12101 IN_LIST PLATFORMS)
-	include(${CMAKE_CURRENT_LIST_DIR}/mc12101.cmake)
+option(MC12101_BUILD "Build hal for mc12101" ON)
+option(MB7707_BUILD "Build hal for mb7707" OFF)
+option(MC5103_BUILD "Build hal for mc5103" OFF)
+option(MC7601_BUILD "Build hal for mc7601" OFF)
+option(VIRTUAL_BUILD "Build hal x64" ON)
+set(NM_GENERATOR "Unix Makefiles" CACHE STRING "NM Building generator")
+
+
+
+
+
+
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/utils.cmake)
+
+if(MC12101_BUILD)
+	add_subdirectory(host/mc12101)
+	add_nm_build_target(mc12101 ${NM_GENERATOR})
 	message(STATUS "MC12101 include")
 endif()
 
-if(mb7707 IN_LIST PLATFORMS)
-	include(${CMAKE_CURRENT_LIST_DIR}/mb7707.cmake)
+if(MB7707_BUILD)
+	add_subdirectory(host/mb7707)
+	add_nm_build_target(mb7707 ${NM_GENERATOR})
 	message(STATUS "MB7707 include")
 endif()
 
-if(mc5103 IN_LIST PLATFORMS)
-	include(${CMAKE_CURRENT_LIST_DIR}/mc5103.cmake)
+if(MC5103_BUILD)
+	add_subdirectory(host/mc5103)
+	add_nm_build_target(mc5103 ${NM_GENERATOR})
 	message(STATUS "MC5103 include")
 endif()
 
-if(mc7601 IN_LIST PLATFORMS)
-	include(${CMAKE_CURRENT_LIST_DIR}/mc7601.cmake)
+if(MC7601_BUILD)
+	add_subdirectory(host/mc7601)
+	add_nm_build_target(mc7601 ${NM_GENERATOR})
 	message(STATUS "MC7601 include")
 endif()
 
-if(virtual IN_LIST PLATFORMS)
-	include(${CMAKE_CURRENT_LIST_DIR}/virtual.cmake)
+if(VIRTUAL_BUILD)
+	add_subdirectory(host/virtual)
 	message(STATUS "VIRTUAL include")
 endif()
 
