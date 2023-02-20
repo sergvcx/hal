@@ -1,16 +1,29 @@
-ifeq ($(OS),Windows_NT)
-  SHELL   = cmd
-  OS_WHICH= where
-  OS_RM   = del /Q /A:A
-  OS_RD   = rd /Q /S
-  OS_SET_ENV = setx  /m 
-else
-  OS_WHICH= which
-  OS_RM   = rm -f -r
-  OS_RD   = rm -f -r
-  OS_SET_ENV = export 
-endif
+# ifeq($(OS),Windows_NT)
+# include("$(NMC_GCC_TOOLPATH)\nmc4-ide\nmc4vars_win.mk")
+# endif
 
-setenv:
-	$(OS_SET_ENV) HAL "$(realpath .)"
-#setenv -ua HAL "$(realpath .)"
+
+
+all:
+  cmake -B build_all . -D MC12101_BUILD=ON -D MC7601_BUILD=ON -D MC5103_BUILD=ON -D MC7601_BUILD=ON -D VIRTUAL_BUILD=ON
+  cmake --build build_all
+
+mc12101:
+  cmake -B build_$@ . -D MC12101_BUILD=ON
+  cmake --build build_$@
+
+mb7707:
+  cmake -B build_$@ . -D MC7601_BUILD=ON
+  cmake --build build_$@
+
+mc5103:
+  cmake -B build_$@ . -D MC5103_BUILD=ON
+  cmake --build build_$@
+
+mc7601: 
+  cmake -B build_$@ . -D MC7601_BUILD=ON
+  cmake --build build_$@
+
+virtual: 
+  cmake -B build_$@ . -D VIRTUAl_BUILD=ON
+  cmake --build build_$@

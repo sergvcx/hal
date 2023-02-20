@@ -1,1 +1,0 @@
-cmake -B build . "-DPLATFORMS=mc12101;virtual" -G "Visual Studio 16 2019"
