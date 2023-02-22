@@ -55,4 +55,6 @@ target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>
 target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:C>:-std=c99>)
 set_source_files_properties(${ROOT}/src_printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
 
-install_board_rules(${board} ${ROOT}/cmake/hal_${board}-config.cmake.in)
+if(HAL_MB7707_INSTALL)
+	install_board_rules(${board} ${ROOT}/cmake/hal_${board}-config.cmake.in)
+endif()

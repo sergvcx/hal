@@ -1,9 +1,10 @@
-# ifeq($(OS),Windows_NT)
-# include("$(NMC_GCC_TOOLPATH)\nmc4-ide\nmc4vars_win.mk")
-# endif
-export GCC_EXEC_PREFIX=/cygdrive/C/Program Files/Module/NMC-SDK/nmc4-ide/lib/gcc/
-$(info  $(GCC_EXEC_PREFIX))
-PATH:=$(NMC_GCC_TOOLPATH)\nmc4-ide\bin;$(NMC_GCC_TOOLPATH)\nmc4-ide\lib;$(PATH)
+
+ifeq($(OS),Windows_NT)
+include("$(NMC_GCC_TOOLPATH)\nmc4-ide\nmc4vars_win.mk")
+endif
+# export GCC_EXEC_PREFIX=/cygdrive/C/Program Files/Module/NMC-SDK/nmc4-ide/lib/gcc/
+# $(info  $(GCC_EXEC_PREFIX))
+# PATH:=$(NMC_GCC_TOOLPATH)\nmc4-ide\bin;$(NMC_GCC_TOOLPATH)\nmc4-ide\lib;$(PATH)
 
 
 

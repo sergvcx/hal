@@ -48,8 +48,7 @@ target_include_directories(hal_${board}
 		"$<BUILD_INTERFACE:${ROOT}/include>"
 		"$<INSTALL_INTERFACE:include>" #install-prefix/include
 	PRIVATE
-		${ROOT}/src/target/1879vm6ya
-	)
+		${ROOT}/src/target/1879vm6ya)
 target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-m${ARCH};-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
 target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-Wall;-m${ARCH}>)
 target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>)
