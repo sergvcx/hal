@@ -5,11 +5,11 @@ project(hal
 	VERSION 0.1.0)
 
 
-option(MC12101_BUILD "Build hal for mc12101" ON)
+option(MC12101_BUILD "Build hal for mc12101" OFF)
 option(MB7707_BUILD "Build hal for mb7707" OFF)
 option(MC5103_BUILD "Build hal for mc5103" OFF)
 option(MC7601_BUILD "Build hal for mc7601" OFF)
-option(VIRTUAL_BUILD "Build hal x64" ON)
+option(VIRTUAL_BUILD "Build hal x64" OFF)
 set(NM_GENERATOR "Unix Makefiles" CACHE STRING "NM Building generator")
 
 

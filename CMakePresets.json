@@ -1,0 +1,124 @@
+{
+    "version": 6,
+    "configurePresets": [
+        {
+            "name": "hal-mc12101",
+            "displayName": "Configure preset for board mc12101 using nmc toolchain file",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "MC12101_BUILD": "ON",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
+            }
+        },
+        {
+            "name": "hal-mb7707",
+            "displayName": "Configure preset for board mb7707 using nmc toolchain file",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "MB7707_BUILD": "ON",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
+            }
+        },
+        {
+            "name": "hal-mc5103",
+            "displayName": "Configure preset for board mc5103 using nmc toolchain file",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "MC5103_BUILD": "ON",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
+            }
+        },
+        {
+            "name": "hal-mc7601",
+            "displayName": "Configure preset for board mc7601 using nmc toolchain file",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "MC7601_BUILD": "ON",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
+            }
+        },
+        {
+            "name": "hal-x64-ninja",
+            "displayName": "Configure preset for virtual with ninja",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "VIRTUAL_BUILD": "ON"
+            }
+        },
+        {
+            "name": "hal-x64-windows-only",
+            "displayName": "Configure preset for virtual with cl compiler",
+            "description": "Sets cl compiler",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "architecture": {
+                "value": "x64",
+                "strategy": "set"
+             },
+            "cacheVariables": {
+                "VIRTUAL_BUILD": "ON",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_C_COMPILER": "cl",
+                "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            },            
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+              }
+        }        
+    ],
+    "buildPresets": [
+        {
+            "name": "Release",
+            "configurePreset": "hal-mc12101",
+            "configuration": "Release"
+        },
+        {
+            "name": "Debug",
+            "configurePreset": "hal-mc12101",
+            "configuration": "Debug"
+        },        
+        {
+            "name": "Release",
+            "configurePreset": "hal-mb7707",
+            "configuration": "Release"
+        },
+        {
+            "name": "Debug",
+            "configurePreset": "hal-mb7707",
+            "configuration": "Debug"
+        },
+        {
+            "name": "Release",
+            "configurePreset": "hal-mc5103",
+            "configuration": "Release"
+        },
+        {
+            "name": "Debug",
+            "configurePreset": "hal-mc5103",
+            "configuration": "Debug"
+        },
+        {
+            "name": "Release",
+            "configurePreset": "hal-mc7601",
+            "configuration": "Release"
+        },
+        {
+            "name": "Debug",
+            "configurePreset": "hal-mc7601",
+            "configuration": "Debug"
+        }
+
+    ]
+}
