@@ -1,31 +1,31 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
 set(ROOT ${CMAKE_CURRENT_LIST_DIR}/..)
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/cmake/nmc-gcc-compile.cmake)
 
 project(hal_target
 	LANGUAGES C CXX ASM 
 	DESCRIPTION "Hal library, target part"
 	VERSION 0.1.0)
 
-option(HAL_MC12101_BUILD "Build hal for mc12101" OFF)
-option(HAL_MB7707_BUILD "Build hal for mb7707" 	 OFF)
-option(HAL_MC5103_BUILD "Build hal for mc5103" 	 OFF)
-option(HAL_MC7601_BUILD "Build hal for mc7601" 	 OFF)
-#option(HAL_VIRTUAL_BUILD "Build hal for mc7601" 	 OFF)
+option(HAL_MC12101 "Build hal for mc12101" OFF)
+option(HAL_MB7707 "Build hal for mb7707" 	 OFF)
+option(HAL_MC5103 "Build hal for mc5103" 	 OFF)
+option(HAL_MC7601 "Build hal for mc7601" 	 OFF)
 
-if(HAL_MC12101_BUILD)
+if(HAL_MC12101)
 	add_library(hal_mc12101 STATIC)
 	add_library(hal::hal_mc12101 ALIAS hal_mc12101)
 endif()
-if(HAL_MB7707_BUILD)
+if(HAL_MB7707)
 	add_library(hal_mb7707 STATIC)
 	add_library(hal::hal_mb7707 ALIAS hal_mb7707)
 endif()
-if(HAL_MC5103_BUILD)
+if(HAL_MC5103)
 	add_library(hal_mc5103 STATIC)
 	add_library(hal::hal_mc5103 ALIAS hal_mc5103)
 endif()
-if(HAL_MC7601_BUILD)
+if(HAL_MC7601)
 	add_library(hal_mc7601 STATIC)
 	add_library(hal::hal_mc7601 ALIAS hal_mc7601)
 endif()
@@ -38,7 +38,6 @@ option(HAL_MC12101_INSTALL "Build hal for mc12101" 	 ${is_top_level})
 option(HAL_MB7707_INSTALL "Build hal for mb7707" 	 ${is_top_level})
 option(HAL_MC5103_INSTALL "Build hal for mc5103" 	 ${is_top_level})
 option(HAL_MC7601_INSTALL "Build hal for mc7601" 	 ${is_top_level})
-#option(HAL_VIRTUAL_BUILD "Build hal x64" 		 OFF)
 
 
 
@@ -47,14 +46,6 @@ include(cmake/utils.cmake)
 
 
 
-
-
-
-if(HAL_MC7601_BUILD OR HAL_MB7707_BUILD OR HAL_MC5103_BUILD OR HAL_MC7601_BUILD)
-	if(HAL_VIRTUAL_BUILD)
-		message(FATAL_ERROR "VIRTUAL IMCOMPATIBILITY WITH BOARD BUILD")
-	endif()
-endif()
 
 
 
@@ -68,7 +59,6 @@ foreach(board ${board_list})
 		continue()
 	endif()
 
-	set(ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
 	include(cmake/${board}-sources.cmake)
 
 	if(board IN_LIST nmc3_board_list)

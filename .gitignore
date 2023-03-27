@@ -21,3 +21,5 @@ nmc4vars_win.mk
 *.abs
 
 make_*/
+.vs/
+.vscode/

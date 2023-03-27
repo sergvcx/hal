@@ -8,7 +8,8 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "HAL_MC12101_BUILD": "ON",
+                "HAL_TYPE": "TARGET",
+                "HAL_MC12101": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
             }
         },
@@ -19,7 +20,8 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "HAL_MB7707_BUILD": "ON",
+                "HAL_TYPE": "TARGET",
+                "HAL_MB7707": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
             }
         },
@@ -30,7 +32,8 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "HAL_MC5103_BUILD": "ON",
+                "HAL_TYPE": "TARGET",
+                "HAL_MC5103": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
             }
         },
@@ -41,8 +44,53 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "HAL_MC7601_BUILD": "ON",
+                "HAL_TYPE": "TARGET",
+                "HAL_MC7601": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
+            }
+        },
+        {
+            "name": "hal-mc12101-host",
+            "displayName": "Configure preset for board mc12101 using nmc toolchain file",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "HAL_TYPE": "HOST",
+                "HAL_MC12101": "ON"
+            }
+        },
+        {
+            "name": "hal-mb7707-host",
+            "displayName": "Configure preset for board mb7707 using nmc toolchain file",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "HAL_TYPE": "HOST",
+                "HAL_MB7707": "ON"
+            }
+        },
+        {
+            "name": "hal-mc5103-host",
+            "displayName": "Configure preset for board mc5103 using nmc toolchain file",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "HAL_TYPE": "HOST",
+                "HAL_MC5103": "ON"
+            }
+        },
+        {
+            "name": "hal-mc7601-host",
+            "displayName": "Configure preset for board mc7601 using nmc toolchain file",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "HAL_TYPE": "HOST",
+                "HAL_MC7601": "ON"
             }
         },
         {
@@ -52,7 +100,7 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "HAL_VIRTUAL_BUILD": "ON"
+                "HAL_TYPE": "VIRTUAL"
             }
         },
         {
@@ -65,7 +113,7 @@
                 "strategy": "set"
              },
             "cacheVariables": {
-                "HAL_VIRTUAL_BUILD": "ON",
+                "HAL_TYPE": "VIRTUAL",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_COMPILER": "cl",
                 "CMAKE_CXX_COMPILER": "cl",
