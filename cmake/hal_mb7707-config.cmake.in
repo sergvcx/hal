@@ -1,6 +1,0 @@
-set(HAL_MB7707_VERSION x.y.z)
-
-@PACKAGE_INIT@
-
-check_required_components(hal_mb7707)
-message("-- Found hal_mb7707 (version ${${CMAKE_FIND_PACKAGE_NAME}_VERSION})")

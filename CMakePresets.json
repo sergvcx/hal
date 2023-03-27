@@ -2,179 +2,165 @@
     "version": 6,
     "configurePresets": [
         {
-            "name": "hal-mc12101",
-            "displayName": "Configure preset for board mc12101 using nmc toolchain file",
-            "description": "Sets Ninja generator, build and install directory",
+            "name": "target-ninja",
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
+            "hidden": true,
             "cacheVariables": {
                 "HAL_TYPE": "TARGET",
-                "HAL_MC12101": "ON",
+                "CMAKE_BUILD_TYPE":"Debug",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
             }
         },
         {
-            "name": "hal-mb7707",
-            "displayName": "Configure preset for board mb7707 using nmc toolchain file",
-            "description": "Sets Ninja generator, build and install directory",
-            "generator": "Ninja Multi-Config",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "HAL_TYPE": "TARGET",
-                "HAL_MB7707": "ON",
-                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
-            }
-        },
-        {
-            "name": "hal-mc5103",
-            "displayName": "Configure preset for board mc5103 using nmc toolchain file",
-            "description": "Sets Ninja generator, build and install directory",
-            "generator": "Ninja Multi-Config",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "HAL_TYPE": "TARGET",
-                "HAL_MC5103": "ON",
-                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
-            }
-        },
-        {
-            "name": "hal-mc7601",
-            "displayName": "Configure preset for board mc7601 using nmc toolchain file",
-            "description": "Sets Ninja generator, build and install directory",
-            "generator": "Ninja Multi-Config",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "HAL_TYPE": "TARGET",
-                "HAL_MC7601": "ON",
-                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
-            }
-        },
-        {
-            "name": "hal-mc12101-host",
-            "displayName": "Configure preset for board mc12101 using nmc toolchain file",
-            "description": "Sets Ninja generator, build and install directory",
-            "generator": "Ninja Multi-Config",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "HAL_TYPE": "HOST",
-                "HAL_MC12101": "ON"
-            }
-        },
-        {
-            "name": "hal-mb7707-host",
-            "displayName": "Configure preset for board mb7707 using nmc toolchain file",
-            "description": "Sets Ninja generator, build and install directory",
-            "generator": "Ninja Multi-Config",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "HAL_TYPE": "HOST",
-                "HAL_MB7707": "ON"
-            }
-        },
-        {
-            "name": "hal-mc5103-host",
-            "displayName": "Configure preset for board mc5103 using nmc toolchain file",
-            "description": "Sets Ninja generator, build and install directory",
-            "generator": "Ninja Multi-Config",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "HAL_TYPE": "HOST",
-                "HAL_MC5103": "ON"
-            }
-        },
-        {
-            "name": "hal-mc7601-host",
-            "displayName": "Configure preset for board mc7601 using nmc toolchain file",
-            "description": "Sets Ninja generator, build and install directory",
-            "generator": "Ninja Multi-Config",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "HAL_TYPE": "HOST",
-                "HAL_MC7601": "ON"
-            }
-        },
-        {
-            "name": "hal-x64-ninja",
-            "displayName": "Configure preset for virtual with ninja",
-            "description": "Sets Ninja generator, build and install directory",
-            "generator": "Ninja Multi-Config",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "HAL_TYPE": "VIRTUAL"
-            }
-        },
-        {
-            "name": "hal-x64-windows-only",
-            "displayName": "Configure preset for virtual with cl compiler",
-            "description": "Sets cl compiler",
+            "name": "host-msvc",
+            "hidden": true,
             "binaryDir": "${sourceDir}/build/${presetName}",
             "architecture": {
                 "value": "x64",
                 "strategy": "set"
              },
-            "cacheVariables": {
-                "HAL_TYPE": "VIRTUAL",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
-            },            
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
                 "rhs": "Windows"
-              }
-        }        
-    ],
-    "buildPresets": [
-        {
-            "name": "hal-mc12101-release",
-            "configurePreset": "hal-mc12101",
-            "configuration": "Release",
-            "displayName": "Release"
+            },
+            "cacheVariables": {
+                "HAL_TYPE": "HOST",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+                "CMAKE_C_COMPILER": "cl",
+                "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
         },
         {
-            "name": "hal-mc12101-debug",
-            "configurePreset": "hal-mc12101",
-            "configuration": "Debug",
-            "displayName": "Debug"
-        },        
-        {
-            "name": "hal-mb7707-release",
-            "configurePreset": "hal-mb7707",
-            "configuration": "Release",
-            "displayName": "Release"
+            "name": "host-makefile",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "generator": "Unix Makefiles",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "HAL_TYPE": "HOST"
+            }
         },
         {
-            "name": "hal-mb7707-debug",
-            "configurePreset": "hal-mb7707",
-            "configuration": "Debug",
-            "displayName": "Debug"
+            "name": "hal-mc12101",
+            "displayName": "hal-mc12101 target",
+            "inherits": "target-ninja",
+            "cacheVariables": {
+                "HAL_MC12101": "ON"                
+            }
         },
         {
-            "name": "hal-mc5103-release",
-            "configurePreset": "hal-mc5103",
-            "configuration": "Release",
-            "displayName": "Release"
+            "name": "hal-mb7707",
+            "displayName": "hal-mb7707 target",
+            "inherits": "target-ninja",
+            "cacheVariables": {
+                "HAL_MB7707": "ON"
+            }
         },
         {
-            "name": "hal-mc5103-debug",
-            "configurePreset": "hal-mc5103",
-            "configuration": "Debug",
-            "displayName": "Debug"
+            "name": "hal-mc5103",
+            "displayName": "hal-mc5103 target",
+            "inherits": "target-ninja",
+            "cacheVariables": {
+                "HAL_MC5103": "ON"
+            }
         },
         {
-            "name": "hal-mc7601-release",
-            "configurePreset": "hal-mc7601",
-            "configuration": "Release",
-            "displayName": "Release"
+            "name": "hal-mc7601",
+            "displayName": "hal-mc7601 target",
+            "inherits": "target-ninja",
+            "cacheVariables": {
+                "HAL_MC7601": "ON"
+            }
         },
         {
-            "name": "hal-mc7601-debug",
-            "configurePreset": "hal-mc7601",
-            "configuration": "Debug",
-            "displayName": "Debug"
-        }
+            "name": "hal-mc12101-host-makefiles",
+            "displayName": "hal-mc12101 host on makefiles",
+            "inherits": "host-makefile",            
+            "cacheVariables": {
+                "HAL_MC12101": "ON"
+            }
+        },
+        {
+            "name": "hal-mb7707-host-makefiles",
+            "displayName": "hal-mb7707 host on makefiles",
+            "inherits": "host-makefile", 
+            "cacheVariables": {
+                "HAL_MB7707": "ON"
+            }
+        },
+        {
+            "name": "hal-mc5103-host-makefiles",
+            "displayName": "hal-mc5103 host on makefiles",
+            "inherits": "host-makefile", 
+            "cacheVariables": {
+                "HAL_MC5103": "ON"
+            }
+        },
+        {
+            "name": "hal-mc7601-host-makefiles",
+            "displayName": "hal-mc7601 host on makefiles",
+            "inherits": "host-makefile", 
+            "cacheVariables": {
+                "HAL_MC7601": "ON"
+            }
+        },
+        {
+            "name": "hal-mc12101-host-msvc",
+            "displayName": "hal-mc12101 host on msvc",
+            "inherits": "host-msvc", 
+            "cacheVariables": {
+                "HAL_MC12101": "ON"
+            }
+        },
+        {
+            "name": "hal-mb7707-host-msvc",
+            "displayName": "hal-mb7707 host on msvc",
+            "inherits": "host-msvc", 
+            "cacheVariables": {
+                "HAL_MB7707": "ON"
+            }
+        },
+        {
+            "name": "hal-mc5103-host-msvc",
+            "displayName": "hal-mc5103 host on msvc",
+            "inherits": "host-msvc", 
+            "cacheVariables": {                
+                "HAL_MC5103": "ON"
+            }
+        },
+        {
+            "name": "hal-mc7601-host-msvc",
+            "displayName": "hal-mc7601 host on msvc",
+            "inherits": "host-msvc", 
+            "cacheVariables": {
+                "HAL_MC7601": "ON"
+            }
+        },
+        {
+            "name": "hal-virtual-makefiles",
+            "displayName": "hal-virtual on makefiles",
+            "inherits": "host-makefile",
+            "cacheVariables": {
+                "HAL_TYPE": "VIRTUAL"
+            }
+        },
+        {
+            "name": "hal-virtual-msvc",
+            "displayName": "hal-virtual on msvc",
+            "inherits": "host-msvc", 
+            "cacheVariables": {
+                "HAL_TYPE": "VIRTUAL"
+            }
 
+        }        
     ]
 }
