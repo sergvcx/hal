@@ -1,6 +1,8 @@
 set(lib_name hal-virtual)
 set(root ${CMAKE_CURRENT_LIST_DIR}/..)
 
+project(hal-virtual VERSION 0.1.0)
+
 add_library(${lib_name} STATIC)
 
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
