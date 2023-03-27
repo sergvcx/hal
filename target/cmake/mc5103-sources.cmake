@@ -4,13 +4,13 @@ file(GLOB mc5103_public_headers
 	${ROOT}/include/*.mlb)
 file(GLOB mc5103_sources 
 	${public_headers}
-	${ROOT}/src/target/1879vm5ya/*.asm
-	${ROOT}/src/target/1879vm5ya/*.c
-	${ROOT}/src/target/1879vm5ya/*.cpp	
-	${ROOT}/src/target/1879vm5ya/*.s
-	${ROOT}/src/target/1879vm5ya/*.S
-	${ROOT}/src/target/1879vm5ya/*.mlb
-	${ROOT}/src/target/1879vm5ya/*.h
+	src/1879vm5ya/*.asm
+	src/1879vm5ya/*.c
+	src/1879vm5ya/*.cpp	
+	src/1879vm5ya/*.s
+	src/1879vm5ya/*.S
+	src/1879vm5ya/*.mlb
+	src/1879vm5ya/*.h
 	${ROOT}/src/ringbuffer/*.cpp  
 	${ROOT}/src/ringbuffer/*.c
 	${ROOT}/src/ringbuffer/*.asm	
@@ -18,12 +18,12 @@ file(GLOB mc5103_sources
 	${ROOT}/src/ringbuffer/*.S
 	${ROOT}/src/ringbuffer/*.mlb
 	${ROOT}/src/ringbuffer/*.h
-	${ROOT}/src/target/nmc_all/*.cpp
-	${ROOT}/src/target/nmc_all/*.c
-	${ROOT}/src/target/nmc_all/*.asm	
-	${ROOT}/src/target/nmc_all/*.s
-	${ROOT}/src/target/nmc_all/*.S
-	${ROOT}/src/target/nmc_all/*.mlb
-	${ROOT}/src/target/nmc_all/*.h
+	src/nmc_all/*.cpp
+	src/nmc_all/*.c
+	src/nmc_all/*.asm	
+	src/nmc_all/*.s
+	src/nmc_all/*.S
+	src/nmc_all/*.mlb
+	src/nmc_all/*.h
 	${CMAKE_CURRENT_LIST_FILE}
 	)

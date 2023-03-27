@@ -71,10 +71,10 @@ foreach(board ${board_list})
 	file(GLOB public_headers ${ROOT}/include/*.h)
 	file(GLOB sources 
 		${public_headers}
-		${ROOT}/src/host/${board}/*.*
+		src/${board}/*.*
 		${ROOT}/src/x86/*.*
 		${ROOT}/src/ringbuffer/*.*
-		${ROOT}/#src/host/host_io/*.*
+		#src/host_io/*.*
 		${CMAKE_CURRENT_LIST_FILE})
 
 

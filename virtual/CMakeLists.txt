@@ -15,9 +15,9 @@ option(HAL_VIRTUAL_INSTALL "Generate target for installing hal_virtual" ${is_top
 
 
 file(GLOB sources 
-	${root}/src/virtual/*.cpp
-	${root}/src/virtual/*.c
-	${root}/src/virtual/*.h
+	src/*.cpp
+	src/*.c
+	src/*.h
 	${root}/src/x86/*.*
 	${root}/src/ringbuffer/*.*
 	${root}/include/*.h
