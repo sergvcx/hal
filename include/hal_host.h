@@ -8,7 +8,7 @@
 //#define ARCH_ADDR unsigned long 
 //#endif
 
-enum RetValue
+enum HalRetValue
 	{
 		HAL_OK              = 0, // Ok
 		HAL_ERROR           = 1, // Error
