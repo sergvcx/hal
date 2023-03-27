@@ -1,0 +1,6 @@
+set(HAL_@BOARD@_HOST_VERSION x.y.z)
+
+@PACKAGE_INIT@
+string(TO_LOWER @BOARD@ board)
+check_required_components(hal_${board}_host)
+message("-- Found hal_${board}_host (version ${${CMAKE_FIND_PACKAGE_NAME}_VERSION})")

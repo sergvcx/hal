@@ -8,7 +8,7 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "MC12101_BUILD": "ON",
+                "HAL_MC12101_BUILD": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
             }
         },
@@ -19,7 +19,7 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "MB7707_BUILD": "ON",
+                "HAL_MB7707_BUILD": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
             }
         },
@@ -30,7 +30,7 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "MC5103_BUILD": "ON",
+                "HAL_MC5103_BUILD": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
             }
         },
@@ -41,7 +41,7 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "MC7601_BUILD": "ON",
+                "HAL_MC7601_BUILD": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
             }
         },
@@ -52,7 +52,7 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "VIRTUAL_BUILD": "ON"
+                "HAL_VIRTUAL_BUILD": "ON"
             }
         },
         {
@@ -65,7 +65,7 @@
                 "strategy": "set"
              },
             "cacheVariables": {
-                "VIRTUAL_BUILD": "ON",
+                "HAL_VIRTUAL_BUILD": "ON",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_COMPILER": "cl",
                 "CMAKE_CXX_COMPILER": "cl",
@@ -80,44 +80,52 @@
     ],
     "buildPresets": [
         {
-            "name": "Release",
+            "name": "hal-mc12101-release",
             "configurePreset": "hal-mc12101",
-            "configuration": "Release"
+            "configuration": "Release",
+            "displayName": "Release"
         },
         {
-            "name": "Debug",
+            "name": "hal-mc12101-debug",
             "configurePreset": "hal-mc12101",
-            "configuration": "Debug"
+            "configuration": "Debug",
+            "displayName": "Debug"
         },        
         {
-            "name": "Release",
+            "name": "hal-mb7707-release",
             "configurePreset": "hal-mb7707",
-            "configuration": "Release"
+            "configuration": "Release",
+            "displayName": "Release"
         },
         {
-            "name": "Debug",
+            "name": "hal-mb7707-debug",
             "configurePreset": "hal-mb7707",
-            "configuration": "Debug"
+            "configuration": "Debug",
+            "displayName": "Debug"
         },
         {
-            "name": "Release",
+            "name": "hal-mc5103-release",
             "configurePreset": "hal-mc5103",
-            "configuration": "Release"
+            "configuration": "Release",
+            "displayName": "Release"
         },
         {
-            "name": "Debug",
+            "name": "hal-mc5103-debug",
             "configurePreset": "hal-mc5103",
-            "configuration": "Debug"
+            "configuration": "Debug",
+            "displayName": "Debug"
         },
         {
-            "name": "Release",
+            "name": "hal-mc7601-release",
             "configurePreset": "hal-mc7601",
-            "configuration": "Release"
+            "configuration": "Release",
+            "displayName": "Release"
         },
         {
-            "name": "Debug",
+            "name": "hal-mc7601-debug",
             "configurePreset": "hal-mc7601",
-            "configuration": "Debug"
+            "configuration": "Debug",
+            "displayName": "Debug"
         }
 
     ]
