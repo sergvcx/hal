@@ -35,6 +35,10 @@ option(HAL_MC12101_INSTALL "Generate target for installing hal_mc12101_host" ${i
 option(HAL_MB7707_INSTALL "Generate target for installing hal_mb7707_host" ${is_top_level})
 option(HAL_MC5103_INSTALL "Generate target for installing hal_mc5103_host" ${is_top_level})
 option(HAL_MC7601_INSTALL "Generate target for installing hal_mc7601_host" ${is_top_level})
+option(HAL_MC12101_TESTS "Generate target for installing hal_mc12101_host" OFF)
+option(HAL_MB7707_TESTS "Generate target for installing hal_mb7707_host" OFF)
+option(HAL_MC5103_TESTS "Generate target for installing hal_mc5103_host" OFF)
+option(HAL_MC7601_TESTS "Generate target for installing hal_mc7601_host" OFF)
 set(MC12101_BSP $ENV{MC12101} 			CACHE PATH "Path to mc12101 bsp")
 set(MB7707_BSP $ENV{MB7707} 			CACHE PATH "Path to mb7707  bsp")
 set(MC5103_BSP $ENV{MC5103}				CACHE PATH "Path to mc5103  bsp")
@@ -62,6 +66,9 @@ set(MC7601_INCLUDE 	${MC7601_BSP}/include)
 set(board_list "mc12101;mc5103;mb7707;mc7601")
 #set(nm6403_board_list "mc7601;mc5103;mb7707")
 #set(nm6405_board_list "mc12101")
+if(is_top_level)
+	enable_testing()
+endif()
 
 foreach(board ${board_list})
 	if(NOT TARGET hal_${board}_host)
@@ -128,4 +135,11 @@ foreach(board ${board_list})
 		    COMPONENT hal_${board}_host-dev
 		    DESTINATION "lib/cmake/hal_${board}_host")
 	endif()
+	if(HAL_${BOARD}_TESTS)
+		add_subdirectory(tests)
+	endif()
 endforeach()
+
+
+
+

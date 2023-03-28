@@ -39,3 +39,7 @@ elseif(HAL_TYPE STREQUAL "VIRTUAL")
 else()
 	message(FATAL_ERROR "Wrong type of build (needed \"HOST\", \"TARGET\" or \"VIRTUAL\")")
 endif()
+
+if(is_top_level)
+	enable_testing()
+endif()
