@@ -11,7 +11,8 @@ set(CPACK_INSTALL_CMAKE_PROJECTS
     #  "${CMAKE_CURRENT_LIST_DIR}/../build_pack/virtual/release;hal-virtual;ALL;/"
     #  "${CMAKE_CURRENT_LIST_DIR}/../build_pack/virtual/debug;hal-virtual;ALL;/"
 	)
-else
+else()
+set(CPACK_INSTALL_CMAKE_PROJECTS
 	"${CMAKE_CURRENT_LIST_DIR}/../build_pack/target/release;hal-target;ALL;/"
 	"${CMAKE_CURRENT_LIST_DIR}/../build_pack/target/debug;hal-target;ALL;/" 
 	"${CMAKE_CURRENT_LIST_DIR}/../build_pack/host;hal-host;ALL;/"    
