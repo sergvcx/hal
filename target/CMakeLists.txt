@@ -32,13 +32,11 @@ endif()
 
 
 
-string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
-    is_top_level)
+string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"   is_top_level)
 option(HAL_MC12101_INSTALL "Build hal for mc12101" 	 ${is_top_level})
 option(HAL_MB7707_INSTALL "Build hal for mb7707" 	 ${is_top_level})
 option(HAL_MC5103_INSTALL "Build hal for mc5103" 	 ${is_top_level})
 option(HAL_MC7601_INSTALL "Build hal for mc7601" 	 ${is_top_level})
-
 
 
 include(CMakePackageConfigHelpers)
