@@ -1,13 +1,15 @@
-
 ifeq ($(OS),Windows_NT)
-include("$(NMC_GCC_TOOLPATH)\nmc4-ide\nmc4vars_win.mk")
-NMC_TOOLCHAIN="Ninja"
+SHELL=cmd
+space := $(subst ,, )
+NMC_TOOLPATH=$(subst $(space),\$(space),$(NMC_GCC_TOOLPATH))
+-include $(NMC_TOOLPATH)\nmc4-ide\include\nmc4vars_win.mk
 X64_TOOLCHAIN="Visual Studio 15 2017 Win64"
-else
-#NMC_TOOLCHAIN="Unix Makefiles"
 NMC_TOOLCHAIN="Ninja"
+else 
 X64_TOOLCHAIN="Unix Makefiles"
+NMC_TOOLCHAIN="Ninja"
 endif
+
 
 
 mc12101:
@@ -41,25 +43,29 @@ virtual:
 pack:
 	cmake -S target  -B build_pack/target/release  	-D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
 	cmake -S target  -B build_pack/target/debug  	-D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Debug   -G $(NMC_TOOLCHAIN)
-	cmake -S host    -B build_pack/host/release    	-D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
-	cmake -S host    -B build_pack/host/debug    	-D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Debug   -G $(NMC_TOOLCHAIN)
+#	cmake -S host    -B build_pack/host/release    	-D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Release -G $(X64_TOOLCHAIN)
+#	cmake -S host    -B build_pack/host/debug    	-D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Debug   -G $(X64_TOOLCHAIN)
+	cmake -S host    -B build_pack/host			   	-D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Release -G $(X64_TOOLCHAIN)
+
 ifeq ($(OS),Windows_NT)
-	cmake -S virtual -B build_pack/virtual -G $(X64_TOOLCHAIN)
+#cmake -S virtual -B build_pack/virtual -G $(X64_TOOLCHAIN)
 else
 #	cmake -S virtual -B build_pack/virtual/release 	-D CMAKE_BUILD_TYPE=Release -G $(X64_TOOLCHAIN)
 #	cmake -S virtual -B build_pack/virtual/debug	-D CMAKE_BUILD_TYPE=Debug 	-G $(X64_TOOLCHAIN)
 endif
 	cmake --build build_pack/target/release
 	cmake --build build_pack/target/debug
-	cmake --build build_pack/host/release
-	cmake --build build_pack/host/debug
+#	cmake --build build_pack/host/release
+#	cmake --build build_pack/host/debug
 ifeq ($(OS),Windows_NT)
-	cmake --build build_pack/virtual --config Release
-	cmake --build build_pack/virtual --config Debug
+#cmake --build build_pack/virtual --config Release
+#cmake --build build_pack/virtual --config Debug
+	cmake --build build_pack/host --config Release
+	cmake --build build_pack/host --config Debug
 else
 #	cmake --build build_pack/virtual/release
 #	cmake --build build_pack/virtual/debug
 endif
-	cmake -S . -B build_pack/pack -D HAL_PACK=ON -G $(NMC_TOOLCHAIN)
+	cmake -S . -B build_pack/pack -D HAL_PACK=ON -G $(X64_TOOLCHAIN)
 	cpack --config build_pack/pack/CPackConfig.cmake -G 7Z
 	$(info all done)

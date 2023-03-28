@@ -162,6 +162,17 @@ TCHAR* createName(TCHAR* baseName, int index0, int index2){
 	wcscat_s(bufferName,TEXT("_"));
 	_itow_s(index2,bufferSuffix,16);
 	wcscat_s(bufferName,bufferSuffix);
+	
+	//static wchar_t bufferName[256];
+	//wchar_t bufferSuffix[256];
+	//
+	//wcscpy_s(bufferName, 256, (wchar_t*)baseName);
+	//_itow_s(index0, bufferSuffix, 16);
+	//wcscat_s(bufferName,bufferSuffix);
+	//wcscat_s(bufferName,TEXT("_"));
+	//_itow_s(index2,bufferSuffix,16);
+	//wcscat_s(bufferName,bufferSuffix);
+	
 	return bufferName;
 }
 
