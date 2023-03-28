@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 set(ROOT ${CMAKE_CURRENT_LIST_DIR}/..)
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/cmake/nmc-gcc-compile.cmake)
 
-project(hal_target
+project(hal-target
 	LANGUAGES C CXX ASM 
 	DESCRIPTION "Hal library, target part"
 	VERSION 0.1.0)
@@ -50,7 +50,6 @@ include(cmake/utils.cmake)
 set(nmc3_board_list "mc7601;mc5103;mb7707")
 set(nmc4_board_list "mc12101")
 
-
 set(board_list "mc12101;mc5103;mb7707;mc7601")
 foreach(board ${board_list})
 	if(NOT TARGET hal_${board})
@@ -84,13 +83,14 @@ foreach(board ${board_list})
 		PUBLIC_HEADER "${${board}_public_headers}"
 		SOVERSION ${PROJECT_VERSION_MAJOR}
 		VERSION ${PROJECT_VERSION}
+		DEBUG_POSTFIX d
 		)
 	target_include_directories(hal_${board} 
 		PUBLIC 
 			"$<BUILD_INTERFACE:${ROOT}/include>"
 			"$<INSTALL_INTERFACE:include>" #install-prefix/include		
 		)
-	set(board_with_ext_include "mc12101;mb7707")
+	set(board_with_ext_include "mc12101;mb7707;mc5103;mc7601")
 	if(board IN_LIST board_with_ext_include)
 		target_include_directories(hal_${board} PRIVATE src/1879vm6ya)
 	endif()

@@ -1,18 +1,16 @@
-set(lib_name hal-virtual)
+cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
+set(lib_name hal_virtual)
 set(root ${CMAKE_CURRENT_LIST_DIR}/..)
 
-project(hal-virtual VERSION 0.1.0)
+project(hal-virtual 
+	LANGUAGES C CXX
+	VERSION 0.1.0)
 
 add_library(${lib_name} STATIC)
 
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
     is_top_level)
 option(HAL_VIRTUAL_INSTALL "Generate target for installing hal_virtual" ${is_top_level})
-
-
-
-
-
 
 
 
@@ -30,13 +28,15 @@ set_target_properties(${lib_name}
 	LINKER_LANGUAGE CXX
 	ARCHIVE_OUTPUT_DIRECTORY ${root}/lib
 	ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${root}/lib
-	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${root}/lib)
+	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${root}/lib
+	DEBUG_POSTFIX d)
 target_include_directories(${lib_name} 
 	PUBLIC 
-		${root}/include 
+		$<BUILD_INTERFACE:${root}/include>
+	  	$<INSTALL_INTERFACE:include> 
 	PRIVATE
 		$ENV{NMPP}/include )
-
+		
 target_sources(${lib_name} PRIVATE ${sources})
 #install host lib
 if(HAL_VIRTUAL_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)

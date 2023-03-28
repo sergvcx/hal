@@ -10,15 +10,18 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
+_CPack_Packages/
 
 build*/
 lib/
 Debug/
+Release/
 *.a
 *.lib
 *.map
 nmc4vars_win.mk
 *.abs
+*.7z
 
 make_*/
 .vs/

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 set(root ${CMAKE_CURRENT_LIST_DIR}/..)
 
-project(hal_host
+project(hal-host
 	LANGUAGES C CXX
 	VERSION 0.1.0)
 
@@ -86,7 +86,8 @@ foreach(board ${board_list})
 		ARCHIVE_OUTPUT_DIRECTORY ${ROOT}/lib
 		ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${ROOT}/lib
 		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${ROOT}/lib
-		PUBLIC_HEADER "${public_headers}")	
+		PUBLIC_HEADER "${public_headers}"
+		DEBUG_POSTFIX d)	
 	target_include_directories(hal_${board}_host 
 		PUBLIC 
 			$<BUILD_INTERFACE:${ROOT}/include>
@@ -99,9 +100,6 @@ foreach(board ${board_list})
 	if(UNIX)
 		target_compile_options(hal_${board}_host PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 	endif()
-
-
-
 
 	#install host lib
 	if(HAL_${BOARD}_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
