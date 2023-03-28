@@ -44,6 +44,8 @@ set(MB7707_BSP $ENV{MB7707} 			CACHE PATH "Path to mb7707  bsp")
 set(MC5103_BSP $ENV{MC5103}				CACHE PATH "Path to mc5103  bsp")
 set(MC7601_BSP $ENV{MC7601}			   	CACHE PATH "Path to mc7601  bsp")
 include(CMakePackageConfigHelpers)
+include(GenerateExportHeader)
+include(GNUInstallDirs)
 
 
 set(ROOT ${CMAKE_CURRENT_LIST_DIR}/..)
@@ -69,6 +71,11 @@ set(board_list "mc12101;mc5103;mb7707;mc7601")
 if(is_top_level)
 	enable_testing()
 endif()
+
+message(${CMAKE_INSTALL_PREFIX})
+
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+set(SYSCONFIG_INSTALL_DIR ${CMAKE_INSTALL_SYSCONFDIR})
 
 foreach(board ${board_list})
 	if(NOT TARGET hal_${board}_host)
@@ -107,36 +114,31 @@ foreach(board ${board_list})
 	if(UNIX)
 		target_compile_options(hal_${board}_host PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 	endif()
-
 	#install host lib
 	if(HAL_${BOARD}_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
 		configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/hal_host-config.cmake.in hal_${board}_host-config.cmake
-	    	INSTALL_DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+	    	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}_host
+			PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR)
 		write_basic_package_version_file(hal_${board}_host-config-version.cmake
 	    	COMPATIBILITY SameMajorVersion)
 	    install(TARGETS hal_${board}_host EXPORT hal_${board}_host_export
 	    	ARCHIVE 
 	    		COMPONENT hal_${board}_host-dev
-	    		DESTINATION lib
 	    	PUBLIC_HEADER 
-	    		COMPONENT hal_${board}_host-dev   
-	    		DESTINATION include)
+	    		COMPONENT hal_${board}_host-dev   )
 	    install(EXPORT hal_${board}_host_export
 	    	COMPONENT hal_${board}_host-dev
 	    	FILE hal_${board}_host-targets.cmake
-	    	DESTINATION lib/cmake/hal_${board}_host
+	    	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}_host
 	    	NAMESPACE hal::)
-		export(TARGETS hal_${board}_host
-			FILE ${CMAKE_CURRENT_BINARY_DIR}/hal_${board}_host-targets.cmake
-			NAMESPACE hal::)
 		install(FILES
 		    "${CMAKE_CURRENT_BINARY_DIR}/hal_${board}_host-config.cmake"
 		    "${CMAKE_CURRENT_BINARY_DIR}/hal_${board}_host-config-version.cmake"
 		    COMPONENT hal_${board}_host-dev
-		    DESTINATION "lib/cmake/hal_${board}_host")
+		    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}_host)
 	endif()
 	if(HAL_${BOARD}_TESTS)
-		add_subdirectory(tests)
+		add_subdirectory(test)
 	endif()
 endforeach()
 

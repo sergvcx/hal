@@ -29,6 +29,9 @@ endif()
 
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"   is_top_level)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/utils.cmake)
+if(is_top_level)
+	enable_testing()
+endif()
 
 if(HAL_TYPE STREQUAL "TARGET")
 	add_subdirectory(target)
@@ -40,6 +43,4 @@ else()
 	message(FATAL_ERROR "Wrong type of build (needed \"HOST\", \"TARGET\" or \"VIRTUAL\")")
 endif()
 
-if(is_top_level)
-	enable_testing()
-endif()
+

@@ -1,4 +1,4 @@
-//#include "hal.h"
+#include "hal.h"
 
 int main(){
 	return 0;

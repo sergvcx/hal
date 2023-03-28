@@ -1,6 +1,17 @@
 set(HAL_@BOARD@_HOST_VERSION x.y.z)
 
 @PACKAGE_INIT@
-string(TO_LOWER @BOARD@ board)
+string(TOLOWER @BOARD@ board)
+
+set_and_check(HAL_INCLUDE_DIR   "@PACKAGE_INCLUDE_INSTALL_DIR@")
+#set_and_check(HAL_SYSCONFIG_DIR "@PACKAGE_SYSCONFIG_INSTALL_DIR@")
+include("${CMAKE_CURRENT_LIST_DIR}/hal_${board}_host-targets.cmake")
+
+set_property(TARGET hal::hal_${board}_host 
+        PROPERTY 
+            INTERFACE_INCLUDE_DIRECTORIES
+                ${HAL_INCLUDE_DIR})
+
 check_required_components(hal_${board}_host)
+
 message("-- Found hal_${board}_host (version ${${CMAKE_FIND_PACKAGE_NAME}_VERSION})")

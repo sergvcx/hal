@@ -41,12 +41,15 @@ option(HAL_MC7601_INSTALL "Build hal for mc7601" 	 ${is_top_level})
 
 include(CMakePackageConfigHelpers)
 include(cmake/utils.cmake)
+include(GNUInstallDirs)
 
 
 
 
 
-
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+set(SYSCONFIG_INSTALL_DIR ${CMAKE_INSTALL_SYSCONFDIR}
+)
 set(nmc3_board_list "mc7601;mc5103;mb7707")
 set(nmc4_board_list "mc12101")
 
@@ -103,29 +106,25 @@ foreach(board ${board_list})
 	string(TOUPPER ${board} BOARD)
 
 	if(HAL_${BOARD}_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
-		configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/hal-config.cmake.in hal_${board}-config.cmake
-			INSTALL_DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+		configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/hal_target-config.cmake.in hal_${board}-config.cmake
+			INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}
+			PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR)
 		write_basic_package_version_file(hal_${board}-config-version.cmake
 			COMPATIBILITY SameMajorVersion)
 		install(TARGETS hal_${board} EXPORT hal_${board}_export
 			ARCHIVE 
 				COMPONENT hal_${board}-dev
-				DESTINATION lib
 			PUBLIC_HEADER 
-				COMPONENT hal_${board}-dev
-				DESTINATION include)
+				COMPONENT hal_${board}-dev)
 		install(EXPORT hal_${board}_export
 			COMPONENT hal_${board}-dev
 			FILE hal_${board}-targets.cmake
-			DESTINATION lib/cmake/hal_${board}
-			NAMESPACE hal::)
-		export(TARGETS hal_${board}
-			FILE ${CMAKE_CURRENT_BINARY_DIR}/hal_${board}-targets.cmake
+			DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}
 			NAMESPACE hal::)
 		install(FILES
 			"${CMAKE_CURRENT_BINARY_DIR}/hal_${board}-config.cmake"
 			"${CMAKE_CURRENT_BINARY_DIR}/hal_${board}-config-version.cmake"
 			COMPONENT hal_${board}-dev
-			DESTINATION "lib/cmake/hal_${board}")
+			DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}")
 	endif()
 endforeach()

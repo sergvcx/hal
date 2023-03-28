@@ -64,4 +64,4 @@ else
 #	cmake --build build_pack/virtual/debug
 endif
 	cmake -S . -B build_pack/pack -D HAL_PACK=ON -G $(X64_TOOLCHAIN)
-	cpack --config build_pack/pack/CPackConfig.cmake -G 7Z -C "Debug;Release;
+	cpack --config build_pack/pack/CPackConfig.cmake -G 7Z -C "Debug;Release"
