@@ -25,11 +25,12 @@ mc12101:
 	cmake -S . -B build/pack -D HAL_PACK=ON -G $(NMC_TOOLCHAIN)
 	cpack --config build/pack/CPackConfig.cmake -G 7Z
 
-mc12101-self-install: 
+mc12101-self-install: mc12101
 	cmake --install build/target/debug --prefix ./hal-0.1.0-Linux
 	cmake --install build/target/release --prefix ./hal-0.1.0-Linux
 	cmake --install build/host/debug --prefix ./hal-0.1.0-Linux
 	cmake --install build/host/release --prefix ./hal-0.1.0-Linux
+	cmake --install build/pack --prefix ./hal-0.1.0-Linux
 
 mb7707:
 	cmake -S . --preset=hal-mb7707

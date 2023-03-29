@@ -14,4 +14,6 @@ set_property(TARGET hal::${board}_host
 
 check_required_components(${board}_host)
 
-message("-- Found hal_${board}_host (version ${${CMAKE_FIND_PACKAGE_NAME}_VERSION})")
+message("-- Found hal::${board} (version ${${CMAKE_FIND_PACKAGE_NAME}_VERSION})")
+
+

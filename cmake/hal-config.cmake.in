@@ -1,0 +1,27 @@
+set(HAL_VERSION x.y.z)
+
+@PACKAGE_INIT@
+
+set_and_check(HAL_INSTALL_LIBDIR   "@PACKAGE_INSTALL_LIBDIR@")
+
+file(GLOB module_paths
+     "${HAL_INSTALL_LIBDIR}/cmake/hal_*"
+)
+
+set(_hal_FIND_PARTS_REQUIRED)
+if (hal_FIND_REQUIRED)
+    set(_hal_FIND_PARTS_REQUIRED REQUIRED)
+endif()
+set(_hal_FIND_PARTS_QUIET)
+if (hal_FIND_QUIETLY)
+    set(_hal_FIND_PARTS_QUIET QUIET)
+endif()
+
+foreach(module ${hal_FIND_COMPONENTS})
+    find_package(hal_${module}
+        ${_hal_FIND_PARTS_REQUIRED}
+        ${_hal_FIND_PARTS_QUIET}
+        PATHS ${module_paths} NO_DEFAULT_PATH)
+endforeach()
+
+
