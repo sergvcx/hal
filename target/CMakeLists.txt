@@ -14,20 +14,24 @@ option(HAL_MC5103 "Build hal for mc5103" 	 OFF)
 option(HAL_MC7601 "Build hal for mc7601" 	 OFF)
 
 if(HAL_MC12101)
-	add_library(hal_mc12101 STATIC)
-	add_library(hal::hal_mc12101 ALIAS hal_mc12101)
+	add_library(mc12101 STATIC)
+	add_library(hal_mc12101 ALIAS mc12101)
+	add_library(hal::mc12101 ALIAS mc12101)
 endif()
 if(HAL_MB7707)
-	add_library(hal_mb7707 STATIC)
-	add_library(hal::hal_mb7707 ALIAS hal_mb7707)
+	add_library(mb7707 STATIC)
+	add_library(hal_mb7707 ALIAS mb7707)
+	add_library(hal::mb7707 ALIAS mb7707)
 endif()
 if(HAL_MC5103)
-	add_library(hal_mc5103 STATIC)
-	add_library(hal::hal_mc5103 ALIAS hal_mc5103)
+	add_library(mc5103 STATIC)	
+	add_library(hal_mc5103 ALIAS mc5103)
+	add_library(hal::mc5103 ALIAS mc5103)	
 endif()
 if(HAL_MC7601)
-	add_library(hal_mc7601 STATIC)
-	add_library(hal::hal_mc7601 ALIAS hal_mc7601)
+	add_library(mc7601 STATIC)
+	add_library(hal_mc7601 ALIAS mc7601)
+	add_library(hal::mc7601 ALIAS mc7601)
 endif()
 
 
@@ -55,7 +59,8 @@ set(nmc4_board_list "mc12101")
 
 set(board_list "mc12101;mc5103;mb7707;mc7601")
 foreach(board ${board_list})
-	if(NOT TARGET hal_${board})
+	set(target_name ${board})
+	if(NOT TARGET ${target_name})
 		continue()
 	endif()
 
@@ -74,10 +79,10 @@ foreach(board ${board_list})
 	message(STATUS "ARCH: ${ARCH}")
 
 
-	target_sources(hal_${board} PRIVATE ${${board}_sources})
+	target_sources(${target_name} PRIVATE ${${board}_sources})
 	add_nmc_compiler_type_option("${${board}_sources}")
 
-	set_target_properties(hal_${board}
+	set_target_properties(${target_name}
 		PROPERTIES 
 		LINKER_LANGUAGE CXX
 		ARCHIVE_OUTPUT_DIRECTORY ${ROOT}/lib
@@ -87,20 +92,21 @@ foreach(board ${board_list})
 		SOVERSION ${PROJECT_VERSION_MAJOR}
 		VERSION ${PROJECT_VERSION}
 		DEBUG_POSTFIX d
+		OUTPUT_NAME hal_${board}
 		)
-	target_include_directories(hal_${board} 
+	target_include_directories(${target_name}
 		PUBLIC 
 			"$<BUILD_INTERFACE:${ROOT}/include>"
 			"$<INSTALL_INTERFACE:include>" #install-prefix/include		
 		)
 	set(board_with_ext_include "mc12101;mb7707;mc5103;mc7601")
 	if(board IN_LIST board_with_ext_include)
-		target_include_directories(hal_${board} PRIVATE src/1879vm6ya)
+		target_include_directories(${target_name} PRIVATE src/1879vm6ya)
 	endif()
-	target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-m${ARCH};-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
-	target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-Wall;-m${ARCH}>)
-	target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>)
-	target_compile_options(hal_${board} PUBLIC $<$<COMPILE_LANGUAGE:C>:-std=c99>)
+	target_compile_options(${target_name} PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-m${ARCH};-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
+	target_compile_options(${target_name} PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-Wall;-m${ARCH}>)
+	target_compile_options(${target_name} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>)
+	target_compile_options(${target_name} PUBLIC $<$<COMPILE_LANGUAGE:C>:-std=c99>)
 	set_source_files_properties(${ROOT}/src_printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
 
 	string(TOUPPER ${board} BOARD)
@@ -111,7 +117,7 @@ foreach(board ${board_list})
 			PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR)
 		write_basic_package_version_file(hal_${board}-config-version.cmake
 			COMPATIBILITY SameMajorVersion)
-		install(TARGETS hal_${board} EXPORT hal_${board}_export
+		install(TARGETS ${target_name} EXPORT hal_${board}_export
 			ARCHIVE 
 				COMPONENT hal_${board}-dev
 			PUBLIC_HEADER 

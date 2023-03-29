@@ -11,20 +11,24 @@ option(HAL_MC5103 "Build hal host part for mc5103" 	 OFF)
 option(HAL_MC7601 "Build hal host part for mc7601" 	 OFF)
 
 if(HAL_MC12101)
-	add_library(hal_mc12101_host STATIC)
-	add_library(hal::hal_mc12101_host ALIAS hal_mc12101_host)
+	add_library(mc12101_host STATIC)
+	add_library(hal_mc12101_host ALIAS mc12101_host)
+	add_library(hal::mc12101_host ALIAS mc12101_host)
 endif()
 if(HAL_MB7707)
-	add_library(hal_mb7707_host STATIC)
-	add_library(hal::hal_mb7707_host ALIAS hal_mb7707_host)
+	add_library(mb7707_host STATIC)
+	add_library(hal_mb7707_host ALIAS mb7707_host)
+	add_library(hal::mb7707_host ALIAS mb7707_host)
 endif()
 if(HAL_MC5103)
-	add_library(hal_mc5103_host STATIC)
-	add_library(hal::hal_mc5103_host ALIAS hal_mc5103_host)
+	add_library(mc5103_host STATIC)	
+	add_library(hal_mc5103_host ALIAS mc5103_host)
+	add_library(hal::mc5103_host ALIAS mc5103_host)
 endif()
 if(HAL_MC7601)
-	add_library(hal_mc7601_host STATIC)
-	add_library(hal::hal_mc7601_host ALIAS hal_mc7601_host)
+	add_library(mc7601_host STATIC)
+	add_library(hal_mc7601_host ALIAS mc7601_host)
+	add_library(hal::mc7601_host ALIAS mc7601_host)
 endif()
 
 
@@ -78,7 +82,9 @@ set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 set(SYSCONFIG_INSTALL_DIR ${CMAKE_INSTALL_SYSCONFDIR})
 
 foreach(board ${board_list})
-	if(NOT TARGET hal_${board}_host)
+
+	set(target_name ${board}_host)
+	if(NOT TARGET ${target_name})
 		continue()
 	endif()
 	string(TOUPPER ${board} BOARD)
@@ -92,8 +98,8 @@ foreach(board ${board_list})
 		${CMAKE_CURRENT_LIST_FILE})
 
 
-	target_sources(hal_${board}_host PRIVATE ${sources})
-	set_target_properties(hal_${board}_host 
+	target_sources(${target_name} PRIVATE ${sources})
+	set_target_properties(${target_name} 
 		PROPERTIES 
 		CXX_STANDARD 11
 		LINKER_LANGUAGE CXX
@@ -101,8 +107,9 @@ foreach(board ${board_list})
 		ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${ROOT}/lib
 		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${ROOT}/lib
 		PUBLIC_HEADER "${public_headers}"
-		DEBUG_POSTFIX d)	
-	target_include_directories(hal_${board}_host 
+		DEBUG_POSTFIX d
+		OUTPUT_NAME hal_${board}_host)	
+	target_include_directories(${target_name} 
 		PUBLIC 
 			$<BUILD_INTERFACE:${ROOT}/include>
 	  		$<INSTALL_INTERFACE:include> 
@@ -110,9 +117,9 @@ foreach(board ${board_list})
 			${ROOT}/src/io/host_io
 			${${BOARD}_INCLUDE}
 		)
-	target_compile_definitions(hal_${board}_host PUBLIC NM6405 SILENT)
+	target_compile_definitions(${target_name} PUBLIC NM6405 SILENT)
 	if(UNIX)
-		target_compile_options(hal_${board}_host PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
+		target_compile_options(${target_name} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 	endif()
 	#install host lib
 	if(HAL_${BOARD}_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
@@ -121,8 +128,8 @@ foreach(board ${board_list})
 			PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR)
 		write_basic_package_version_file(hal_${board}_host-config-version.cmake
 	    	COMPATIBILITY SameMajorVersion)
-	    install(TARGETS hal_${board}_host EXPORT hal_${board}_host_export
-	    	ARCHIVE 
+	    install(TARGETS ${target_name}  EXPORT hal_${board}_host_export
+	    	ARCHIVE 	
 	    		COMPONENT hal_${board}_host-dev
 	    	PUBLIC_HEADER 
 	    		COMPONENT hal_${board}_host-dev   )

@@ -7,17 +7,29 @@ X64_TOOLCHAIN="Visual Studio 15 2017 Win64"
 #X64_TOOLCHAIN="Visual Studio 16 2019"
 NMC_TOOLCHAIN="Ninja"
 else 
-X64_TOOLCHAIN="Unix Makefiles"
+X64_TOOLCHAIN="Ninja"
 NMC_TOOLCHAIN="Ninja"
 endif
 
 
 
 mc12101:
-	cmake -S . --preset=hal-mc12101
-	cmake --build build/hal-mc12101
-	cmake -S . --preset=hal-mc12101-host-msvc
-	cmake --build build/hal-mc12101-host-msvc
+	cmake -S target -B build/target/release -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
+	cmake -S target -B build/target/debug   -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
+	cmake --build build/target/release
+	cmake --build build/target/debug
+	cmake -S host -B build/host/release -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Release -G $(X64_TOOLCHAIN)
+	cmake -S host -B build/host/debug   -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Debug -G $(X64_TOOLCHAIN)
+	cmake --build build/host/release
+	cmake --build build/host/debug
+	cmake -S . -B build/pack -D HAL_PACK=ON -G $(NMC_TOOLCHAIN)
+	cpack --config build/pack/CPackConfig.cmake -G 7Z
+
+mc12101-self-install: 
+	cmake --install build/target/debug --prefix ./hal-0.1.0-Linux
+	cmake --install build/target/release --prefix ./hal-0.1.0-Linux
+	cmake --install build/host/debug --prefix ./hal-0.1.0-Linux
+	cmake --install build/host/release --prefix ./hal-0.1.0-Linux
 
 mb7707:
 	cmake -S . --preset=hal-mb7707

@@ -13,6 +13,6 @@ endif()
 
 set(board mc12101)
 add_executable(${board}_open_close_test open_close/main.cpp)
-target_link_libraries(${board}_open_close_test PUBLIC hal::hal_${board}_host)
+target_link_libraries(${board}_open_close_test PUBLIC hal::${board}_host)
 add_test(NAME ${board}_open_close_test 
 		COMMAND ${board}_open_close_test)
