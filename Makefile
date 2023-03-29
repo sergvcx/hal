@@ -3,8 +3,8 @@ SHELL=cmd
 space := $(subst ,, )
 NMC_TOOLPATH=$(subst $(space),\$(space),$(NMC_GCC_TOOLPATH))
 -include $(NMC_TOOLPATH)\nmc4-ide\include\nmc4vars_win.mk
-X64_TOOLCHAIN="Visual Studio 15 2017 Win64"
-#X64_TOOLCHAIN="Visual Studio 16 2019"
+#X64_TOOLCHAIN="Visual Studio 15 2017 Win64"
+X64_TOOLCHAIN="Visual Studio 16 2019"
 NMC_TOOLCHAIN="Ninja"
 else 
 X64_TOOLCHAIN="Ninja"
@@ -22,7 +22,7 @@ mc12101:
 	cmake -S host -B build_pack/host/debug   -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Debug -G $(X64_TOOLCHAIN)
 	cmake --build build_pack/host/release
 	cmake --build build_pack/host/debug
-	cmake -S . -B build_pack/pack -D HAL_PACK=ON -G $(NMC_TOOLCHAIN)
+	cmake -S . -B build_pack/pack -D HAL_PACK=ON -G $(X64_TOOLCHAIN)
 	cpack --config build_pack/pack/CPackConfig.cmake -G 7Z
 
 mc12101-self-install: mc12101
