@@ -1,4 +1,3 @@
-set(HAL_@BOARD@_HOST_VERSION x.y.z)
 
 @PACKAGE_INIT@
 string(TOLOWER @BOARD@ board)

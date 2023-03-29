@@ -14,23 +14,23 @@ endif
 
 
 mc12101:
-	cmake -S target -B build/target/release -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
-	cmake -S target -B build/target/debug   -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
-	cmake --build build/target/release
-	cmake --build build/target/debug
-	cmake -S host -B build/host/release -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Release -G $(X64_TOOLCHAIN)
-	cmake -S host -B build/host/debug   -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Debug -G $(X64_TOOLCHAIN)
-	cmake --build build/host/release
-	cmake --build build/host/debug
-	cmake -S . -B build/pack -D HAL_PACK=ON -G $(NMC_TOOLCHAIN)
-	cpack --config build/pack/CPackConfig.cmake -G 7Z
+	cmake -S target -B build_pack/target/release -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
+	cmake -S target -B build_pack/target/debug   -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
+	cmake --build build_pack/target/release
+	cmake --build build_pack/target/debug
+	cmake -S host -B build_pack/host/release -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Release -G $(X64_TOOLCHAIN)
+	cmake -S host -B build_pack/host/debug   -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Debug -G $(X64_TOOLCHAIN)
+	cmake --build build_pack/host/release
+	cmake --build build_pack/host/debug
+	cmake -S . -B build_pack/pack -D HAL_PACK=ON -G $(NMC_TOOLCHAIN)
+	cpack --config build_pack/pack/CPackConfig.cmake -G 7Z
 
 mc12101-self-install: mc12101
-	cmake --install build/target/debug --prefix ./hal-0.1.0-Linux
-	cmake --install build/target/release --prefix ./hal-0.1.0-Linux
-	cmake --install build/host/debug --prefix ./hal-0.1.0-Linux
-	cmake --install build/host/release --prefix ./hal-0.1.0-Linux
-	cmake --install build/pack --prefix ./hal-0.1.0-Linux
+	cmake --install build_pack/target/debug --prefix ./hal-0.1.0-Linux
+	cmake --install build_pack/target/release --prefix ./hal-0.1.0-Linux
+	cmake --install build_pack/host/debug --prefix ./hal-0.1.0-Linux
+	cmake --install build_pack/host/release --prefix ./hal-0.1.0-Linux
+	cmake --install build_pack/pack --prefix ./hal-0.1.0-Linux
 
 mb7707:
 	cmake -S . --preset=hal-mb7707

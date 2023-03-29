@@ -1,4 +1,3 @@
-set(HAL_VERSION x.y.z)
 
 @PACKAGE_INIT@
 
