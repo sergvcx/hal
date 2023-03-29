@@ -10,8 +10,8 @@ add_subdirectory(host)
 
 
 add_custom_target(nm-gen
-	COMMAND ${CMAKE_COMMAND} -S target -B build_nm -G Ninja -D hal_DIR=${HAL_PATH}/lib/cmake/hal)
+	COMMAND ${CMAKE_COMMAND} -S ${CMAKE_CURRENT_LIST_DIR}/target -B ${CMAKE_CURRENT_LIST_DIR}/build_nm -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH} -G Ninja )
 
 add_custom_target(nm-build ALL
-	COMMAND ${CMAKE_COMMAND} --build build_nm
+	COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/build_nm
 	DEPENDS nm-gen)
