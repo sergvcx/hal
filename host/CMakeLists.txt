@@ -3,7 +3,7 @@ set(root ${CMAKE_CURRENT_LIST_DIR}/..)
 
 project(hal-host
 	LANGUAGES C CXX
-	VERSION 0.1.0)
+	VERSION 0.1.2)
 
 option(HAL_MC12101 "Build hal host part for mc12101"  OFF)
 option(HAL_MB7707 "Build hal host part for mb7707" 	 OFF)
@@ -121,12 +121,17 @@ foreach(board ${board_list})
 	if(UNIX)
 		target_compile_options(${target_name} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 	endif()
+	
 	#install host lib
+	set(config_dst ${ROOT}/lib/cmake/hal_${board}_host)
 	if(HAL_${BOARD}_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
-		configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/hal_host-config.cmake.in hal_${board}_host-config.cmake
+		configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/hal_host-config.cmake.in 
+			${config_dst}/hal_${board}_host-config.cmake
 	    	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}_host
 			PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR)
-		write_basic_package_version_file(hal_${board}_host-config-version.cmake
+		write_basic_package_version_file(
+			${config_dst}/hal_${board}_host-config-version.cmake
+			VERSION "${PROJECT_VERSION}"
 	    	COMPATIBILITY SameMajorVersion)
 	    install(TARGETS ${target_name}  EXPORT hal_${board}_host_export
 	    	ARCHIVE 	
@@ -138,9 +143,12 @@ foreach(board ${board_list})
 	    	FILE hal_${board}_host-targets.cmake
 	    	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}_host
 	    	NAMESPACE hal::)
+		export(TARGETS ${target_name}
+			NAMESPACE hal::
+			FILE ${config_dst}/hal_${board}_host-targets.cmake)
 		install(FILES
-		    "${CMAKE_CURRENT_BINARY_DIR}/hal_${board}_host-config.cmake"
-		    "${CMAKE_CURRENT_BINARY_DIR}/hal_${board}_host-config-version.cmake"
+		    "${config_dst}/hal_${board}_host-config.cmake"
+		    "${config_dst}/hal_${board}_host-config-version.cmake"
 		    COMPONENT hal_${board}_host-dev
 		    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}_host)
 	endif()

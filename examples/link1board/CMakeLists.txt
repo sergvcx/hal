@@ -4,7 +4,15 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/../../cmake/nmc-gcc-compile.c
 project(link1board
 	LANGUAGES C CXX ASM)
 
-find_package(hal COMPONENTS mc12101 REQUIRED)
+string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"    is_top_level)
+
+if(is_top_level)
+	set(HAL_PATH "${CMAKE_CURRENT_LIST_DIR}/../.." CACHE PATH "Path to hal")
+	list(APPEND CMAKE_PREFIX_PATH "${HAL_PATH}/lib/cmake/hal")
+	find_package(hal 0.1.0 COMPONENTS mc12101 REQUIRED)
+endif()
+
+
 
 
 add_executable(nmc0 src_target0/nm_main0.cpp)

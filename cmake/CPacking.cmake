@@ -2,14 +2,18 @@ include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
 set(INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR})
-configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/hal-config.cmake.in hal-config.cmake
+set(config_dst ${CMAKE_CURRENT_LIST_DIR}/../lib/cmake/hal)
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/hal-config.cmake.in 
+			${config_dst}/hal-config.cmake
 			INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal
 			PATH_VARS INSTALL_LIBDIR)
-write_basic_package_version_file(hal-config-version.cmake
+write_basic_package_version_file(
+			${config_dst}/hal-config-version.cmake
+			VERSION "${PROJECT_VERSION}"
 			COMPATIBILITY SameMajorVersion)
 install(FILES
-			"${CMAKE_CURRENT_BINARY_DIR}/hal-config.cmake"
-			"${CMAKE_CURRENT_BINARY_DIR}/hal-config-version.cmake"
+			"${config_dst}/hal-config.cmake"
+			"${config_dst}/hal-config-version.cmake"
 			COMPONENT hal-dev
 			DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/hal")
 

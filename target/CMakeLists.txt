@@ -6,7 +6,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/cmake/nmc-gcc-compile.cmake)
 project(hal-target
 	LANGUAGES C CXX ASM 
 	DESCRIPTION "Hal library, target part"
-	VERSION 0.1.0)
+	VERSION 0.1.1)
 
 option(HAL_MC12101 "Build hal for mc12101" OFF)
 option(HAL_MB7707 "Build hal for mb7707" 	 OFF)
@@ -109,12 +109,16 @@ foreach(board ${board_list})
 	set_source_files_properties(${ROOT}/src_printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
 
 	string(TOUPPER ${board} BOARD)
+	set(config_dst ${ROOT}/lib/cmake/hal_${board})
 
 	if(HAL_${BOARD}_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
-		configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/hal_target-config.cmake.in hal_${board}-config.cmake
+		configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/hal_target-config.cmake.in 
+			${config_dst}/hal_${board}-config.cmake
 			INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}
 			PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR)
-		write_basic_package_version_file(hal_${board}-config-version.cmake
+		write_basic_package_version_file(
+			${config_dst}/hal_${board}-config-version.cmake
+			VERSION "${PROJECT_VERSION}"
 			COMPATIBILITY SameMajorVersion)
 		install(TARGETS ${target_name} EXPORT hal_${board}_export
 			ARCHIVE 
@@ -126,9 +130,12 @@ foreach(board ${board_list})
 			FILE hal_${board}-targets.cmake
 			DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}
 			NAMESPACE hal::)
+		export(TARGETS ${target_name}
+			NAMESPACE hal::
+			FILE ${config_dst}/hal_${board}-targets.cmake)
 		install(FILES
-			"${CMAKE_CURRENT_BINARY_DIR}/hal_${board}-config.cmake"
-			"${CMAKE_CURRENT_BINARY_DIR}/hal_${board}-config-version.cmake"
+			"${config_dst}/hal_${board}-config.cmake"
+			"${config_dst}/hal_${board}-config-version.cmake"
 			COMPONENT hal_${board}-dev
 			DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}")
 	endif()
