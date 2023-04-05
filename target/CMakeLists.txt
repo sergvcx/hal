@@ -124,7 +124,8 @@ foreach(board ${board_list})
 			ARCHIVE 
 				COMPONENT hal_${board}-dev
 			PUBLIC_HEADER 
-				COMPONENT hal_${board}-dev)
+				COMPONENT hal_${board}-dev
+				DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 		install(EXPORT hal_${board}_export
 			COMPONENT hal_${board}-dev
 			FILE hal_${board}-targets.cmake

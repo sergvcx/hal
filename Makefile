@@ -7,74 +7,72 @@ NMC_TOOLPATH=$(subst $(space),\$(space),$(NMC_GCC_TOOLPATH))
 X64_TOOLCHAIN="Visual Studio 16 2019"
 NMC_TOOLCHAIN="Ninja"
 else 
-X64_TOOLCHAIN="Ninja"
+X64_TOOLCHAIN="Ninja Multi-Config"
 NMC_TOOLCHAIN="Ninja"
 endif
 
 
 
 mc12101:
-	cmake -S target -B build_pack/target/release -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
-	cmake -S target -B build_pack/target/debug   -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
-	cmake --build build_pack/target/release
-	cmake --build build_pack/target/debug
-	cmake -S host -B build_pack/host/release -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Release -G $(X64_TOOLCHAIN)
-	cmake -S host -B build_pack/host/debug   -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Debug -G $(X64_TOOLCHAIN)
-	cmake --build build_pack/host/release
-	cmake --build build_pack/host/debug
-	cmake -S . -B build_pack/pack -D HAL_PACK=ON -G $(X64_TOOLCHAIN)
-	cpack --config build_pack/pack/CPackConfig.cmake -G 7Z
-
-mc12101-self-install: mc12101
-	cmake --install build_pack/target/debug --prefix ./hal-0.1.0-Linux
-	cmake --install build_pack/target/release --prefix ./hal-0.1.0-Linux
-	cmake --install build_pack/host/debug --prefix ./hal-0.1.0-Linux
-	cmake --install build_pack/host/release --prefix ./hal-0.1.0-Linux
-	cmake --install build_pack/pack --prefix ./hal-0.1.0-Linux
+	cmake -S target -B build/$@/target/release -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
+	cmake -S target -B build/$@/target/debug   -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
+	cmake --build build/$@/target/release
+	cmake --build build/$@/target/debug
+	cmake -S host -B build/$@/host -D HAL_MC12101=ON -G $(X64_TOOLCHAIN)	
+	cmake --build build/$@/host --config Release
+	cmake --build build/$@/host --config Debug
 
 mb7707:
-	cmake -S . --preset=hal-mb7707
-	cmake --build build/hal-mb7707
-	cmake -S . --preset=hal-mb7707-host-msvc
-	cmake --build build/hal-mb7707-host-msvc
+	cmake -S target -B build/$@/target/release -D HAL_MB7707=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
+	cmake -S target -B build/$@/target/debug   -D HAL_MB7707=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
+	cmake --build build/$@/target/release
+	cmake --build build/$@/target/debug
+	cmake -S host -B build/$@/host -D HAL_MB7707=ON -G $(X64_TOOLCHAIN)	
+	cmake --build build/$@/host --config Release
+	cmake --build build/$@/host --config Debug
 
 mc5103:
-	cmake -S . --preset=hal-mc5103
-	cmake --build build/hal-mc5103
-	cmake -S . --preset=hal-mc5103-host-msvc
-	cmake --build build/hal-mc5103-host-msvc
+	cmake -S target -B build/$@/target/release -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
+	cmake -S target -B build/$@/target/debug   -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
+	cmake --build build/$@/target/release
+	cmake --build build/$@/target/debug
+	cmake -S host -B build/$@/host -D HAL_MC5103=ON -G $(X64_TOOLCHAIN)	
+	cmake --build build/$@/host --config Release
+	cmake --build build/$@/host --config Debug
 
 mc7601: 
-	cmake -S . --preset=hal-mc7601
-	cmake --build build/hal-mc7601
-	cmake -S . --preset=hal-mc7601-host-msvc
-	cmake --build build/hal-mc7601-host-msvc
+	cmake -S target -B build/$@/target/release -D HAL_MC7601=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
+	cmake -S target -B build/$@/target/debug   -D HAL_MC7601=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
+	cmake --build build/$@/target/release
+	cmake --build build/$@/target/debug
+	cmake -S host -B build/$@/host -D HAL_MC7601=ON -G $(X64_TOOLCHAIN)	
+	cmake --build build/$@/host --config Release
+	cmake --build build/$@/host --config Debug
 
 virtual: 
-	cmake -S . --preset=hal-virtual-msvc
-	cmake --build build/hal-virtual-msvc	
+	cmake -S host -B build/$@/virtual -D HAL_MC7601=ON -G $(X64_TOOLCHAIN)	
+	cmake --build build/$@/virtual --config Release
+	cmake --build build/$@/virtual --config Debug
 
-pack:
-	cmake -S target  -B build_pack/target/release  	-D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
-	cmake -S target  -B build_pack/target/debug  	-D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Debug   -G $(NMC_TOOLCHAIN)
-	cmake --build build_pack/target/release
-	cmake --build build_pack/target/debug
-ifeq ($(OS),Windows_NT)
-	cmake -S host    -B build_pack/host	-D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -G $(X64_TOOLCHAIN)	
-	cmake --build build_pack/host --config Release
-	cmake --build build_pack/host --config Debug
-#	cmake -S virtual -B build_pack/virtual 	-G $(X64_TOOLCHAIN)
-#	cmake --build build_pack/virtual --config Release
-#	cmake --build build_pack/virtual --config Debug
-else
-	cmake -S host    -B build_pack/host/release -D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Release -G $(X64_TOOLCHAIN)
-	cmake -S host    -B build_pack/host/debug   -D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Debug   -G $(X64_TOOLCHAIN)
-	cmake --build build_pack/host/release
-	cmake --build build_pack/host/debug
-#	cmake -S virtual -B build_pack/virtual/release 	-D CMAKE_BUILD_TYPE=Release -G $(X64_TOOLCHAIN)
-#	cmake -S virtual -B build_pack/virtual/debug	-D CMAKE_BUILD_TYPE=Debug 	-G $(X64_TOOLCHAIN)
-#	cmake --build build_pack/virtual/release
-#	cmake --build build_pack/virtual/debug
-endif
-	cmake -S . -B build_pack/pack -D HAL_PACK=ON -G $(X64_TOOLCHAIN)
-	cpack --config build_pack/pack/CPackConfig.cmake -G 7Z -C "Debug;Release"
+pack-mc12101: mc12101
+	cmake -S . -B build/pack -D HAL_PACK=ON -G $(X64_TOOLCHAIN) -D HAL_MC12101=ON
+	cpack --config build/pack/CPackConfig.cmake -G 7Z -C "Debug;Release"
+
+pack-mb7707: mb7707
+	cmake -S . -B build/pack -D HAL_PACK=ON -G $(X64_TOOLCHAIN) -D HAL_MB7707=ON
+	cpack --config build/pack/CPackConfig.cmake -G 7Z -C "Debug;Release"
+
+pack-mc5103: mc5103
+	cmake -S . -B build/pack -D HAL_PACK=ON -G $(X64_TOOLCHAIN) -D HAL_MC5103=ON
+	cpack --config build/pack/CPackConfig.cmake -G 7Z -C "Debug;Release"
+
+pack-mc7601: mc7601
+	cmake -S . -B build/pack -D HAL_PACK=ON -G $(X64_TOOLCHAIN) -D HAL_MC7601=ON
+	cpack --config build/pack/CPackConfig.cmake -G 7Z -C "Debug;Release"
+
+pack-all: mc12101 mb7707 mc5103 mc7601
+	cmake -S . -B build/pack -D HAL_PACK=ON -G $(X64_TOOLCHAIN) -D HAL_MC12101=ON -D HAL_MB7707=ON -D HAL_MC7601=ON -D HAL_MC5103=ON
+	cpack --config build/pack/CPackConfig.cmake -G 7Z -C "Debug;Release"
+
+clean:
+	rm -r build lib

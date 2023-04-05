@@ -10,7 +10,7 @@
 * работу со светодиодами, задержками, DMA и прерываниями 
 * обеспечивает вывод printf на консоль
  
-Поддерживаемые модули: МС51.03 , MС76.01, МВ77.07, МС12101
+Поддерживаемые модули: МС51.03 , MС76.01, МВ77.07, МС121.01
 
 
 # Установка HAL 
@@ -26,20 +26,9 @@
 [Visual Studio 2005 Express](http://apdubey.blogspot.ru/2009/04/microsoft-visual-studio-2005-express.html)  
 [Visual Studio Express](https://visualstudio.microsoft.com/ru/vs/older-downloads/)  
 
-*  Сборка компонент (статические lib-библиотеки, тесты, примеры) построена на Makefile скриптах. Для корректного запуска сборочных Makefile-ов  под Windows требуется установленный GNU **make**.
-Для ОС Windows рекомендуется версия make [3.81](https://sourceforge.net/projects/gnuwin32/files/make/3.81/)  (3.82- проявляет себя нестабильно). 
+*  Сборка компонент (статические lib-библиотеки, тесты, примеры) построена на CMake. 
 
-* Генерация сборочных проектов x86/x64 библиотек/тестов, в т.ч. для VisualStudio, осуществляется [premake5](https://premake.github.io/)  версией не ниже premake-5.0.0-alpha14
-
-* Для обеспечения полной функциональности Makefile-ов (тестов/примеров/генерации проектов и .т.д.), а также кросс-платформенной работы Makefile как в ОС Windows, так и в Linux  используются :    UNIX-утилиты:   
-[rm,cp,mkdir,rmdir,...](http://gnuwin32.sourceforge.net/packages/coreutils.htm )  
-[find](http://gnuwin32.sourceforge.net/packages/findutils.htm ) (требует переимнования в gfind.exe для устранения конфликта
- с системным Windows\System32\find.exe)  
-
-* Пути к premake и GnuWin утилитами должны быть прописаны в PATH 
-
-
-
+##
 
 ## Сборка NeuroMatrix библиотек  NMC-GCC  компилятором 
   Сборка осуществляется командой ```make nmcgcc``` из соответствующей плате папки */make/hal_board*. 

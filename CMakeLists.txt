@@ -8,6 +8,7 @@ endif()
 
 project(hal VERSION 0.1.0)
 
+string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"   is_top_level)
 
 option(HAL_MC12101 "Build hal for mc12101" OFF)
 option(HAL_MB7707 "Build hal for mb7707" OFF)
@@ -15,11 +16,7 @@ option(HAL_MC5103 "Build hal for mc5103" OFF)
 option(HAL_MC7601 "Build hal for mc7601" OFF)
 option(HAL_PACK "Create configuration for cpack and exit" OFF)
 option(HAL_TESTS "Enable tests" ON)
-set(HAL_MC12101_INSTALL ${HAL_MC12101})
-set(HAL_MB7707_INSTALL ${HAL_MB7707})
-set(HAL_MC5103_INSTALL ${HAL_MC5103})
-set(HAL_MC7601_INSTALL ${HAL_MC7601})
-
+#set(boards "mc12101;mc7601;mc5103;mb7707")
 
 
 
@@ -28,7 +25,7 @@ if(HAL_PACK)
 	return()
 endif()
 
-string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"   is_top_level)
+
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/utils.cmake)
 if(is_top_level)
 	enable_testing()
