@@ -121,7 +121,8 @@ foreach(board ${board_list})
 		write_basic_package_version_file(
 			${config_dst}/hal_${board}-config-version.cmake
 			VERSION "${PROJECT_VERSION}"
-			COMPATIBILITY SameMajorVersion)
+			COMPATIBILITY SameMajorVersion
+			ARCH_INDEPENDENT)
 		install(TARGETS ${target_name} EXPORT hal_${board}_export
 			ARCHIVE 
 				COMPONENT hal_${board}-dev
