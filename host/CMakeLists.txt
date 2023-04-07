@@ -50,6 +50,7 @@ set(MC7601_BSP $ENV{MC7601}			   	CACHE PATH "Path to mc7601  bsp")
 include(CMakePackageConfigHelpers)
 include(GenerateExportHeader)
 include(GNUInstallDirs)
+include(../cmake/utils.cmake)
 
 
 set(ROOT ${CMAKE_CURRENT_LIST_DIR}/..)
@@ -125,6 +126,7 @@ foreach(board ${board_list})
 	#install host lib
 	set(config_dst ${ROOT}/lib/cmake/hal_${board}_host)
 	if(HAL_${BOARD}_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
+		configure_common_config()
 		configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/hal_host-config.cmake.in 
 			${config_dst}/hal_${board}_host-config.cmake
 	    	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}_host

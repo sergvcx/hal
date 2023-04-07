@@ -46,6 +46,7 @@ option(HAL_MC7601_INSTALL "Build hal for mc7601" 	 ${is_top_level})
 include(CMakePackageConfigHelpers)
 include(cmake/utils.cmake)
 include(GNUInstallDirs)
+include(../cmake/utils.cmake)
 
 
 
@@ -112,6 +113,7 @@ foreach(board ${board_list})
 	set(config_dst ${ROOT}/lib/cmake/hal_${board})
 
 	if(HAL_${BOARD}_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
+		configure_common_config()
 		configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/hal_target-config.cmake.in 
 			${config_dst}/hal_${board}-config.cmake
 			INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}

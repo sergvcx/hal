@@ -7,6 +7,24 @@ if(WIN32)
 	LIST(APPEND CMAKE_PROGRAM_PATH ${path_bin} ${path_lib})
 endif()
 
+function(configure_common_config)
+	set(config_dst ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../lib/cmake/hal)
+	set(INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR})
+	configure_package_config_file(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/hal-config.cmake.in 
+				${config_dst}/hal-config.cmake
+				INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal
+				PATH_VARS INSTALL_LIBDIR)
+	write_basic_package_version_file(
+				${config_dst}/hal-config-version.cmake
+				VERSION "${PROJECT_VERSION}"
+				COMPATIBILITY SameMajorVersion)
+	install(FILES
+				"${config_dst}/hal-config.cmake"
+				"${config_dst}/hal-config-version.cmake"
+				COMPONENT hal-dev
+				DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/hal")
+endfunction()
+
 macro(add_nm_build_target board nm_generator)
 
 	set(destination_binary_dir ${CMAKE_CURRENT_BINARY_DIR}/hal_${board})

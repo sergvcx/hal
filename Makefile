@@ -11,6 +11,7 @@ X64_TOOLCHAIN="Ninja Multi-Config"
 NMC_TOOLCHAIN="Ninja"
 endif
 
+.DEFAULT_GOAL := mytarget
 
 
 mc12101:

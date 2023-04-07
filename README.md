@@ -18,49 +18,33 @@
 * NeuroMatrix NMGCC-SDK  
   Для сборки библиотек под NeuroMatrix  gcc компилятором 
 
-* Leqacy NeuroMatrix SDK  (устаревшая версия SDK)
-  Для сборки библиотек под NeuroMatrix предыдущим компилятором требуется  NMSDK версией не ниже 3.07
-
 * x86/x64 SDK   
   Для эмуляции NeuroMatrix функций из состава NMPP под x86/x64 возможна сборка библиотек с помощью   Gnu GCC.  http://www.mingw.org/  или http://win-builds.org/doku.php или Microsoft Visual Studio, и в частности версиями Express:  
 [Visual Studio 2005 Express](http://apdubey.blogspot.ru/2009/04/microsoft-visual-studio-2005-express.html)  
 [Visual Studio Express](https://visualstudio.microsoft.com/ru/vs/older-downloads/)  
 
-*  Сборка компонент (статические lib-библиотеки, тесты, примеры) построена на CMake. 
+* CMake
 
-##
+* Ninja 
+
+* Сборка компонент (статические lib-библиотеки, тесты, примеры) построена на CMake. 
+
 
 ## Сборка NeuroMatrix библиотек  NMC-GCC  компилятором 
-  Сборка осуществляется командой ```make nmcgcc``` из соответствующей плате папки */make/hal_board*. 
+  Генерация проект происходит с помощью Cmake.  
+  cmake -S . -B build -D HAL_BOARD=ON -D HAL_TYPE=TYPE
   
-```
-hal> cd make-mc12101
-hal/make-mc12101> make nmcgcc
-```
-## Сборка NeuroMatrix библиотек Legacy  компилятором 
-  Сборка устравшим компилятором осуществляется командой ```make``` с ключом ```legacy``` из соответствующей плате папки */make/hal_board*. 
-  
-```
-hal> cd make-mc12101
-hal/make-mc12101> make legacy
-```
 
-## Сборка x86/x64 библиотек  
-  Генерация проектов библиотек оcуществляется средствами [**premake5**](https://premake.github.io/).  
-  Сконфигурировать проект под нужный SDK и собрать его можно командой   
- 
-```\hal\make-mc12101> make vs2015 ```  
-
-где с помощью ключей:  vs2008, vs20015, vs2017 , unix, mingw ...
-указывается требуемый SDK   
-
-> по умолчания команда 
-> ```\hal\make-mc12101> make ```   равносильна
-> ```\hal\make-mc12101> make nmcgcc vs2015 ```  
+  Чтобы собрать для всех плат
 
 ## Настройка переменных окружения  
 
 Для удобства подключения библиотек к собственным проектам, а также примерам и тестам  рекомендуется использовать переменную окружения **HAL**. Создать переменную **HAL** и присвоить ей путь к установленной папке hal можно с помощью команды  
 ```\hal> make setenv```
 
+## Создание архива
+Собранную библиотеку можно упаковать в архив командой
+
+Например ждя архивирования библиотек для платы mc12101 не обходимо выполнить команду
+```make pack-mc12101```
 
