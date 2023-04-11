@@ -6,6 +6,7 @@ list(APPEND CMAKE_PREFIX_PATH "${HAL_PATH}/lib/cmake/hal")
 	
 	
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/../../../cmake/nmc-gcc-compile.cmake)
+list(APPEND CMAKE_PREFIX_PATH ${CURRENT_LIST_DIR}/../../../lib/cmake/hal)
 project(sync-host-nm
 	LANGUAGES C CXX ASM)
 

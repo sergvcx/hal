@@ -12,7 +12,7 @@ NMC_TOOLCHAIN="Ninja"
 endif
 
 .DEFAULT_GOAL := mytarget
-
+.PHONY: virtual
 
 mc12101:
 	cmake -S target -B build/$@/target/release -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
@@ -51,9 +51,10 @@ mc7601:
 	cmake --build build/$@/host --config Debug
 
 virtual: 
-	cmake -S host -B build/$@/virtual -D HAL_MC7601=ON -A x64
+	cmake -S virtual -B build/$@/virtual -A x64
 	cmake --build build/$@/virtual --config Release
 	cmake --build build/$@/virtual --config Debug
+
 
 pack-mc12101: mc12101
 	cmake -S . -B build/pack -D HAL_PACK=ON -A x64 -D HAL_MC12101=ON

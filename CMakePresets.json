@@ -158,6 +158,16 @@
             }
         },
         {
+            "name": "hal-virtual-mingw",
+            "displayName": "hal-virtual on mingw",
+            "inherits": "host-makefile",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "x86_64-w64-mingw32-gcc",
+                "CMAKE_CXX_COMPILER": "x86_64-w64-mingw32-g++",
+                "HAL_TYPE": "VIRTUAL"
+            }
+        },
+        {
             "name": "hal-virtual-msvc",
             "displayName": "hal-virtual on msvc",
             "inherits": "host-msvc", 
