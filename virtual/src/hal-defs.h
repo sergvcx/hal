@@ -1,4 +1,4 @@
-#include "hal.h"
+п»ї#include "hal.h"
 //TCHAR sMallocRegestryName[]=TEXT(REGISTRY_BUFFER_MAPPNING_NAME);
 //TCHAR sSharedMemName[]     =TEXT(SYNC_BUFFER_MAPPING_NAME);
 
@@ -32,12 +32,12 @@ struct SyncBuf {
 
 SyncBuf* getSyncBuffer();
 struct MappedBuffer {
-	int*     address;	// адрес разделяемого буфера 
-	unsigned size32;	// размер буфера в 32р словах 
-	int		 owner;		// владелец похоже что лишняя пременная
+	int*     address;	// Р°РґСЂРµСЃ СЂР°Р·РґРµР»В¤РµРјРѕРіРѕ Р±СѓС„РµСЂР° 
+	unsigned size32;	// СЂР°Р·РјРµСЂ Р±СѓС„РµСЂР° РІ 32СЂ СЃР»РѕРІР°С… 
+	int		 owner;		// РІР»Р°РґРµР»РµС† РїРѕС…РѕР¶Рµ С‡С‚Рѕ Р»РёС€РЅВ¤В¤ РїСЂРµРјРµРЅРЅР°В¤
 	HANDLE   handle;
-	int*	 mappedAddress[MAX_COUNT_PROCESSORS];	// под этими адресами видят сей буфер другие процессы
-	int*	 mappedDiff[MAX_COUNT_PROCESSORS];		// смещение, которое необходимо  добавить к адресу в сием буффере чтобы получить отмпапированный адрес для другого процесса 
+	int*	 mappedAddress[MAX_COUNT_PROCESSORS];	// РїРѕРґ СЌС‚РёРјРё Р°РґСЂРµСЃР°РјРё РІРёРґВ¤С‚ СЃРµР№ Р±СѓС„РµСЂ РґСЂСѓРіРёРµ РїСЂРѕС†РµСЃСЃС‹
+	int*	 mappedDiff[MAX_COUNT_PROCESSORS];		// СЃРјРµС‰РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ РЅРµРѕР±С…РѕРґРёРјРѕ  РґРѕР±Р°РІРёС‚СЊ Рє Р°РґСЂРµСЃСѓ РІ СЃРёРµРј Р±СѓС„С„РµСЂРµ С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ РѕС‚РјРїР°РїРёСЂРѕРІР°РЅРЅС‹Р№ Р°РґСЂРµСЃ РґР»В¤ РґСЂСѓРіРѕРіРѕ РїСЂРѕС†РµСЃСЃР° 
 };   
 
 struct BufferRegistry {

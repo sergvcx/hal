@@ -1,4 +1,4 @@
-void halInstrCacheEnable(){
+﻿void halInstrCacheEnable(){
 	
 }
 void halInstrCacheDisable(){

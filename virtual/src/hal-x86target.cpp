@@ -1,4 +1,4 @@
-#include "hal_target.h"
+п»ї#include "hal_target.h"
 #include "hal.h"
 #include <windows.h>
 #include <stdio.h>
@@ -19,29 +19,29 @@ extern int procNo;
 #define TRACE(str) printf("%s", str)
 
 struct SharedMemory {
-	SharedMemory* hostOwnAddr;												// адрес под которым хост видит эту структуру
-	SharedMemory* procOwnAddr[MAX_COUNT_PROCESSORS];						// адрес под которым каждый процессора видит SharedMemory 
-	SyncBuf		 hostSyncBuff[MAX_COUNT_PROCESSORS];						// структура для синхронизация с хостом - nmc
-	SyncBuf		 procSyncBuff[MAX_COUNT_PROCESSORS][MAX_COUNT_PROCESSORS];	// nmc-nmc межпроцессорная синхронизция (ипользуется половина)
-	long long 	 hostMapDiff [MAX_COUNT_PROCESSORS];						// смещение для пересчета адресов при их пересылке между процессором и хостом 
-	long long	 procMapDiff [MAX_COUNT_PROCESSORS][MAX_COUNT_PROCESSORS];	// смещения для пересчета адресов при их пересылке между процессорами
-	Heap<0x8200000> heap;													// общая разделяемая куча
-	// (256*1024*1024*2+4*1024*1024*2)/4 = 8200000
+	SharedMemory* hostOwnAddr;												// Р°РґСЂРµСЃ РїРѕРґ РєРѕС‚РѕСЂС‹Рј С…РѕСЃС‚ РІРёРґРёС‚ СЌС‚Сѓ СЃС‚СЂСѓРєС‚СѓСЂСѓ
+	SharedMemory* procOwnAddr[MAX_COUNT_PROCESSORS];						// Р°РґСЂРµСЃ РїРѕРґ РєРѕС‚РѕСЂС‹Рј РєР°Р¶РґС‹Р№ РїСЂРѕС†РµСЃСЃРѕСЂР° РІРёРґРёС‚ SharedMemory 
+	SyncBuf		 hostSyncBuff[MAX_COUNT_PROCESSORS];						// СЃС‚СЂСѓРєС‚СѓСЂР° РґР»СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ СЃ С…РѕСЃС‚РѕРј - nmc
+	SyncBuf		 procSyncBuff[MAX_COUNT_PROCESSORS][MAX_COUNT_PROCESSORS];	// nmc-nmc РјРµР¶РїСЂРѕС†РµСЃСЃРѕСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·С†РёСЏ (РёРїРѕР»СЊР·СѓРµС‚СЃСЏ РїРѕР»РѕРІРёРЅР°)
+	long long 	 hostMapDiff [MAX_COUNT_PROCESSORS];						// СЃРјРµС‰РµРЅРёРµ РґР»СЏ РїРµСЂРµСЃС‡РµС‚Р° Р°РґСЂРµСЃРѕРІ РїСЂРё РёС… РїРµСЂРµСЃС‹Р»РєРµ РјРµР¶РґСѓ РїСЂРѕС†РµСЃСЃРѕСЂРѕРј Рё С…РѕСЃС‚РѕРј 
+	long long	 procMapDiff [MAX_COUNT_PROCESSORS][MAX_COUNT_PROCESSORS];	// СЃРјРµС‰РµРЅРёСЏ РґР»СЏ РїРµСЂРµСЃС‡РµС‚Р° Р°РґСЂРµСЃРѕРІ РїСЂРё РёС… РїРµСЂРµСЃС‹Р»РєРµ РјРµР¶РґСѓ РїСЂРѕС†РµСЃСЃРѕСЂР°РјРё
+	Heap<0x8200000> heap;													// РѕР±С‰Р°СЏ СЂР°Р·РґРµР»СЏРµРјР°СЏ РєСѓС‡Р°
+	// (256*1024*1024*2+4*1024*1024*2)/4В =В 8200000
 };
 
 SharedMemory* sharedMemory=0;
 
-// создает разделяемую структура мапируемую в память. Кто первый зашел , тот и создают . Остальные подключаются
+// СЃРѕР·РґР°РµС‚ СЂР°Р·РґРµР»СЏРµРјСѓСЋ СЃС‚СЂСѓРєС‚СѓСЂР° РјР°РїРёСЂСѓРµРјСѓСЋ РІ РїР°РјСЏС‚СЊ. РљС‚Рѕ РїРµСЂРІС‹Р№ Р·Р°С€РµР» , С‚РѕС‚ Рё СЃРѕР·РґР°СЋС‚ . РћСЃС‚Р°Р»СЊРЅС‹Рµ РїРѕРґРєР»СЋС‡Р°СЋС‚СЃСЏ
 SharedMemory* openSharedMemory() {
 	
 	if (sharedMemory == 0) {
-		// округляем размер. так надо
+		// РѕРєСЂСѓРіР»СЏРµРј СЂР°Р·РјРµСЂ. С‚Р°Рє РЅР°РґРѕ
 		unsigned sharedSize32 = sizeof(SharedMemory);
 		sharedSize32 += (64 * 1024 / 4 - 1);
 		sharedSize32 &= (~0x3FFF);
 
 		HANDLE hMapFile;
-		// пытаемся открыть существующий мап- объект
+		// РїС‹С‚Р°РµРјСЃСЏ РѕС‚РєСЂС‹С‚СЊ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ РјР°Рї- РѕР±СЉРµРєС‚
 		for (int i = 0; i<HOST_CONNECT_TIMEOUT; i += 100) {
 			hMapFile = OpenFileMapping(
 				FILE_MAP_ALL_ACCESS,   // read/write access
@@ -51,7 +51,7 @@ SharedMemory* openSharedMemory() {
 				break;
 			halSleep(100);
 		}
-		// пытаемся создать сами мап- объект
+		// РїС‹С‚Р°РµРјСЃСЏ СЃРѕР·РґР°С‚СЊ СЃР°РјРё РјР°Рї- РѕР±СЉРµРєС‚
 		bool mapFileCreated = false;
 		try {
 			if (hMapFile == NULL) {
@@ -75,7 +75,7 @@ SharedMemory* openSharedMemory() {
 			printf("Could not create file sync mapping object (%d).\n", err);
 			return 0;
 		}
-		// Отображаем мап- объект на область памяти
+		// РћС‚РѕР±СЂР°Р¶Р°РµРј РјР°Рї- РѕР±СЉРµРєС‚ РЅР° РѕР±Р»Р°СЃС‚СЊ РїР°РјСЏС‚Рё
 		try {
 			sharedMemory = (SharedMemory*)MapViewOfFile(
 				hMapFile, // handle to map object
@@ -99,12 +99,12 @@ SharedMemory* openSharedMemory() {
 			memset(sharedMemory, -1, sharedSize32 );
 			sharedMemory->heap.init();
 		}
-		// пишем свои адреса
+		// РїРёС€РµРј СЃРІРѕРё Р°РґСЂРµСЃР°
 		if (procNo == -1) //host
 			sharedMemory->hostOwnAddr = sharedMemory;
 		else 
 			sharedMemory->procOwnAddr[procNo] = sharedMemory;
-		// вычислем смещения для конвертации адресов
+		// РІС‹С‡РёСЃР»РµРј СЃРјРµС‰РµРЅРёСЏ РґР»СЏ РєРѕРЅРІРµСЂС‚Р°С†РёРё Р°РґСЂРµСЃРѕРІ
 		for (int i = 0; i < MAX_COUNT_PROCESSORS; i++)
 			sharedMemory->hostMapDiff[i] = (int*)sharedMemory->hostOwnAddr - (int*)sharedMemory->procOwnAddr[i];
 		for (int i = 0; i < MAX_COUNT_PROCESSORS; i++)
@@ -152,7 +152,7 @@ int ncl_hostSync(int val){
 
 };
 
-
+/*
 TCHAR* createName(TCHAR* baseName, int index0, int index2){
 	static TCHAR bufferName[256];
 	TCHAR bufferSuffix[256];
@@ -174,7 +174,7 @@ TCHAR* createName(TCHAR* baseName, int index0, int index2){
 	//wcscat_s(bufferName,bufferSuffix);
 	
 	return bufferName;
-}
+}*/
 
 int* halMalloc32(int bufferSize32){
 	if (openSharedMemory()==0)
@@ -219,7 +219,7 @@ int halHostSyncArray(
 //	return ownAddress;
 //}
 
-// синхронизация host-nmc и nmc-nmc
+// СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ host-nmc Рё nmc-nmc
 //void* halSyncAddr(
 void* halSyncAddr(
 					 void *outAddress, // Sended array address (can be NULL)
@@ -228,7 +228,7 @@ void* halSyncAddr(
 		return 0;
 
 	void* inAddress;
-	// если запуск был на хосте
+	// РµСЃР»Рё Р·Р°РїСѓСЃРє Р±С‹Р» РЅР° С…РѕСЃС‚Рµ
 	if (procNo == -1) {		// if host  <-> processoor sync
 		SyncBuf& syncro = sharedMemory->hostSyncBuff[processor];
 
@@ -247,7 +247,7 @@ void* halSyncAddr(
 		syncro.readCounter[1]++;
 	
 	}
-	// если запуск был на таржете
+	// РµСЃР»Рё Р·Р°РїСѓСЃРє Р±С‹Р» РЅР° С‚Р°СЂР¶РµС‚Рµ
 	else
 	{
 		//if (procNo == 0)
@@ -355,7 +355,7 @@ void* halMapAddrFrom(const void* extAddress, int fromProccessor) {
 	return ownAddress;
 }
 
-// синхронизация host-nmc и nmc-nmc
+// СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ host-nmc Рё nmc-nmc
 int halSync(int val, int processor) {
 	if (openSharedMemory() == 0)
 		return 0;

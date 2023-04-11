@@ -13,9 +13,11 @@ endif()
 add_subdirectory(host)
 
 
-add_custom_target(nm-gen
+add_custom_target(nm-gen 
+	COMMAND "C:\Program Files\Module\NMC-SDK\nmc4cmd.bat" .
 	COMMAND ${CMAKE_COMMAND} -S ${CMAKE_CURRENT_LIST_DIR}/target -B ${CMAKE_CURRENT_LIST_DIR}/build_nm -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH} -G Ninja )
 
 add_custom_target(nm-build ALL
+	COMMAND "C:\Program Files\Module\NMC-SDK\nmc4cmd.bat" .
 	COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/build_nm
 	DEPENDS nm-gen)

@@ -3,7 +3,7 @@
 -- A solution contains projects, and defines the available configurations
 solution "hal-virtual"
 	configurations { "Debug", "Release" }
-	platforms { "Win32","x64"}
+	platforms { "x64"}
 	project "hal-virtual"
 		kind "StaticLib"
 		files { 	"../src_virtual/*.*",

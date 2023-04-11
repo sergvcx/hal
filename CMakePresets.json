@@ -10,6 +10,10 @@
                 "HAL_TYPE": "TARGET",
                 "CMAKE_BUILD_TYPE":"Debug",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/nmc-gcc-compile.cmake"
+            },
+            "environment": {
+                "PATH":"$env{NMC_GCC_TOOLPATH}/nmc4-ide/bin;$env{NMC_GCC_TOOLPATH}/nmc4-ide/lib;$penv{PATH}",
+                "GCC_EXEC_PREFIX":"/cygdrive/c/Program Files/Module/NMC-SDK/nmc4-ide/lib/gcc/"
             }
         },
         {

@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
+set(HAL_PATH "${CMAKE_CURRENT_LIST_DIR}/../../.." CACHE PATH "Path to hal/lib/cmake/hal")
+list(APPEND CMAKE_PREFIX_PATH "${HAL_PATH}/lib/cmake/hal")
+	
+	
+	
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/../../../cmake/nmc-gcc-compile.cmake)
 project(sync-host-nm
 	LANGUAGES C CXX ASM)

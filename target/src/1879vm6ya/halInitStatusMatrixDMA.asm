@@ -1,7 +1,11 @@
 global _halInitStatusMatrixDMA : label;
 
 extern _flag_of_pack_DMA 	: word;
-extern mirror_offset      : word;
+//extern mirror_offset      : word;
+
+data ".data.hal"
+mirror_offset      : word = 0;
+end  ".data.hal";
 
 extern _halEnterCriticalSection : label;
 extern _halExitCriticalSection  : label;
