@@ -1,10 +1,10 @@
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
-include(utils.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/utils.cmake)
 
 configure_common_config()
 
-set(CPACK_PACKAGE_NAME hal)
+set(CPACK_PACKAGE_NAME hal CACHE STRING "Package Name")
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/..)
 set(CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files\\\\Module")
 set(CPACK_PACKAGE_VENDOR "RC Module")

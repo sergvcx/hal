@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 set(root ${CMAKE_CURRENT_LIST_DIR}/..)
 
+
 project(hal-host
 	LANGUAGES C CXX
 	VERSION 0.1.2)
@@ -47,6 +48,7 @@ set(MC12101_BSP $ENV{MC12101} 			CACHE PATH "Path to mc12101 bsp")
 set(MB7707_BSP $ENV{MB7707} 			CACHE PATH "Path to mb7707  bsp")
 set(MC5103_BSP $ENV{MC5103}				CACHE PATH "Path to mc5103  bsp")
 set(MC7601_BSP $ENV{MC7601}			   	CACHE PATH "Path to mc7601  bsp")
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 include(CMakePackageConfigHelpers)
 include(GenerateExportHeader)
 include(GNUInstallDirs)
