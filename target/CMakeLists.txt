@@ -14,23 +14,19 @@ option(HAL_MC5103 "Build hal for mc5103" 	 OFF)
 option(HAL_MC7601 "Build hal for mc7601" 	 OFF)
 
 if(HAL_MC12101)
-	add_library(mc12101 STATIC)
-	add_library(hal_mc12101 ALIAS mc12101)
+	add_library(mc12101 STATIC)	
 	add_library(hal::mc12101 ALIAS mc12101)
 endif()
 if(HAL_MB7707)
 	add_library(mb7707 STATIC)
-	add_library(hal_mb7707 ALIAS mb7707)
 	add_library(hal::mb7707 ALIAS mb7707)
 endif()
 if(HAL_MC5103)
-	add_library(mc5103 STATIC)	
-	add_library(hal_mc5103 ALIAS mc5103)
+	add_library(mc5103 STATIC)		
 	add_library(hal::mc5103 ALIAS mc5103)	
 endif()
 if(HAL_MC7601)
 	add_library(mc7601 STATIC)
-	add_library(hal_mc7601 ALIAS mc7601)
 	add_library(hal::mc7601 ALIAS mc7601)
 endif()
 
@@ -85,9 +81,9 @@ foreach(board ${board_list})
 	set_target_properties(${target_name}
 		PROPERTIES 
 		LINKER_LANGUAGE CXX
-		ARCHIVE_OUTPUT_DIRECTORY ${ROOT}/lib
-		ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${ROOT}/lib
-		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${ROOT}/lib
+		ARCHIVE_OUTPUT_DIRECTORY ${ROOT}/lib/nm
+		ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${ROOT}/lib/nm
+		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${ROOT}/lib/nm
 		PUBLIC_HEADER "${${board}_public_headers}"
 		SOVERSION ${PROJECT_VERSION_MAJOR}
 		VERSION ${PROJECT_VERSION}

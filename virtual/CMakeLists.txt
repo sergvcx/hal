@@ -26,9 +26,9 @@ file(GLOB sources
 set_target_properties(${lib_name} 
 	PROPERTIES 
 	LINKER_LANGUAGE CXX
-	ARCHIVE_OUTPUT_DIRECTORY ${root}/lib
-	ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${root}/lib
-	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${root}/lib
+	ARCHIVE_OUTPUT_DIRECTORY ${root}/lib/x86
+	ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${root}/lib/
+	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${root}/lib/x86
 	DEBUG_POSTFIX d)
 target_include_directories(${lib_name} 
 	PUBLIC 

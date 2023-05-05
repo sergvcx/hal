@@ -13,22 +13,18 @@ option(HAL_MC7601 "Build hal host part for mc7601" 	 OFF)
 
 if(HAL_MC12101)
 	add_library(mc12101_host STATIC)
-	add_library(hal_mc12101_host ALIAS mc12101_host)
 	add_library(hal::mc12101_host ALIAS mc12101_host)
 endif()
 if(HAL_MB7707)
 	add_library(mb7707_host STATIC)
-	add_library(hal_mb7707_host ALIAS mb7707_host)
 	add_library(hal::mb7707_host ALIAS mb7707_host)
 endif()
 if(HAL_MC5103)
 	add_library(mc5103_host STATIC)	
-	add_library(hal_mc5103_host ALIAS mc5103_host)
 	add_library(hal::mc5103_host ALIAS mc5103_host)
 endif()
 if(HAL_MC7601)
 	add_library(mc7601_host STATIC)
-	add_library(hal_mc7601_host ALIAS mc7601_host)
 	add_library(hal::mc7601_host ALIAS mc7601_host)
 endif()
 
@@ -106,9 +102,9 @@ foreach(board ${board_list})
 		PROPERTIES 
 		CXX_STANDARD 11
 		LINKER_LANGUAGE CXX
-		ARCHIVE_OUTPUT_DIRECTORY ${ROOT}/lib
-		ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${ROOT}/lib
-		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${ROOT}/lib
+		ARCHIVE_OUTPUT_DIRECTORY ${ROOT}/lib/x86
+		ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${ROOT}/lib/x86
+		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${ROOT}/lib/x86
 		PUBLIC_HEADER "${public_headers}"
 		DEBUG_POSTFIX d
 		OUTPUT_NAME hal_${board}_host)	
