@@ -1,6 +1,7 @@
 global _halInitStatusSingleDMA 	: label;
 
-extern mirror_offset      : word;
+//extern mirror_offset      : word; 9:28 PM 4/12/2023 because not exists 
+extern _halMirrorOffset      : word; 
 
 
 
@@ -15,7 +16,7 @@ begin ".text_hal"
 	[1001000Ah] = gr7;//clear the control register MDAM to fall interruption register
 	[1001001Ah] = gr7;//clear the control register MDAM to fall interruption register 
 	gr7 = [--ar5];//src
-	gr2 = [mirror_offset];
+	gr2 = [_halMirrorOffset];
 	ar2 = gr7 with gr7 >>= 18;//check is the src addres in ddr mem or not
 	if <>0 delayed goto SKIP_SRC_MIRROR;	
 		gr7 = [--ar5];//dst

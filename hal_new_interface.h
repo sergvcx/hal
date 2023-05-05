@@ -51,13 +51,14 @@ int halGetLastError();
  * @return HalAccess* 
  * @details 
  */
+ 
 HalAccess *halCreateAccess(HalBoard *board, int *attrib_list);      
 void halDestroyAccess(HalAccess *access);
 
 void halLoadProgram(HalAccess *, const char *filename); // work only on host
 
-int halSync(HalCore *board, int value);
-hintptr halSyncAddr(HalCore *board, hintptr value);
+int halSync(HalAccess *board, int value);
+hintptr halSyncAddr(HalAccess *board, hintptr value);
 
 void halReadMemBlock (HalAccess *access, const void* dstHostAddr, hintptr srcBoardAddr, size_t size32);
 void halWriteMemBlock(HalAccess *access, const void* srcHostAddr, hintptr dstBoardAddr, size_t size32);
@@ -65,5 +66,6 @@ void halWriteMemBlock(HalAccess *access, const void* srcHostAddr, hintptr dstBoa
 int halGetResult(HalAccess *access);
 void halSetTimeout(int msec);
 
+void* halMalloc32(size_t size32);
 
 

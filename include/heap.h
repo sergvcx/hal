@@ -1,4 +1,4 @@
-#ifndef MULTIHEAP_INCLUDED
+﻿#ifndef MULTIHEAP_INCLUDED
 #define MULTIHEAP_INCLUDED
 typedef unsigned size_t32;
 typedef unsigned size_t32;
@@ -205,7 +205,7 @@ public:
 			//int* guardEndBits=pNewBuffer->EndGuardBits();
 			//*guardEndBits    =GUARD_BITS;
 			//*(guardEndBits+1)=GUARD_BITS;
-			// уменьшаем сободный размер				
+			// уменьшаем свободный размер				
 			sizeHeapAvail32 -= (sizeBuffer32 + sizeof(BufferHeader) / sizeof(int));
 			return pNewBuffer->dataStart();
 		} 
@@ -233,7 +233,7 @@ public:
 		return 1;
 	}
 	
-	/// осообождат память по адресу
+	/// освообождат память по адресу
 	int release(void* p){
 		if (isHeapLocked) 
 			return 0;

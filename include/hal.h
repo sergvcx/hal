@@ -48,9 +48,9 @@
 	void*  halCopyInt   (const void* src,  void* dst,  unsigned size32);
 	void*  halCopyFlt   (const void* src,  void* dst,  unsigned size32);
 	
-	// отборажение  адреса в глобальное адресное пространство
+	// отображение  адреса в глобальное адресное пространство
 	//void* halMapAddr(const void* srcAddr);	
-	void* halMapAddrTo(const void* ownAddress, int toProccessor);
+	void* halMapAddrTo  (const void* ownAddress, int toProccessor);
 	void* halMapAddrFrom(const void* extAddress, int fromProcessor);
 
 	void halSetActiveHeap(int heapNo);

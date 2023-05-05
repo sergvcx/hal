@@ -1,16 +1,17 @@
 global _halInitStatusMatrixDMA : label;
 
 extern _flag_of_pack_DMA 	: word;
-//extern mirror_offset      : word;
+//extern mirror_offset      : word; 9:32 PM 4/12/2023
+extern _halMirrorOffset      : word; 
 
 data ".data.hal"
-mirror_offset      : word = 0;
+//mirror_offset      : word = 0;
 end  ".data.hal";
 
 extern _halEnterCriticalSection : label;
 extern _halExitCriticalSection  : label;
 
-begin ".text_hal"
+begin ".text.hal"
 <_halInitStatusMatrixDMA>
 	//int  halInitMatrixDMA(void*  src,  int  width,int  height, int srcStride32,  int* dst, int dstStride32);
 	ar5 = ar7 - 2;
@@ -23,7 +24,7 @@ begin ".text_hal"
 	push ar2,gr2;
 	push ar3,gr3;
 	push ar4,gr4;
-	gr4 = [mirror_offset];
+	gr4 = [_halMirrorOffset];
 	gr7 = [--ar5];//load src
 	ar4 = gr7 with gr7 >>= 18;
 	if <>0 delayed goto SKIP_SRC_MIRROR_SETUP;
@@ -84,4 +85,4 @@ begin ".text_hal"
 	pop ar1,gr1;
 	pop ar0,gr0;
 	delayed return;
-end ".text_hal";
+end ".text.hal";
