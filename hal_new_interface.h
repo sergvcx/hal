@@ -14,11 +14,10 @@ enum HAL_ERROR{
     HAL_NOT_IMPLEMENTED
 };
 
-enum HalCoreAttribute{
-    HAL_CORE_NUMBER,
-    HAL_CLUSTER_NUMBER,
-    HAL_NONE
-};
+#define HAL_NONE            0
+#define HAL_CORE_NUMBER     0xB000
+#define HAL_CLUSTER_NUMBER  0xB001
+#define HAL_CORE_NUMBER     0xB002
 
 /**
  * @brief open board
@@ -52,10 +51,10 @@ int halGetLastError();
  * @details 
  */
  
-HalAccess *halCreateAccess(HalBoard *board, int *attrib_list);      
+HalAccess *halCreateAccess(HalBoard *board, int *attrib_list);
 void halDestroyAccess(HalAccess *access);
 
-void halLoadProgram(HalAccess *, const char *filename); // work only on host
+void halLoadProgram(HalAccess *access, const char *filename); // work only on host
 
 int halSync(HalAccess *board, int value);
 hintptr halSyncAddr(HalAccess *board, hintptr value);
