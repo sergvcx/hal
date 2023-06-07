@@ -91,6 +91,7 @@ foreach(board ${board_list})
 	file(GLOB sources 
 		${public_headers}
 		src/${board}/*.*
+		src/*.*
 		${ROOT}/src/x86/*.*
 		${ROOT}/src/ringbuffer/*.*
 		#src/host_io/*.*
@@ -114,6 +115,7 @@ foreach(board ${board_list})
 	  		$<INSTALL_INTERFACE:include> 
 		PRIVATE
 			${ROOT}/src/io/host_io
+			${ROOT}/src
 			${${BOARD}_INCLUDE}
 		)
 	target_compile_definitions(${target_name} PUBLIC NM6405 SILENT)
