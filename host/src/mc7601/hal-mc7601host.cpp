@@ -17,7 +17,7 @@ static bool isFinished[2]={false,false};
 const int IP_ADDRESS = 0x0201A8C0; // 192.168.1.2
 
 extern "C"{
-
+#ifdef DEPRECATED
 int halSync(int val, unsigned processor=0){
 	WR_Word ret;
 	WR_Sync(access[processor],0xFFFFFFFF,val,&ret);

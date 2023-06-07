@@ -8,12 +8,12 @@ typedef struct HalAccess HalAccess;       //for nm and x86 different realization
 typedef struct HalCore HalCore;
 typedef struct HalBoardSetting HalBoardSetting;
 
-typedef enum{
+enum HalBoardType{
     MC12101,
     MB7707,
     MC7601,
     MC5103
-} HalBoardType;
+};
 
 enum HalError{
     HAL_OK,
@@ -26,7 +26,6 @@ enum HalError{
 #define HAL_NONE            0
 #define HAL_CORE_NUMBER     0xB000
 #define HAL_CLUSTER_NUMBER  0xB001
-#define HAL_CORE_NUMBER     0xB002
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,21 +45,26 @@ extern "C" {
     HalBoard *halOpenBoard(HalBoardSetting *board_settings);
 
     void halCloseBoard(HalBoard *board);
+    void halResetBoard(HalBoard *board);
 
     int halGetLastError();
  
     HalAccess *halCreateAccess(HalBoard *board, int *attrib_list);
     void halDestroyAccess(HalAccess *access);
 
+    //HalIO *halStartIO(HalAccess *access, FILE *file);
+    //void halStopIO(HalIO *io);
+
     void halLoadProgram(HalAccess *access, const char *filename); // work only on host
 
     int halSync(HalAccess *board, int value);
     uintptr_t halSyncAddr(HalAccess *board, uintptr_t value);
 
-    void halReadMemBlock (HalAccess *access, const void* dstHostAddr, uintptr_t srcBoardAddr, size_t size32);
+    void halReadMemBlock (HalAccess *access, void* dstHostAddr, uintptr_t srcBoardAddr, size_t size32);
     void halWriteMemBlock(HalAccess *access, const void* srcHostAddr, uintptr_t dstBoardAddr, size_t size32);
 
     int halGetResult(HalAccess *access);
+    int halGetStatus(HalAccess *access);
     void halSetTimeout(int msec);
 
     void* halMalloc32(size_t size32);

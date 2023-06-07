@@ -92,6 +92,7 @@ foreach(board ${board_list})
 		${public_headers}
 		src/${board}/*.*
 		src/*.*
+		${ROOT}/src/*.*
 		${ROOT}/src/x86/*.*
 		${ROOT}/src/ringbuffer/*.*
 		#src/host_io/*.*
@@ -116,6 +117,7 @@ foreach(board ${board_list})
 		PRIVATE
 			${ROOT}/src/io/host_io
 			${ROOT}/src
+			src
 			${${BOARD}_INCLUDE}
 		)
 	target_compile_definitions(${target_name} PUBLIC NM6405 SILENT)

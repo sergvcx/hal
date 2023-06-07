@@ -12,6 +12,8 @@ _deps
 CMakeUserPresets.json
 _CPack_Packages/
 
+*.exe
+
 build*/
 lib/
 Debug/
