@@ -11,6 +11,8 @@ file(GLOB mc12101_sources
 	src/1879vm6ya/*.S
 	src/1879vm6ya/*.mlb
 	src/1879vm6ya/*.h
+	${ROOT}/src/*.h
+	${ROOT}/src/*.cpp
 	${ROOT}/src/ringbuffer/*.cpp  
 	${ROOT}/src/ringbuffer/*.c
 	${ROOT}/src/ringbuffer/*.asm	

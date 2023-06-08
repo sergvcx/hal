@@ -29,9 +29,14 @@ public:
 
 
 
-struct HalBoardSetting{
+struct HalBoardOptions{
     int board_no;
     int board_type;
+};
+
+struct HalAccessOptions{
+    int core;
+    int cluster;
 };
 
 struct HalBoard{
@@ -44,9 +49,12 @@ public:
     int board_no;
 
     static HalBoard *createBoard_MC12101(int index);
+    static HalBoard *createHost();
     void open();
     void close();
     void reset();
+    HalAccess *getAccess(HalAccessOptions *options);
+    void closeAccess(HalAccess *access);
     friend class HalAccess;
 };
 
@@ -60,8 +68,6 @@ public:
     int cluster;
     char program[256];
 
-    static HalAccess *createAccess(HalBoard *board, int core, int cluster = 0);
-
     int sync(int value);
     void readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size);
     void writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size);
@@ -70,6 +76,7 @@ public:
     int getStatus();
 
     ~HalAccess();
+    friend class HalBoard;
 };
 
 

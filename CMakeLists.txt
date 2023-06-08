@@ -1,12 +1,20 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
-set(HAL_TYPE "VIRTUAL" CACHE STRING "TARGET, HOST or VIRTUAL")
-if(HAL_TYPE STREQUAL "TARGET")
-	set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/cmake/nmc-gcc-compile.cmake)
-endif()
+# set(HAL_TYPE "VIRTUAL" CACHE STRING "TARGET, HOST or VIRTUAL")
+# if(HAL_TYPE STREQUAL "TARGET")
+# 	set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/cmake/nmc-gcc-compile.cmake)
+# endif()
 
 
-project(hal VERSION 0.1.0)
+project(hal 
+	LANGUAGES C CXX
+	DESCRIPTION "Hal library"
+	VERSION 0.1.2)
+
+
+add_library(hal STATIC)
+add_library(hal::hal ALIAS hal)
+
 
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"   is_top_level)
 
@@ -14,38 +22,109 @@ option(HAL_MC12101 "Build hal for mc12101" OFF)
 option(HAL_MB7707 "Build hal for mb7707" OFF)
 option(HAL_MC5103 "Build hal for mc5103" OFF)
 option(HAL_MC7601 "Build hal for mc7601" OFF)
+option(HAL_X86    "Build hal for x86" OFF)
 option(HAL_PACK "Create configuration for cpack and exit" OFF)
-option(HAL_TESTS "Enable tests" ON)
-#set(boards "mc12101;mc7601;mc5103;mb7707")
+option(HAL_TESTS "Enable tests" OFF)
+include(cmake/mb7707-sources.cmake)
+include(cmake/mc5103-sources.cmake)
+include(cmake/mc7601-sources.cmake)
+include(cmake/mc12101-sources.cmake)
+include(cmake/x86-sources.cmake)
+include(cmake/utils.cmake)
 
 
+target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>)
+target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:C>:-std=c99>)
 
-if(HAL_PACK)
-	include(cmake/CPacking.cmake)
-	return()
+target_include_directories(hal 
+	PUBLIC
+		${CMAKE_CURRENT_LIST_DIR}/include
+	PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/src)
+
+
+if(HAL_X86)
+	set(arch x86)
+	target_sources(hal PRIVATE ${x86_sources})
+endif()
+if(HAL_MC12101)
+	set(arch mc12101)
+	target_sources(hal PRIVATE ${mc12101_sources})	
+	message(STATUS "${mc12101_sources}")
+	enable_language(ASM)
+	add_nmc_compiler_type_option("${mc12101_sources}")
+	target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-mnmc4;-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
+	target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-Wall;-mnmc4>)
+	set_source_files_properties(src/printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
+	target_include_directories(hal PRIVATE src/1879vm6ya)
+endif()
+if(HAL_MB7707)
+	set(arch mb7707)
+	target_sources(hal PRIVATE ${mb7707_sources})
+	enable_language(ASM)
+	add_nmc_compiler_type_option("${mb7707_sources}")
+	target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-mnmc3;-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
+	target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-Wall;-mnmc3>)
+	set_source_files_properties(src/printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
+	target_include_directories(hal PRIVATE src/1879vm6ya)
+endif()
+if(HAL_MC5103)
+	set(arch mc5103)	
+	target_sources(hal PRIVATE ${mc5103_sources})	
+	enable_language(ASM)
+	add_nmc_compiler_type_option("${mc5103_sources}")
+	target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-mnmc3;-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
+	target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-Wall;-mnmc3>)
+	set_source_files_properties(src/printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
+	target_include_directories(hal PRIVATE src/1879vm6ya)
+endif()
+if(HAL_MC7601)
+	set(arch mc7601)
+	target_sources(hal PRIVATE ${mc7601_sources})
+	add_nmc_compiler_type_option(${mc7601_sources})
+	enable_language(ASM)
+	target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-mnmc3;-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
+	target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-Wall;-mnmc3>)
+	set_source_files_properties(src/printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
+	target_include_directories(hal PRIVATE src/1879vm6ya)
 endif()
 
+set_target_properties(hal PROPERTIES
+    DEBUG_POSTFIX d
+	OUTPUT_NAME hal_${arch}
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib
+    ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_LIST_DIR}/lib
+    ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_LIST_DIR}/lib)
 
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/utils.cmake)
-if(is_top_level)
-	enable_testing()
-endif()
+add_subdirectory(examples)
 
-if(HAL_TYPE STREQUAL "TARGET")
-	add_subdirectory(target)
-elseif(HAL_TYPE STREQUAL "HOST")
-	add_subdirectory(host)
-	add_subdirectory(examples)
-	if(HAL_TESTS)
-		#add_subdirectory(test/host-target)
-	endif()
-elseif(HAL_TYPE STREQUAL "VIRTUAL")
-	add_subdirectory(virtual)
-	if(HAL_TESTS)
-		#add_subdirectory(test/virtual)
-	endif()
-else()
-	message(FATAL_ERROR "Wrong type of build (needed \"HOST\", \"TARGET\" or \"VIRTUAL\")")
-endif()
+
+# if(HAL_PACK)
+# 	include(cmake/CPacking.cmake)
+# 	return()
+# endif()
+
+
+# include(${CMAKE_CURRENT_LIST_DIR}/cmake/utils.cmake)
+# if(is_top_level)
+# 	enable_testing()
+# endif()
+
+# if(HAL_TYPE STREQUAL "TARGET")
+# 	add_subdirectory(target)
+# elseif(HAL_TYPE STREQUAL "HOST")
+# 	add_subdirectory(host)
+# 	add_subdirectory(examples)
+# 	if(HAL_TESTS)
+# 		#add_subdirectory(test/host-target)
+# 	endif()
+# elseif(HAL_TYPE STREQUAL "VIRTUAL")
+# 	add_subdirectory(virtual)
+# 	if(HAL_TESTS)
+# 		#add_subdirectory(test/virtual)
+# 	endif()
+# else()
+# 	message(FATAL_ERROR "Wrong type of build (needed \"HOST\", \"TARGET\" or \"VIRTUAL\")")
+# endif()
 
 

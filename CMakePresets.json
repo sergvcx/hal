@@ -94,61 +94,13 @@
             }
         },
         {
-            "name": "hal-mb7707-host-makefiles",
-            "displayName": "hal-mb7707 host on makefiles",
-            "inherits": "host-makefile", 
-            "cacheVariables": {
-                "HAL_MB7707": "ON"
-            }
-        },
-        {
-            "name": "hal-mc5103-host-makefiles",
-            "displayName": "hal-mc5103 host on makefiles",
-            "inherits": "host-makefile", 
-            "cacheVariables": {
-                "HAL_MC5103": "ON"
-            }
-        },
-        {
-            "name": "hal-mc7601-host-makefiles",
-            "displayName": "hal-mc7601 host on makefiles",
-            "inherits": "host-makefile", 
-            "cacheVariables": {
-                "HAL_MC7601": "ON"
-            }
-        },
-        {
-            "name": "hal-mc12101-host-msvc",
-            "displayName": "hal-mc12101 host on msvc",
+            "name": "hal-x86-msvc",
+            "displayName": "hal host on msvc",
             "inherits": "host-msvc", 
             "cacheVariables": {
-                "HAL_MC12101": "ON"
+                "HAL_X86": "ON"
             }
-        },
-        {
-            "name": "hal-mb7707-host-msvc",
-            "displayName": "hal-mb7707 host on msvc",
-            "inherits": "host-msvc", 
-            "cacheVariables": {
-                "HAL_MB7707": "ON"
-            }
-        },
-        {
-            "name": "hal-mc5103-host-msvc",
-            "displayName": "hal-mc5103 host on msvc",
-            "inherits": "host-msvc", 
-            "cacheVariables": {                
-                "HAL_MC5103": "ON"
-            }
-        },
-        {
-            "name": "hal-mc7601-host-msvc",
-            "displayName": "hal-mc7601 host on msvc",
-            "inherits": "host-msvc", 
-            "cacheVariables": {
-                "HAL_MC7601": "ON"
-            }
-        },
+        },        
         {
             "name": "hal-virtual-makefiles",
             "displayName": "hal-virtual on makefiles",

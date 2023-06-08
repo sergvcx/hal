@@ -7,5 +7,6 @@ set(target simple)
 target_include_directories(${target}
     PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/../include)
-target_link_libraries(${target} PUBLIC hal_mc12101_hostd)
-target_link_directories(${target} PUBLIC $ENV{HAL}/lib/x86)
+target_link_libraries(${target} PUBLIC hal_x86d)
+#target_link_libraries(${target} PUBLIC hal_mc12101d)
+target_link_directories(${target} PUBLIC $ENV{HAL}/lib)

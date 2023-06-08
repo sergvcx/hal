@@ -10,30 +10,40 @@ SECTIONS
 	.text : ALIGN(0x8)
 	{
 		*(.text);
-	} > Cx_IMU
+	} > EMI
 
 	.init : ALIGN(0x8)
 	{
 		*(.init);
-	} > Cx_IMU
+	} > EMI
 
 	.fini : ALIGN(0x8)
 	{
 		*(.fini);
-	} > Cx_IMU
+	} > EMI
 
 	.data : ALIGN(0x8)
 	{
 		*(.data);
-	} > Cx_IMU
+	} > EMI
 
 	.bss : ALIGN(0x8)
 	{
 		*(.bss);
-	} > Cx_IMU
+	} > EMI
 
 	.stack : ALIGN(0x8)
 	{
 		*(.stack);
 	} > Cx_IMU
+	
+	.rpc_services : ALIGN(0x8)
+	{
+		KEEP(*(.rpc_services));
+	} > EMI
+
+	.rpc_services.bss (NOLOAD) : ALIGN(0x8)
+	{
+		*(.rpc_services.bss);
+	} > EMI
 }

@@ -1,26 +1,21 @@
 #include "hal/hal.h"
+#include "hal/hal-options.h"
 #include "hal-core.h"
 #include <iostream>
 
-#ifndef DEPRECARED
+#ifndef DEPRECATED
 extern "C" {
 
-    HalBoardSetting *halGetBoardSettings(const char *str){
-        HalBoardSetting *settings = new HalBoardSetting();
-        settings->board_type = MC12101;
-        settings->board_no = 0;
-        return settings;
+     HalBoard *halGetBoard(const char* options){
+        HalBoardOptions opt;
+        halSetBoardOption(&opt, HAL_BOARD_NUMBER, 0);
+        return halGetBoardOpt(&opt);
     }
-
-    HalBoard *halOpenBoard(HalBoardSetting *board_settings){
-        HalBoard *board = 0;
-        if(board_settings->board_type == MC12101){
-            board = HalBoard::createBoard_MC12101(board_settings->board_no);
-        } else {
-            std::cout << "Not implemented";
-        }   
-        board->open();
-        return board;
+    
+    HalAccess *halGetAccess(HalBoard *board, const char* options){
+        HalAccessOptions opt;
+        halSetAccessOption(&opt, HAL_CORE, 0);
+        return halGetAccessOpt(board, &opt);
     }
 
     void halCloseBoard(HalBoard *board){
@@ -35,24 +30,8 @@ extern "C" {
         return 0;
     }
  
-    HalAccess *halCreateAccess(HalBoard *board, int *attrib_list){
-        int i = 0;
-        int core, cluster;
-        while(attrib_list[i] != HAL_NONE){
-            if(attrib_list[i] == HAL_CORE_NUMBER){
-                core = attrib_list[i + 1];
-            }
-            if(attrib_list[i] == HAL_CLUSTER_NUMBER){
-                cluster = attrib_list[i + 1];
-            }
-            i += 2;
-        }
-        if(board->board_type == MC12101){
-            return HalAccess::createAccess(board, core);
-        }
-    }
 
-    void halDestroyAccess(HalAccess *access){
+    void halCloseAccess(HalAccess *access){
         delete access;
     }
 
@@ -94,5 +73,5 @@ extern "C" {
 
     
 
-#endif DEPRECARED
+#endif //DEPRECATED
 }

@@ -5,15 +5,7 @@
 
 typedef struct HalBoard HalBoard;        //for nm and x86 different realizations
 typedef struct HalAccess HalAccess;       //for nm and x86 different realizations
-typedef struct HalCore HalCore;
-typedef struct HalBoardSetting HalBoardSetting;
 
-enum HalBoardType{
-    MC12101,
-    MB7707,
-    MC7601,
-    MC5103
-};
 
 enum HalError{
     HAL_OK,
@@ -31,10 +23,6 @@ enum HalError{
 extern "C" {
 #endif //__cplusplus
 
-    HalBoardSetting *halGetBoardSettings(const char *str);
-    //HalBoardSetting *halSetIPAddr(HalBoardSetting *setting, const char *addr);
-    //HalBoardSetting *halSetBoardNumber(HalBoardSetting *setting, int i);
-
     /**
      * @brief open board
      * 
@@ -42,15 +30,15 @@ extern "C" {
      * @return HalBoard* 
      * @details 
      */
-    HalBoard *halOpenBoard(HalBoardSetting *board_settings);
+    HalBoard *halGetBoard(const char *options);
 
     void halCloseBoard(HalBoard *board);
     void halResetBoard(HalBoard *board);
 
     int halGetLastError();
  
-    HalAccess *halCreateAccess(HalBoard *board, int *attrib_list);
-    void halDestroyAccess(HalAccess *access);
+    HalAccess *halGetAccess(HalBoard *board, const char *options);
+    void halCloseAccess(HalAccess *access);
 
     //HalIO *halStartIO(HalAccess *access, FILE *file);
     //void halStopIO(HalIO *io);

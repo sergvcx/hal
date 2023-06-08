@@ -5,6 +5,9 @@
 #   include <windows.h> 
 #   define LibraryHandle HINSTANCE 
 #   define LibraryFuncAddr void*
+#else
+#   define LibraryHandle int 
+#   define LibraryFuncAddr void*
 #endif //_WIN32
 
 LibraryHandle open_library(const char* name);

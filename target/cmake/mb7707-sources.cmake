@@ -11,6 +11,8 @@ file(GLOB mb7707_sources
 	src/1879hb1ya/*.S
 	src/1879hb1ya/*.mlb
 	src/1879hb1ya/*.h
+	${ROOT}/src/*.h
+	${ROOT}/src/*.cpp
 	${ROOT}/src/ringbuffer/*.cpp  
 	${ROOT}/src/ringbuffer/*.c
 	${ROOT}/src/ringbuffer/*.asm	

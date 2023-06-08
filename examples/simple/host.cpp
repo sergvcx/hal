@@ -1,4 +1,5 @@
 #include "hal/hal.h"
+#include "hal/hal-options.h"
 #include <stdlib.h>
 #include <iostream>
 struct HalCore{
@@ -7,16 +8,22 @@ struct HalCore{
 };
 
 int main(){
-    HalBoardSetting *settings = halGetBoardSettings("mc12101:0");
+    HalBoardOptions *options = halCreateBoardOptions();
+    HalAccessOptions *accessOptions = halCreateAccessOptions();
 
-    HalBoard *board = halOpenBoard(settings);
-    int attrib[] = {
-        HAL_CLUSTER_NUMBER, 0,
-        HAL_CORE_NUMBER, 0,       
-        HAL_NONE};    
-        //"cluster:0,core:1,io:on"
-    HalCore core = {0,0};
-    HalAccess *access = halCreateAccess(board, (int*)&core);
+    //options->type(MC12101)->number(0)->ip("localhost:5557");
+    halSetBoardOption(options, HAL_BOARD_TYPE, MC12101);
+    halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
+
+    halSetAccessOption(accessOptions, HAL_CORE, 0);
+    halSetAccessOption(accessOptions, HAL_CLUSTER, 0);
+
+
+    HalBoard *board = halGetBoardOpt(options);
+    HalAccess *access = halGetAccessOpt(board, accessOptions);
+
+    halDestroyBoardOptions(options); 
+    halDestroyAccessOptions(accessOptions);
     
 
     halLoadProgram(access, "simple.abs");
@@ -31,7 +38,7 @@ int main(){
     int result = halGetResult(access);
     std::cout << "result: " << result << std::endl;
 
-    halDestroyAccess(access);
+    halCloseAccess(access);
     halCloseBoard(board);
     return 0;
 }

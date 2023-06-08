@@ -29,7 +29,7 @@ static int locked = false;
 #define LOCK()  while (locked);	locked =true;
 #define UNLOCK()  locked = false;
 
-#ifdef DEPRECARED
+#ifdef DEPRECATED
 int halSync(int val,int processor=0){
 	int static counter[2] = { 0,0 };
 	counter[processor]++;
@@ -193,6 +193,6 @@ int halGetResult(unsigned long* returnCode, int processor=0){
 	returnCode[0] = result;
 	return error;
 }
-#endif DEPRECARED
+#endif //DEPRECATED
 
 };
