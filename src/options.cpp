@@ -6,6 +6,7 @@ extern "C" {
     HalBoard *halGetBoardOpt(HalBoardOptions *board_options){
         HalBoard *board = NULL;
         if(board_options->board_type == MC12101){
+            //board = new HalBoardMC12101(board_options->board_no);
             board = HalBoard::createBoard_MC12101(board_options->board_no);
         }
         if(board) board->open();

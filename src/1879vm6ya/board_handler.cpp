@@ -3,16 +3,12 @@
 #include <iostream>
 
 
-HalBoard::HalBoard(){
-
-}
-
 // HalBoard *HalBoard::createBoard_MB7707(char *addr){
 
 // }
 
 HalBoard *HalBoard::createBoard_MC12101(int i){
-    std::cout << "optn board mc12101 not implemented" << std::endl;
+    std::cout << "open board mc12101 not implemented" << std::endl;
     return 0;
 }
 
@@ -31,11 +27,6 @@ void HalBoard::reset(){
 HalAccess *HalBoard::getAccess(HalAccessOptions *options){
     std::cout << "get access not implemented" << std::endl;
     return 0;
-}
-
-
-HalAccess::HalAccess(){
-    
 }
 
 

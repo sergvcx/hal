@@ -3,9 +3,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
+
 typedef struct HalBoard HalBoard;        //for nm and x86 different realizations
 typedef struct HalAccess HalAccess;       //for nm and x86 different realizations
-
+typedef struct HalBoardOptions HalBoardOptions;
+typedef struct HalAccessOptions HalAccessOptions;
 
 enum HalError{
     HAL_OK,
@@ -15,9 +17,7 @@ enum HalError{
     HAL_NOT_IMPLEMENTED
 };
 
-#define HAL_NONE            0
-#define HAL_CORE_NUMBER     0xB000
-#define HAL_CLUSTER_NUMBER  0xB001
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,6 +31,8 @@ extern "C" {
      * @details 
      */
     HalBoard *halGetBoard(const char *options);
+    HalBoard *halGetBoardOpt(HalBoardOptions *board_options);
+    
 
     void halCloseBoard(HalBoard *board);
     void halResetBoard(HalBoard *board);
@@ -38,6 +40,7 @@ extern "C" {
     int halGetLastError();
  
     HalAccess *halGetAccess(HalBoard *board, const char *options);
+    HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options);
     void halCloseAccess(HalAccess *access);
 
     //HalIO *halStartIO(HalAccess *access, FILE *file);

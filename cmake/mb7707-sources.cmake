@@ -1,7 +1,7 @@
 
 file(GLOB mb7707_public_headers 
-	include/*.h
 	include/hal/*.h
+	include/*.h
 	include/*.mlb)
 file(GLOB mb7707_sources 
 	${public_headers}

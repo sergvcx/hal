@@ -1,11 +1,7 @@
 #include "hal/hal.h"
 #include "hal/hal-options.h"
 #include <stdlib.h>
-#include <iostream>
-struct HalCore{
-    int core;
-    int cluster;
-};
+#include "stdio.h"
 
 int main(){
     HalBoardOptions *options = halCreateBoardOptions();
@@ -36,7 +32,7 @@ int main(){
 			break;
 	}
     int result = halGetResult(access);
-    std::cout << "result: " << result << std::endl;
+    printf("result: %d\n", result);
 
     halCloseAccess(access);
     halCloseBoard(board);

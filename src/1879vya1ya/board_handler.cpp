@@ -1,70 +1,62 @@
 #include "hal-core.h"
 #include "hal/hal-options.h"
+#include <iostream>
 
-
-HalBoard::HalBoard(){
-
-}
 
 // HalBoard *HalBoard::createBoard_MB7707(char *addr){
 
 // }
 
-HalBoard *HalBoard::createBoard_MC12101(int i){
-    std::cout << "optn board mc12101 not implemented" << std::endl;
-    return board;
+inline HalBoard *HalBoard::createBoard_MC12101(int i){
+    std::cout << "open board mc12101 not implemented" << std::endl;
+    return 0;
 }
 
-void HalBoard::open(){
+inline void HalBoard::open(){
     std::cout << "close not implemented" << std::endl;
 }
 
-void HalBoard::close(){
+inline void HalBoard::close(){
     std::cout << "close not implemented" << std::endl;
 }
 
-void HalBoard::reset(){
+inline void HalBoard::reset(){
     std::cout << "reset not implemented" << std::endl;
 }
 
-HalAccess *HalBoard::getAccess(HalAccessOptions *options){
+inline HalAccess *HalBoard::getAccess(HalAccessOptions *options){
     std::cout << "get access not implemented" << std::endl;
     return 0;
 }
 
 
-HalAccess::HalAccess(){
-    
-}
-
-
-int HalAccess::sync(int value){
+inline int HalAccess::sync(int value){
     std::cout << "sync not implemented" << std::endl;
     return 0;
 }
 
-void HalAccess::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
+inline void HalAccess::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
     std::cout << "read not implemented" << std::endl;
 }
 
-void HalAccess::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
+inline void HalAccess::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
     std::cout << "write not implemented" << std::endl;
 }
 
-int HalAccess::getResult(){
+inline int HalAccess::getResult(){
     std::cout << "get result not implemented" << std::endl;
     return 0;
 }
 
-void HalAccess::loadProgram(const char* program_name){
+inline void HalAccess::loadProgram(const char* program_name){
     std::cout << "load program not implemented" << std::endl;
 }
 
-int HalAccess::getStatus(){
+inline int HalAccess::getStatus(){
     std::cout << "get status not implemented" << std::endl;
-    return 0;
+    return 2;
 }
 
-HalAccess::~HalAccess(){
+inline HalAccess::~HalAccess(){
     std::cout << "close access not implemented" << std::endl;
 }

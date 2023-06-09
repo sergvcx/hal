@@ -27,12 +27,12 @@ enum HAL_ACCESS_OPTIONS{
 typedef struct HalBoardOptions HalBoardOptions;
 typedef struct HalAccessOptions HalAccessOptions;
 
+
 #ifdef __cplusplus
 extern "C"{
 #endif
 
-    HalBoard *halGetBoardOpt(HalBoardOptions *board_options);
-    HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options);
+    
 
     HalBoardOptions *halSetBoardOption(HalBoardOptions *builder, int option, ...);
     HalAccessOptions *halSetAccessOption(HalAccessOptions *builder, int option, ...);

@@ -24,6 +24,8 @@ int halSync(int val, unsigned processor=0){
 	return ret;
 }
 
+#ifdef DEPRECATED
+
 int halOpen(char* absfile,...){
 	
 	//system ("taskkill /F /IM LLC_MULTI_TASK_DAEMON.exe >nul");
@@ -164,5 +166,6 @@ int halGetResult(unsigned* returnCode, int processor=0){
 		return ret;
 	}
 }
+#endif //DEPRECATED
 
 };

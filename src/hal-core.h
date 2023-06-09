@@ -3,29 +3,44 @@
 #include "hal/hal.h"
 #include "library.h"
 
-struct PL_Access;
-struct IO_Service;
-struct PL_Board;
+#ifdef __NM__
+#define HAL_VIRTUAL
+#else
+#define HAL_VIRTUAL virtual
+#endif
 
-class BoardHandle{
+#ifdef __cplusplus
+struct HalBoard{
+protected:
+    HalBoard(){};
 public:
-    LibraryHandle handle;
-    int (*plGetCount)(unsigned int*);
-    int (*plGetDesc)(unsigned int, PL_Board **);
-    int (*plCloseDesc)(PL_Board *);
-    int (*plGetAccess_i)(PL_Board *, int, PL_Access**);
-    int (*plGetAccess_ii)(PL_Board *, int *, PL_Access**);
-    int (*plCloseAccess)(PL_Access *);
-    int (*plReadMemBlock)(PL_Access *, void *, int addr, int);
-    int (*plWriteMemBlock)(PL_Access *, const void *, int addr, int); 
-    int (*plLoadProgramFile)(PL_Access *, const char *);
-    int (*plGetStatus)(PL_Access *, unsigned int *);
-    int (*plGetResult)(PL_Access *, unsigned int *);
-    int (*plSync)(PL_Access *, int, int *);
-    int (*plReset)(PL_Board *board);
-
-    BoardHandle(const char *library);
+    int board_type;
+    static HalBoard *createBoard_MC12101(int index);
+    //static HalBoard *createBoard(HalAccessOptions *options);
+    static HalBoard *createHost();
+    HAL_VIRTUAL void open();
+    HAL_VIRTUAL void close();
+    HAL_VIRTUAL void reset();
+    HAL_VIRTUAL HalAccess *getAccess(HalAccessOptions *options);
+    HAL_VIRTUAL ~HalBoard();
 };
+
+struct HalAccess{
+protected:
+    HalAccess(){};
+public:
+    HalBoard *board;
+
+    HAL_VIRTUAL int sync(int value);
+    HAL_VIRTUAL void readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size);
+    HAL_VIRTUAL void writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size);
+    HAL_VIRTUAL int getResult();
+    HAL_VIRTUAL void loadProgram(const char* program_name);
+    HAL_VIRTUAL int getStatus();
+
+    HAL_VIRTUAL ~HalAccess();
+};
+#endif
 
 
 
@@ -38,47 +53,6 @@ struct HalAccessOptions{
     int core;
     int cluster;
 };
-
-struct HalBoard{
-private:
-    HalBoard();
-public:
-    PL_Board *desc;
-    BoardHandle *board_handle;
-    int board_type;
-    int board_no;
-
-    static HalBoard *createBoard_MC12101(int index);
-    static HalBoard *createHost();
-    void open();
-    void close();
-    void reset();
-    HalAccess *getAccess(HalAccessOptions *options);
-    void closeAccess(HalAccess *access);
-    friend class HalAccess;
-};
-
-struct HalAccess{
-private:
-    HalAccess();
-public:
-    HalBoard *board;
-    PL_Access *access;
-    int core;
-    int cluster;
-    char program[256];
-
-    int sync(int value);
-    void readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size);
-    void writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size);
-    int getResult();
-    void loadProgram(const char* program_name);
-    int getStatus();
-
-    ~HalAccess();
-    friend class HalBoard;
-};
-
 
 
 #endif //__HAL_CORE_H_INCLUDED__

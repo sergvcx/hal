@@ -1,7 +1,8 @@
 
 file(GLOB mc7601_public_headers 
-	${ROOT}/include/*.h
-	${ROOT}/include/*.mlb)
+	include/hal/*.h
+	include/*.h
+	include/*.mlb)
 file(GLOB mc7601_sources 
 	${public_headers}
 	src/1879vya1ya/*.asm
@@ -11,15 +12,15 @@ file(GLOB mc7601_sources
 	src/1879vya1ya/*.S
 	src/1879vya1ya/*.mlb
 	src/1879vya1ya/*.h
-	${ROOT}/src/*.h
-	${ROOT}/src/*.cpp
-	${ROOT}/src/ringbuffer/*.cpp  
-	${ROOT}/src/ringbuffer/*.c
-	${ROOT}/src/ringbuffer/*.asm	
-	${ROOT}/src/ringbuffer/*.s
-	${ROOT}/src/ringbuffer/*.S
-	${ROOT}/src/ringbuffer/*.mlb
-	${ROOT}/src/ringbuffer/*.h
+	src/*.h
+	src/*.cpp
+	src/ringbuffer/*.cpp  
+	src/ringbuffer/*.c
+	src/ringbuffer/*.asm	
+	src/ringbuffer/*.s
+	src/ringbuffer/*.S
+	src/ringbuffer/*.mlb
+	src/ringbuffer/*.h
 	src/nmc_all/*.cpp
 	src/nmc_all/*.c
 	src/nmc_all/*.asm	

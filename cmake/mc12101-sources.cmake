@@ -1,7 +1,8 @@
 
 file(GLOB mc12101_public_headers 
-	${ROOT}/include/*.h
-	${ROOT}/include/*.mlb)
+	include/hal/*.h
+	include/*.h
+	include/*.mlb)
 file(GLOB mc12101_sources 
 	${public_headers}
 	src/1879vm6ya/*.asm
