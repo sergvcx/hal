@@ -17,6 +17,7 @@ enum HalBoardType{
 enum HAL_BOARD_OPTIONS{
     HAL_BOARD_NUMBER,
     HAL_BOARD_TYPE,
+    HAL_BOARD_MAC_ADDR,
     HAL_IP,
 };
 

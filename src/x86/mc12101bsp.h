@@ -1,9 +1,12 @@
+#ifndef __MC12101BSP_H_INCLUDED
+#define __MC12101BSP_H_INCLUDED
 #include "library.h"
 #include "hal-core.h"
 
 struct PL_Access;
 struct IO_Service;
 struct PL_Board;
+
 
 struct HalBoardMC12101: public HalBoard{
 public:
@@ -26,20 +29,19 @@ public:
     HalBoardMC12101(int i);
     ~HalBoardMC12101() override;
 
-    void open() override;
-    void close() override;
-    void reset() override;
+    int open() override;
+    int close() override;
+    int reset() override;
     HalAccess *getAccess(HalAccessOptions *options) override;
 };
 
 struct HalAccessMC12101 : public HalAccess{
 public:
-    HalBoardMC12101 *board;
+    HalBoardMC12101 *_board;
     PL_Access *access;    
     int core;
     char program[256];
     HalAccessMC12101(HalBoardMC12101 *board, HalAccessOptions *opt);
-    int (*plCloseAccess)(PL_Access *);
     int (*plReadMemBlock)(PL_Access *, void *, int, int);
     int (*plWriteMemBlock)(PL_Access *, const void *, int, int); 
     int (*plLoadProgramFile)(PL_Access *, const char *);
@@ -55,8 +57,9 @@ public:
     void loadProgram(const char* program_name) override;
     int getStatus() override;
     ~HalAccessMC12101() override;
-    friend class HalBoardMC12101;
 };
+
+#endif //__MC12101BSP_H_INCLUDED
 
 
 

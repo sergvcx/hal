@@ -1,7 +1,7 @@
 #ifndef __HAL_CORE_H_INCLUDED__
 #define __HAL_CORE_H_INCLUDED__
 #include "hal/hal.h"
-#include "library.h"
+#include <iostream>
 
 #ifdef __NM__
 #define HAL_VIRTUAL
@@ -9,18 +9,30 @@
 #define HAL_VIRTUAL virtual
 #endif
 
+#ifdef DEBUG
+#   define   INF_LOG(message) std::cout << message << std::endl
+#else
+#   define   INF_LOG(message)
+#endif
+
+
+HalBoard *createBoard_MB7707(const unsigned char *host_mac_addr);
+HalBoard *createBoard_MC12101(int index);
+
 #ifdef __cplusplus
 struct HalBoard{
 protected:
     HalBoard(){};
 public:
-    int board_type;
-    static HalBoard *createBoard_MC12101(int index);
-    //static HalBoard *createBoard(HalAccessOptions *options);
-    static HalBoard *createHost();
-    HAL_VIRTUAL void open();
-    HAL_VIRTUAL void close();
-    HAL_VIRTUAL void reset();
+    int is_initialized;
+    int board_type;    
+    //static HalBoard *createBoard_MC12705(int index);
+    //static HalBoard *createBoard_MC5103(int index);
+    //static HalBoard *createBoard_MC7601(int index);
+    static HalBoard *createHost(int index);
+    HAL_VIRTUAL int open();
+    HAL_VIRTUAL int close();
+    HAL_VIRTUAL int reset();
     HAL_VIRTUAL HalAccess *getAccess(HalAccessOptions *options);
     HAL_VIRTUAL ~HalBoard();
 };
@@ -47,6 +59,7 @@ public:
 struct HalBoardOptions{
     int board_no;
     int board_type;
+    unsigned char host_mac_addr[7];
 };
 
 struct HalAccessOptions{

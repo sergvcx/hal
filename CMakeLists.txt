@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 project(hal 
 	LANGUAGES C CXX
 	DESCRIPTION "Hal library"
-	VERSION 0.1.2)
+	VERSION 0.2.2)
 
 
 add_library(hal STATIC)
@@ -46,6 +46,7 @@ target_include_directories(hal
 if(HAL_X86)
 	set(arch x86)
 	target_sources(hal PRIVATE ${x86_sources})
+	target_compile_definitions(hal PUBLIC $<$<CONFIG:Debug>:DEBUG>)
 	target_include_directories(hal PRIVATE src/x86)
 endif()
 if(HAL_MC12101)

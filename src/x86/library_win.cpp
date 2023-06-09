@@ -4,7 +4,10 @@
 
 
 LibraryHandle open_library(const char* name){
-    return LoadLibrary(name);;
+    char win_name[50];
+    sprintf(win_name, "%s.dll", name);
+    printf("%s\n", win_name);
+    return LoadLibrary(win_name);
 }
 
 LibraryFuncAddr library_get_addr(LibraryHandle handle, const char* func_name){

@@ -20,6 +20,7 @@ extern "C" {
 
     void halCloseBoard(HalBoard *board){
         board->close();
+        delete board;
     }
 
     void halResetBoard(HalBoard *board){

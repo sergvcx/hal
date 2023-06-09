@@ -12,16 +12,19 @@ HalBoard *HalBoard::createBoard_MC12101(int i){
     return 0;
 }
 
-void HalBoard::open(){
+int HalBoard::open(){
     std::cout << "close not implemented" << std::endl;
+    return HAL_NOT_IMPLEMENTED;
 }
 
-void HalBoard::close(){
+int HalBoard::close(){
     std::cout << "close not implemented" << std::endl;
+    return HAL_NOT_IMPLEMENTED;
 }
 
-void HalBoard::reset(){
+int HalBoard::reset(){
     std::cout << "reset not implemented" << std::endl;
+    return HAL_NOT_IMPLEMENTED;
 }
 
 HalAccess *HalBoard::getAccess(HalAccessOptions *options){
