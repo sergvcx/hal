@@ -2,8 +2,8 @@
 #include "string.h"
 
 
-HalBoard *createBoard_MB7707(const unsigned char* host_mac_addr){
-    return new HalBoardMB7707(host_mac_addr);
+HalBoard *createBoard_MB7707(HalBoardOptions *board_options){
+    return new HalBoardMB7707(board_options->host_mac_addr);
 }
     
 HalBoardMB7707::HalBoardMB7707(const unsigned char* host_mac_addr){

@@ -24,6 +24,7 @@ Release/
 nmc4vars_win.mk
 *.abs
 *.7z
+*.pdb
 
 make_*/
 .vs/

@@ -4,21 +4,17 @@
 typedef struct HalBoard HalBoard;        //for nm and x86 different realizations
 typedef struct HalAccess HalAccess;       //for nm and x86 different realizations
 
-enum HalBoardType{
-    NO_BOARD,
-    MC12101,
-    MB7707,
-    MC7601,
-    MC5103,
-    VIRTUAL
-};
+
+
 
 
 enum HAL_BOARD_OPTIONS{
     HAL_BOARD_NUMBER,
     HAL_BOARD_TYPE,
     HAL_BOARD_MAC_ADDR,
-    HAL_IP,
+    HAL_SERVER_IP,
+    HAL_SERVER_PORT,
+    HAL_SERVER_ENABLED
 };
 
 enum HAL_ACCESS_OPTIONS{

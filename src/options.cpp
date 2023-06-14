@@ -9,10 +9,10 @@ extern "C" {
         switch (board_options->board_type)
         {
         case MC12101:
-            board = createBoard_MC12101(board_options->board_no);
+            board = createBoard_MC12101(board_options);
             break;
         case MB7707:
-            board = createBoard_MB7707(board_options->host_mac_addr);
+            board = createBoard_MB7707(board_options);
             break;
         default:
             break;
@@ -25,6 +25,13 @@ extern "C" {
             delete board;
             return NULL;
         }
+    }
+
+    unsigned int halGetBoardCount(HalBoardOptions *board_options, int *error){
+        HalBoard *board = halGetBoardOpt(board_options);    
+        unsigned int count = board->count();
+        halCloseBoard(board);
+        return count;
     }
 
     HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options){
@@ -45,27 +52,38 @@ extern "C" {
         delete options;
     }
 
-    HalBoardOptions *halSetBoardOption(HalBoardOptions *builder, int option, ...){
+    HalBoardOptions *halSetBoardOption(HalBoardOptions *options, int optcode, ...){
         va_list ap;
-        va_start(ap, option);
-        switch (option)
+        va_start(ap, optcode);
+        switch (optcode)
         {
         case HAL_BOARD_TYPE:
-            builder->board_type = va_arg(ap, int);
+            options->board_type = va_arg(ap, int);
             break;
         case HAL_BOARD_NUMBER:
-            builder->board_no = va_arg(ap, int);
+            options->board_no = va_arg(ap, int);
             break;
         case HAL_BOARD_MAC_ADDR:{
             const char *addr = va_arg(ap, const char*);
-            memcpy(builder->host_mac_addr, addr, 6);
+            memcpy(options->host_mac_addr, addr, 6);
             break;
         }
+        case HAL_SERVER_IP:{
+            const char *server_ip = va_arg(ap, const char*);
+            strcpy(options->server_ip, server_ip);
+            break;
+        }
+        case HAL_SERVER_PORT:
+            options->server_port = va_arg(ap, int);
+            break;
+        case HAL_SERVER_ENABLED:
+            options->server_enabled = va_arg(ap, int);
+            break;
         default:
             break;
         }
         va_end(ap);
-        return builder;
+        return options;
     }
 
     HalAccessOptions *halSetAccessOption(HalAccessOptions *builder, int option, ...){

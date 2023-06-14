@@ -11,6 +11,7 @@ project(hal
 	DESCRIPTION "Hal library"
 	VERSION 0.2.2)
 
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 
 add_library(hal STATIC)
 add_library(hal::hal ALIAS hal)
@@ -46,8 +47,13 @@ target_include_directories(hal
 if(HAL_X86)
 	set(arch x86)
 	target_sources(hal PRIVATE ${x86_sources})
-	target_compile_definitions(hal PUBLIC $<$<CONFIG:Debug>:DEBUG>)
-	target_include_directories(hal PRIVATE src/x86)
+	target_compile_definitions(hal PUBLIC $<$<CONFIG:Debug>:DEBUG> HAL_IO_HOST)
+	target_include_directories(hal 
+		PRIVATE 
+			src/x86
+			$ENV{MC12101}/include)
+	target_compile_definitions(hal PUBLIC _ITERATOR_DEBUG_LEVEL=0)
+	add_subdirectory(hal-run)
 endif()
 if(HAL_MC12101)
 	set(arch mc12101)

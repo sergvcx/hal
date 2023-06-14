@@ -34,10 +34,10 @@ int main(){
     
 
     halLoadProgram(access, "simple.abs");
-    if(halGetLastError()){
-        printf("Error occured\n");
-        return 0;
-    }
+    // if(halGetLastError()){
+    //     printf("Error occured\n");
+    //     return 0;
+    // }
     //halStartIOService(access, stdout);
 
     

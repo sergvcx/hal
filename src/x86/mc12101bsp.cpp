@@ -3,19 +3,33 @@
 #include "hal/hal-options.h"
 #include "mc12101bsp.h"
 #include <iostream>
+#include "io_host.h"
 
-HalBoard *createBoard_MC12101(int i){
-    return new HalBoardMC12101(i);
+HalBoard *createBoard_MC12101(HalBoardOptions *options){
+    return new HalBoardMC12101(options);
 }
 
-HalBoardMC12101::HalBoardMC12101(int i) {
-    handle = open_library("mc12101load");
-    if(handle == 0){
-        INF_LOG("Library not found");
-        return;
+HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
+    remoted = 0;
+    if(options->server_enabled){
+        remoted = 1;
+        handle = open_library("mc12101load_proxy");
+        if(handle == 0){
+           INF_LOG("Library mc12101load_proxy not found");
+            return;
+        }
+        auto rplConnectToHost = (int (*)(const char *, int))library_get_addr(handle, "PL_ConnectToHost");
+        int error = rplConnectToHost(options->server_ip, options->server_port);        
+    } else {
+        handle = open_library("mc12101load");
+        if(handle == 0){
+            INF_LOG("Library mc12101load not found");
+            return;
+        }
     }
+
     board_type = MC12101;
-    board_no = i;
+    board_no = options->board_no;
     plGetCount = (int(*)(unsigned int*))library_get_addr(handle, "PL_GetBoardCount");
     plGetDesc = (int (*)(unsigned int, PL_Board **))library_get_addr(handle, "PL_GetBoardDesc");
     plCloseDesc = (int (*)(PL_Board *))library_get_addr(handle, "PL_CloseBoardDesc");
@@ -28,11 +42,25 @@ HalBoardMC12101::HalBoardMC12101(int i) {
     plGetResult = (int (*)(PL_Access *, unsigned int *))library_get_addr(handle, "PL_GetResult");
     plSync = (int (*)(PL_Access *, int, int *))library_get_addr(handle, "PL_Sync");
     plReset = (int (*)(PL_Board *))library_get_addr(handle, "PL_ResetBoard");
+    is_initialized = 1;
+
+    
 }
+
+unsigned int HalBoardMC12101::count(){
+    plGetCount(&board_count);
+    return board_count;
+}
+
 
 HalBoardMC12101::~HalBoardMC12101(){
     close();
-    close_library(handle);
+    if(remoted){
+        auto rplDisconnect = (int (*)())library_get_addr(handle, "RPL_DisconnectFromHost");
+        rplDisconnect();
+    } else {
+        close_library(handle);
+    }
 }
 
 
@@ -62,7 +90,16 @@ HalAccessMC12101::HalAccessMC12101(HalBoardMC12101 *board, HalAccessOptions *opt
     plReadMemBlock = board->plReadMemBlock;
     plWriteMemBlock = board->plWriteMemBlock;
     plLoadProgramFile = board->plLoadProgramFile;
+    core = opt->core;
+    
+    ops.plReadMemBlock = plReadMemBlock;
+    ops.plWriteMemBlock = plWriteMemBlock;
+
     board->plGetAccess(board->desc, opt->core, &access);    
+}
+
+PL_Access *HalAccessMC12101::getBspAccess(){
+    return access;
 }
 
 
@@ -99,6 +136,7 @@ int HalAccessMC12101::getResult(){
 }
 
 void HalAccessMC12101::loadProgram(const char* program_name){
+    strcpy(program, program_name);
     int error = plLoadProgramFile(access, program_name);
     if(error){
         std::cout << "Failed load program" << std::endl;
@@ -113,6 +151,11 @@ int HalAccessMC12101::getStatus(){
     }
     return (int)result;
 }
+
+void *HalAccessMC12101::getOpsForIO(){
+    return &ops;
+}
+
 
 HalAccessMC12101::~HalAccessMC12101(){
     _board->plCloseAccess(access);
