@@ -69,7 +69,7 @@ public:
     void readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size) override;
     void writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size) override;
     int getResult() override;
-    void loadProgram(const char* program_name) override;
+    void loadProgramFile(const char* program_name) override;
     int getStatus() override;
     ~HalAccessMB7707() override;
 };

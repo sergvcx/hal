@@ -81,7 +81,7 @@ int HalAccessMC5103::getResult(){
     return 0;
 }
 
-void HalAccessMC5103::loadProgram(const char* program_name){
+void HalAccessMC5103::loadProgramFile(const char* program_name){
 
 }
 

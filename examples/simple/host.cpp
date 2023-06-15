@@ -33,7 +33,7 @@ int main(){
     halDestroyAccessOptions(accessOptions);
     
 
-    halLoadProgram(access, "simple.abs");
+    halLoadProgramFile(access, "simple.abs");
     // if(halGetLastError()){
     //     printf("Error occured\n");
     //     return 0;

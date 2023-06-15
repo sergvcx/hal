@@ -62,7 +62,10 @@ int HalAccess::getResult(){
     return 0;
 }
 
-void HalAccess::loadProgram(const char* program_name){
+void HalAccess::loadProgramFile(const char* program_name){
+    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
+}
+void HalAccess::loadProgramFile(const char* program_name, const char *mainArgs){
     std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
 }
 

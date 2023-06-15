@@ -99,7 +99,7 @@ int HalAccessMB7707::getResult(){
     return 0;
 }
 
-void HalAccessMB7707::loadProgram(const char* program_name){
+void HalAccessMB7707::loadProgramFile(const char* program_name){
 
 }
 

@@ -229,7 +229,7 @@ int main(int argc, char **argv)
 			int ret = 1;
 
 			if (!f_Run_program_special)
-				ret = halLoadProgramArgs(Access, ABS_file_name, ABS_file_args);
+				ret = halLoadProgramFileArgs(Access, ABS_file_name, ABS_file_args);
 			// else
 			// 	ret = PL_LoadProgramFileArgs_Int(Access, ABS_file_name, ABS_file_args);
 

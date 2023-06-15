@@ -67,8 +67,9 @@ extern "C" {
     //HalIO *halStartIO(HalAccess *access, FILE *file);
     //void halStopIO(HalIO *io);
 
-    int halLoadProgram(HalAccess *access, const char *program_name);
-    int halLoadProgramArgs(HalAccess *access, const char *program_name, const char *args);
+    int halLoadProgramFile(HalAccess *access, const char *program_name);
+    int halLoadProgramFileArgs(HalAccess *access, const char *program_name, const char *args);
+    int halLoadProgram(HalAccess *access, const void *addrProgram, unsigned int sizeProgram);
     HalIO *halStartIO(HalAccess *access, const char *program_file, FILE *file);
     int halStopIO(HalIO *hal_io);
 

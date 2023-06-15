@@ -53,7 +53,8 @@ public:
     HAL_VIRTUAL void readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size);
     HAL_VIRTUAL void writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size);
     HAL_VIRTUAL int getResult();
-    HAL_VIRTUAL void loadProgram(const char* program_name);
+    HAL_VIRTUAL void loadProgramFile(const char* filename);
+    HAL_VIRTUAL void loadProgramFile(const char* filename, const char *mainArgs);
     HAL_VIRTUAL int getStatus();
     HAL_VIRTUAL ~HalAccess();
 };

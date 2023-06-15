@@ -51,18 +51,24 @@ extern "C" {
         return 0;
     }
 
-    int halLoadProgram(HalAccess *access, const char *program_name){
-        access->loadProgram(program_name);
+    int halLoadProgramFile(HalAccess *access, const char *program_name){
+        access->loadProgramFile(program_name);
         return 0;
     }
 
-    int halLoadProgramArgs(HalAccess *access, const char *program_name, const char *args){
-        access->loadProgram(program_name);
+    int halLoadProgram(HalAccess *access, const void *addrProgram, unsigned int sizeProgram){
+        return HAL_NOT_IMPLEMENTED;
+    }
+
+    int halLoadProgramFileArgs(HalAccess *access, const char *program_name, const char *args){
+        access->loadProgramFile(program_name, args);
         return 0;
     }
 
     int halSync(HalAccess *access, int value, int *error){
-        *error = 0;
+        if(error != NULL){
+            *error = 0;
+        }
         return access->sync(value);
     }
     

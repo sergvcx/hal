@@ -54,7 +54,10 @@ int HalAccess::getResult(){
     std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
     return 0;
 }
-void HalAccess::loadProgram(const char* program_name){
+void HalAccess::loadProgramFile(const char* program_name){
+    std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
+}
+void HalAccess::loadProgramFile(const char* program_name, const char *mainArgs){
     std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
 }
 

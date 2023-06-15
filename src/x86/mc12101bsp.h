@@ -26,6 +26,7 @@ public:
     int (*plReadMemBlock)(PL_Access *, void *, int, int);
     int (*plWriteMemBlock)(PL_Access *, const void *, int, int); 
     int (*plLoadProgramFile)(PL_Access *, const char *);
+    int (*plLoadProgramFileArgs)(PL_Access *, const char *, const char *);
     int (*plGetStatus)(PL_Access *, unsigned int *);
     int (*plGetResult)(PL_Access *, unsigned int *);
     int (*plSync)(PL_Access *, int, int *);    
@@ -53,19 +54,21 @@ public:
         int (*plWriteMemBlock)(PL_Access *, const void *, int, int); 
     } ops;
     HalAccessMC12101(HalBoardMC12101 *board, HalAccessOptions *opt);
-    int (*plReadMemBlock)(PL_Access *, void *, int, int);
-    int (*plWriteMemBlock)(PL_Access *, const void *, int, int); 
-    int (*plLoadProgramFile)(PL_Access *, const char *);
-    int (*plGetStatus)(PL_Access *, unsigned int *);
-    int (*plGetResult)(PL_Access *, unsigned int *);
-    int (*plSync)(PL_Access *, int, int *);     
+    // int (*plReadMemBlock)(PL_Access *, void *, int, int);
+    // int (*plWriteMemBlock)(PL_Access *, const void *, int, int); 
+    // int (*plLoadProgramFile)(PL_Access *, const char *);
+    // int (*plLoadProgramFileArgs)(PL_Access *, const char *, const char *);
+    // int (*plGetStatus)(PL_Access *, unsigned int *);
+    // int (*plGetResult)(PL_Access *, unsigned int *);
+    // int (*plSync)(PL_Access *, int, int *);     
 
     PL_Access *getBspAccess() override;
     int sync(int value) override;
     void readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size) override;
     void writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size) override;
     int getResult() override;
-    void loadProgram(const char* program_name) override;
+    void loadProgramFile(const char* program_name) override;
+    void loadProgramFile(const char* program_name, const char *mainArgs) override;
     int getStatus() override;
     void *getOpsForIO() override;
     ~HalAccessMC12101() override;
