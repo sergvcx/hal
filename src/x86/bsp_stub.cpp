@@ -5,6 +5,12 @@
 //     std::cout << "HalBoard not reailized! Use derived structs" << std::endl;
 // }
 
+
+int HalBoard::loadInitCode(){
+    std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
+    return HAL_NOT_IMPLEMENTED;
+}
+
 int HalBoard::open(){
     std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
     return HAL_NOT_IMPLEMENTED;

@@ -43,10 +43,10 @@ int main(){
     
     while (1)
 	{
-        if (halGetStatus(access) & 2)
+        if (halGetStatus(access, NULL) & 2)
 			break;
 	}
-    int result = halGetResult(access);
+    int result = halGetResult(access, NULL);
     printf("result: %d\n", result);
 
     halCloseAccess(access);

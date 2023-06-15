@@ -18,9 +18,6 @@ typedef struct PL_Access PL_Access;
 #endif
 
 
-HalBoard *createBoard_MB7707(HalBoardOptions *board_options);
-HalBoard *createBoard_MC12101(HalBoardOptions *board_options);
-
 #ifdef __cplusplus
 struct HalBoard{
 protected:
@@ -30,6 +27,7 @@ public:
     int board_type;    
     static HalBoard *createHost(int index);
     HAL_VIRTUAL int open();
+    HAL_VIRTUAL int loadInitCode();
     HAL_VIRTUAL int close();
     HAL_VIRTUAL int reset();
     HAL_VIRTUAL HalAccess *getAccess(HalAccessOptions *options);

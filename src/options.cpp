@@ -3,6 +3,11 @@
 #include "hal-core.h"
 #include "string.h"
 
+HalBoard *createBoard_MB7707(HalBoardOptions *board_options);
+HalBoard *createBoard_MC12101(HalBoardOptions *board_options);
+HalBoard *createBoard_MC12705(HalBoardOptions *board_options);
+
+
 extern "C" {
     HalBoard *halGetBoardOpt(HalBoardOptions *board_options){
         HalBoard *board = NULL;
@@ -13,6 +18,9 @@ extern "C" {
             break;
         case MB7707:
             board = createBoard_MB7707(board_options);
+            break;
+        case MC12705:
+            board = createBoard_MC12705(board_options);
             break;
         default:
             break;

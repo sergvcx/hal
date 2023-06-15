@@ -22,6 +22,7 @@ enum HalBoardType{
     MB7707,
     MC7601,
     MC5103,
+    MC12705,
     VIRTUAL
 };
 
@@ -49,7 +50,7 @@ extern "C" {
     HalBoard *halGetBoard(const char *options);
     HalBoard *halGetBoardOpt(HalBoardOptions *board_options);
 
-    unsigned int halGetBoardCount(HalBoardOptions *board_options, int *error = NULL);
+    unsigned int halGetBoardCount(HalBoardOptions *board_options, int *error);
 
     int halGetFirmwareVersion(HalBoard *board, unsigned int *version_major, unsigned int *version_minor);
     
@@ -74,14 +75,14 @@ extern "C" {
     int halStopIO(HalIO *hal_io);
 
 
-    int halSync(HalAccess *board, int value, int *error = NULL);
-    uintptr_t halSyncAddr(HalAccess *board, uintptr_t value, int *error = NULL);
+    int halSync(HalAccess *board, int value, int *error);
+    uintptr_t halSyncAddr(HalAccess *board, uintptr_t value, int *error);
 
     int halReadMemBlock (HalAccess *access, void* dstHostAddr, uintptr_t srcBoardAddr, size_t size32);
     int halWriteMemBlock(HalAccess *access, const void* srcHostAddr, uintptr_t dstBoardAddr, size_t size32);
 
-    int halGetResult(HalAccess *access, int *error = NULL);
-    int halGetStatus(HalAccess *access, int *error = NULL);
+    int halGetResult(HalAccess *access, int *error);
+    int halGetStatus(HalAccess *access, int *error);
 
     
     int halSetTimeout(int msec);

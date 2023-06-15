@@ -31,7 +31,7 @@ extern "C" {
         return 0;
     }
     int halLoadInitCode(HalBoard *board){
-        std::cout << "halLoadInitCode not implemented" << std::endl;
+        board->loadInitCode();
         return 0;
     }
 
