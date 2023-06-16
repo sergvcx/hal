@@ -48,12 +48,13 @@ extern "C" {
 
     int halCloseAccess(HalAccess *access){
         delete access;
+        //return access->getError();
         return 0;
     }
 
     int halLoadProgramFile(HalAccess *access, const char *program_name){
         access->loadProgramFile(program_name);
-        return 0;
+        return access->getError();
     }
 
     int halLoadProgram(HalAccess *access, const void *addrProgram, unsigned int sizeProgram){
@@ -62,7 +63,7 @@ extern "C" {
 
     int halLoadProgramFileArgs(HalAccess *access, const char *program_name, const char *args){
         access->loadProgramFile(program_name, args);
-        return 0;
+        return access->getError();
     }
 
     int halSync(HalAccess *access, int value, int *error){

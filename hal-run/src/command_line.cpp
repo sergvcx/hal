@@ -7,6 +7,7 @@
 #include <assert.h>
 
 #include "mc12101load.h"
+#include "hal/hal.h"
 
 #include "nmrun.h"
 
@@ -25,6 +26,7 @@ extern BOOL f_Perform_reset;
 extern BOOL f_Run_program_special;
 extern BOOL f_Return_NM_ret_val;
 extern BOOL Quiet;
+extern int Board_type;
 
 #ifdef NM_IO_ServiceX
 extern BOOL f_Use_print;
@@ -107,6 +109,7 @@ void Usage(void)
 
 	cout << "--args=\"List of args\"\n\tSpecify arguments forwarded to main of user program\n";
 
+	cout << "--board=<mc12101|mb7707>\n\tSpecify kind of board\n";
 #ifdef NM_RPC
 	cout << "--server_ip=<Server_IP_address>\n\tSpecify server IP address\n";
 	cout << "--server_port=<num>\n\tSpecify server port (default: " << dec << RPC_server_port << ")\n";
@@ -186,6 +189,26 @@ int Parse_extended_option(char *ex_opt)
 		RPC_server_port_specified = true;
 	}
 #endif
+	else If_this_option("board="){
+		istringstream sin(ex_opt + sizeof("board=") - 1);
+		string kind;
+		sin >> kind;
+
+		if ((sin.fail()) || (!(sin.eof())))
+		{
+			cout << "ERROR: Invalid option '" << ex_opt << "'!\n";
+			return 1;
+		}
+
+		if(strcmp(kind.c_str(), "mc12101") == 0){
+			Board_type = MC12101;
+		} else if(strcmp(kind.c_str(), "mb7707") == 0){
+			Board_type = MB7707;
+		}else {
+			cout << "Error: Wrong kind of board";
+			return 1;
+		}
+	}
 	else If_this_option("recv_file_name=")
 	{
 		if (strlen(ex_opt) < sizeof("recv_file_name="))

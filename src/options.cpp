@@ -27,7 +27,11 @@ extern "C" {
         }
         if(!board) return NULL;
         if(board->is_initialized){
-            board->open();
+            int error = board->open();
+            if(error){
+                delete board;
+                return 0;
+            }
             return board;
         } else {
             delete board;

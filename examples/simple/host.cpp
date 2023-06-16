@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include "stdio.h"
 
-unsigned char MAC_ADDRESS[] = { 0x1A,0x2B,0x3C,0x4D,0x5E,0x6F,0,0,0,0 };
+//unsigned char MAC_ADDRESS[] = { 0x1A,0x2B,0x3C,0x4D,0x5E,0x6F,0,0,0,0 };
+unsigned char MAC_ADDRESS[] = { 0x10,0x62,0xEB,0xDF,0x42,0x74};
+//10-62-EB-DF-42-74
 
 int main(){
     HalBoardOptions *options = halCreateBoardOptions();
@@ -32,8 +34,15 @@ int main(){
     halDestroyBoardOptions(options); 
     halDestroyAccessOptions(accessOptions);
     
-
-    halLoadProgramFile(access, "simple.abs");
+    //int error = halLoadProgramFile(access, "simple.abs");
+    int error = halLoadProgramFile(access, "e:\\Win10\\git\\hal\\examples\\simple\\factorial_mb7707.abs");
+    if(error){
+        printf("Failed load program\n");
+        halCloseAccess(access);
+        halCloseBoard(board);
+        return 1;
+    }
+    
     // if(halGetLastError()){
     //     printf("Error occured\n");
     //     return 0;

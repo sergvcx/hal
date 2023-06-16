@@ -8,6 +8,7 @@ HalBoard *createBoard_MB7707(HalBoardOptions *board_options){
     
 HalBoardMB7707::HalBoardMB7707(const unsigned char* host_mac_addr){
     is_initialized = 0;
+    is_opened = 0;
     strcpy((char*)mac_addr, (const char*)host_mac_addr);
     handle = open_library("mb7707load");
     
@@ -50,11 +51,20 @@ HalBoardMB7707::~HalBoardMB7707(){
 
 int HalBoardMB7707::open(){
     if(!check()) return HAL_ERROR;
-    return plGetBoardDesc(mac_addr, &desc);
+    int error = plGetBoardDesc(mac_addr, &desc);
+    if(error == 0){
+        is_opened = 1;
+    }
+    return error;
 }
 int HalBoardMB7707::close(){
     if(!check()) return HAL_ERROR;
-    return plCloseBoardDesc(desc);
+    if(is_opened){
+        return plCloseBoardDesc(desc);
+    } else {
+        return HAL_OK;
+    }
+    
 }
 
 int HalBoardMB7707::reset(){
@@ -69,7 +79,7 @@ HalAccess *HalBoardMB7707::getAccess(HalAccessOptions *options){
 }
 
 HalAccessMB7707::HalAccessMB7707(HalBoardMB7707 *board, HalAccessOptions *opt){
-    if(!_board->check()) return;
+    if(!board->check()) return;
     core = opt->core;
     _board = board;
     board->plGetAccess(board->desc, core, &access);
@@ -84,24 +94,30 @@ int HalAccessMB7707::sync(int value){
 
 void HalAccessMB7707::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
     if(!_board->check()) return;
-    _board->plReadMemBlock(access, (PL_Word *)dstHostAddr, srcBoardAddr, size);
+    error = _board->plReadMemBlock(access, (PL_Word *)dstHostAddr, srcBoardAddr, size);
 }
 
 void HalAccessMB7707::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
     if(!_board->check()) return;
-    _board->plWriteMemBlock(access, (PL_Word *)srcHostAddr, dstBoardAddr, size);
+    error = _board->plWriteMemBlock(access, (PL_Word *)srcHostAddr, dstBoardAddr, size);
 }
 
 int HalAccessMB7707::getResult(){
     return 0;
 }
 
-void HalAccessMB7707::loadProgramFile(const char* program_name){
+int HalAccessMB7707::getError(){
+    return error;
+}
 
+void HalAccessMB7707::loadProgramFile(const char* program_name){
+    error = _board->plLoadProgramFile(access, program_name);
 }
 
 int HalAccessMB7707::getStatus(){
-    return 0;
+    PL_Word result;
+    error = _board->plGetStatus(access, &result);
+    return (int)result;
 }
 
 HalAccessMB7707::~HalAccessMB7707(){

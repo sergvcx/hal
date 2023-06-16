@@ -14,6 +14,7 @@ typedef unsigned long PL_Addr;
 struct HalBoardMB7707: public HalBoard{
 private:
     bool check();
+    int is_opened;
 public:
     PL_Board *desc;
     LibraryHandle handle;
@@ -55,6 +56,7 @@ public:
     HalBoardMB7707 *_board;
     PL_Access *access;    
     int core;
+    int error;
     char program[256];
     HalAccessMB7707(HalBoardMB7707 *board, HalAccessOptions *opt);
     int (*plReadMemBlock)(PL_Access *, void *, int, int);
@@ -71,6 +73,7 @@ public:
     int getResult() override;
     void loadProgramFile(const char* program_name) override;
     int getStatus() override;
+    int getError() override;
     ~HalAccessMB7707() override;
 };
 

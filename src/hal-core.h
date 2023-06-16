@@ -54,6 +54,7 @@ public:
     HAL_VIRTUAL void loadProgramFile(const char* filename);
     HAL_VIRTUAL void loadProgramFile(const char* filename, const char *mainArgs);
     HAL_VIRTUAL int getStatus();
+    HAL_VIRTUAL int getError();
     HAL_VIRTUAL ~HalAccess();
 };
 

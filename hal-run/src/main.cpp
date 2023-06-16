@@ -17,6 +17,7 @@ using namespace std;
 
 unsigned int Board_number = 0;
 unsigned int Core_number = 0;
+int Board_type = MC12101;
 
 unsigned long Serial_number;
 
@@ -74,7 +75,7 @@ int main(int argc, char **argv)
 	Parse_command_line(argc, argv);
 
 	HalBoardOptions *board_options = halCreateBoardOptions();
-	halSetBoardOption(board_options, HAL_BOARD_TYPE, MC12101);
+	halSetBoardOption(board_options, HAL_BOARD_TYPE, Board_type);
 
 	try
 	{

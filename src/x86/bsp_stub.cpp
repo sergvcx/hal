@@ -40,6 +40,10 @@ unsigned int HalBoard::count(){
 
 // }
 
+int HalAccess::getError(){
+    std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
+    return HAL_NOT_IMPLEMENTED;
+}
 int HalAccess::sync(int value){
     std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
     return 0;
