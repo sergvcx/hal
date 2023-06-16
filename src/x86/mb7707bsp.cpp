@@ -10,10 +10,7 @@ HalBoardMB7707::HalBoardMB7707(const unsigned char* host_mac_addr){
     is_initialized = 0;
     strcpy((char*)mac_addr, (const char*)host_mac_addr);
     handle = open_library("mb7707load");
-    char *path = getenv("PATH");
-    INF_LOG(path);
-    path = getenv("MB7707");
-    INF_LOG(path);
+    
     if(handle == 0){
         INF_LOG("Library not found");
         return;

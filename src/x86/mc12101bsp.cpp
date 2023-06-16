@@ -3,6 +3,7 @@
 #include "hal/hal-options.h"
 #include "mc12101bsp.h"
 #include <iostream>
+#include <cstring>
 
 HalBoard *createBoard_MC12101(HalBoardOptions *options){
     return new HalBoardMC12101(options);

@@ -73,7 +73,9 @@ extern "C" {
     }
     
     uintptr_t halSyncAddr(HalAccess *access, uintptr_t value, int *error){
-        *error = 0;
+        if(error != NULL){
+            *error = 0;
+        }
         return 0;
     }
 
@@ -88,12 +90,16 @@ extern "C" {
     }
 
     int halGetResult(HalAccess *access, int* error){
-        *error = 0;
+        if(error != NULL){
+            *error = 0;
+        }
         return access->getResult();
     }
 
     int halGetStatus(HalAccess *access, int* error){
-        *error = 0;
+        if(error != NULL){
+            *error = 0;
+        }
         return access->getStatus();
     }
 

@@ -5,6 +5,8 @@
 #include <iostream>
 #include "assert.h"
 
+#include <cstring>
+
 HalBoard *createBoard_MC12705(HalBoardOptions *options){
     return new HalBoardMC12705(options);
 }

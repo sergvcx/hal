@@ -6,7 +6,8 @@
 #   define LibraryHandle HINSTANCE 
 #   define LibraryFuncAddr void*
 #else
-#   define LibraryHandle int 
+#   include "dlfcn.h"
+#   define LibraryHandle void * 
 #   define LibraryFuncAddr void*
 #endif //_WIN32
 

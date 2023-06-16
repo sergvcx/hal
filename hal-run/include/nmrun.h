@@ -29,7 +29,11 @@ const unsigned int CORES_COUNT = 2;
 const PL_Addr Dump_memory_begin_default = 0x00018000; // (Must be multiple of 2)
 const PL_Addr Dump_memory_size_default = 0x1000; // (Must be multiple of 2)
 
+#ifdef _WIN32
 const DWORD MAX_TIMEOUT = 1000000000; // (mS)
+#else 
+const unsigned long MAX_TIMEOUT = 1000000000; // (mS)
+#endif 
 
 extern "C" {
 #ifdef NM_RPC

@@ -86,16 +86,16 @@
             }
         },
         {
-            "name": "hal-mc12101-host-makefiles",
-            "displayName": "hal-mc12101 host on makefiles",
+            "name": "hal-x86-makefiles",
+            "displayName": "hal x86 on makefiles",
             "inherits": "host-makefile",            
             "cacheVariables": {
-                "HAL_MC12101": "ON"
+                "HAL_X86": "ON"
             }
         },
         {
             "name": "hal-x86-msvc",
-            "displayName": "hal host on msvc",
+            "displayName": "hal x86 on msvc",
             "inherits": "host-msvc", 
             "cacheVariables": {
                 "HAL_X86": "ON"

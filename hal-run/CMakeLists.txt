@@ -17,8 +17,9 @@ set(sources
     src/dump.cpp
     src/command_line.cpp)
 
-
+if(WIN32)
 add_subdirectory(libelf)
+endif()
 target_sources(hal-run PRIVATE ${sources})
 target_include_directories(hal-run
     PUBLIC
