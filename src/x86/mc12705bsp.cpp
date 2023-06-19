@@ -30,7 +30,7 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
         }
     }
 
-    board_type = MC12705;
+    board_type = HAL_MC12705;
     board_no = options->board_no;
     plGetCount = (int(*)(unsigned int*))library_get_addr(handle, "PL_GetBoardCount");
     plGetDesc = (int (*)(unsigned int, PL_Board **))library_get_addr(handle, "PL_GetBoardDesc");
@@ -50,7 +50,7 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
     
 }
 
-unsigned int HalBoardMC12705::count(){
+unsigned int HalBoardMC12705::count(int *error){
     plGetCount(&board_count);
     return board_count;
 }
@@ -113,58 +113,46 @@ PL_Access *HalAccessMC12705::getBspAccess(){
 }
 
 
-int HalAccessMC12705::sync(int value){
-    int result;
-    int error = _board->plSync(access, value, &result);
-    if(error){
-        std::cout << "Failed sync" << std::endl;
-    }
+int HalAccessMC12705::sync(int value, int *error){
+    int result = 0;
+    // int _error = board->plSync(access, value, &result);
+    // if(error != NULL){
+    //     *error = _error;
+    // }
     return result;
 }
 
-void HalAccessMC12705::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
-    int error = _board->plReadMemBlock(access, dstHostAddr, (int)srcBoardAddr, size);
-    if(error){
-        std::cout << "Failed read mem block" << std::endl;
-    }
+int HalAccessMC12705::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
+    return _board->plReadMemBlock(access, dstHostAddr, (int)srcBoardAddr, size);    
 }
 
-void HalAccessMC12705::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
-    int error = _board->plWriteMemBlock(access, srcHostAddr, (int)dstBoardAddr, size);
-    if(error){
-        std::cout << "Failed write mem block";
-    }
+int HalAccessMC12705::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
+    return _board->plWriteMemBlock(access, srcHostAddr, (int)dstBoardAddr, size);    
 }
 
-int HalAccessMC12705::getResult(){
+int HalAccessMC12705::getResult(int *error){
     PL_Word result;
-    int error = _board->plGetResult(access, &result);
-    if(error){
+    int _error = _board->plGetResult(access, &result);
+    if(_error){
         std::cout << "Failed get result" << std::endl;
     }
     return (int)result;
 }
 
-void HalAccessMC12705::loadProgramFile(const char* program_name){
+int HalAccessMC12705::loadProgramFile(const char* program_name){
     strcpy(program, program_name);
-    int error = _board->plLoadProgramFile(access, program_name);
-    if(error){
-        std::cout << "Failed load program" << std::endl;
-    }
+    return _board->plLoadProgramFile(access, program_name);
 }
 
-void HalAccessMC12705::loadProgramFile(const char* program_name, const char *mainArgs){
+int HalAccessMC12705::loadProgramFile(const char* program_name, const char *mainArgs){
     strcpy(program, program_name);
-    int error = _board->plLoadProgramFileArgs(access, program_name, mainArgs);
-    if(error){
-        std::cout << "Failed load program" << std::endl;
-    }
+    return _board->plLoadProgramFileArgs(access, program_name, mainArgs);
 }
 
-int HalAccessMC12705::getStatus(){
+int HalAccessMC12705::getStatus(int *error){
     PL_Word result;
-    int error = _board->plGetStatus(access, &result);
-    if(error){
+    int _error = _board->plGetStatus(access, &result);
+    if(_error){
         std::cout << "Failed get status" << std::endl;
     }
     return (int)result;

@@ -6,9 +6,9 @@
 typedef struct PL_Access PL_Access;
 
 #ifdef __NM__
-#define HAL_VIRTUAL
+#define HAL_VIRTUAL_FUNC
 #else
-#define HAL_VIRTUAL virtual
+#define HAL_VIRTUAL_FUNC virtual
 #endif
 
 #ifdef DEBUG
@@ -26,17 +26,17 @@ public:
     int is_initialized;
     int board_type;    
     static HalBoard *createHost(int index);
-    HAL_VIRTUAL int open();
-    HAL_VIRTUAL int loadInitCode();
-    HAL_VIRTUAL int close();
-    HAL_VIRTUAL int reset();
-    HAL_VIRTUAL HalAccess *getAccess(HalAccessOptions *options);
-    HAL_VIRTUAL ~HalBoard();
-    HAL_VIRTUAL unsigned int count();
+    HAL_VIRTUAL_FUNC int open();
+    HAL_VIRTUAL_FUNC int loadInitCode();
+    HAL_VIRTUAL_FUNC int close();
+    HAL_VIRTUAL_FUNC int reset();    
+    HAL_VIRTUAL_FUNC HalAccess *getAccess(HalAccessOptions *options);
+    HAL_VIRTUAL_FUNC ~HalBoard();
+    HAL_VIRTUAL_FUNC unsigned int count(int *error = NULL);
 };
 
 struct IHalAccessIO{
-    HAL_VIRTUAL void *getOpsForIO();
+    HAL_VIRTUAL_FUNC void *getOpsForIO();
 };
 
 struct HalAccess{
@@ -46,16 +46,17 @@ public:
     HalBoard *board;
 
     //HAL_VIRTUAL uintptr_t getBspAccess();
-    HAL_VIRTUAL PL_Access *getBspAccess();
-    HAL_VIRTUAL int sync(int value);
-    HAL_VIRTUAL void readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size);
-    HAL_VIRTUAL void writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size);
-    HAL_VIRTUAL int getResult();
-    HAL_VIRTUAL void loadProgramFile(const char* filename);
-    HAL_VIRTUAL void loadProgramFile(const char* filename, const char *mainArgs);
-    HAL_VIRTUAL int getStatus();
-    HAL_VIRTUAL int getError();
-    HAL_VIRTUAL ~HalAccess();
+    HAL_VIRTUAL_FUNC PL_Access *getBspAccess();
+    HAL_VIRTUAL_FUNC int open();
+    HAL_VIRTUAL_FUNC int close();
+    HAL_VIRTUAL_FUNC int sync(int value, int *error = NULL);
+    HAL_VIRTUAL_FUNC int readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size);
+    HAL_VIRTUAL_FUNC int writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size);
+    HAL_VIRTUAL_FUNC int getResult(int *error = NULL);
+    HAL_VIRTUAL_FUNC int loadProgramFile(const char* filename);
+    HAL_VIRTUAL_FUNC int loadProgramFile(const char* filename, const char *mainArgs);
+    HAL_VIRTUAL_FUNC int getStatus(int *error = NULL);
+    HAL_VIRTUAL_FUNC ~HalAccess();
 };
 
 #endif

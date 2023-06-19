@@ -60,32 +60,35 @@ HalAccessMC5103::HalAccessMC5103(HalBoardMC5103 *board, HalAccessOptions *opt){
     
 }
 
-int HalAccessMC5103::sync(int value){
+int HalAccessMC5103::sync(int value, int *error){
     if(!_board->check()) return 0;
     PL_Word result = 0;
     //_board->plSync(access, value, &result);
     return result;
 }
 
-void HalAccessMC5103::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
-    if(!_board->check()) return;
-    //_board->plReadMemBlock(access, (PL_Word *)dstHostAddr, srcBoardAddr, size);
+int HalAccessMC5103::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
+    if(!_board->check()) return HAL_ERROR;
+    //return _board->plReadMemBlock(access, (PL_Word *)dstHostAddr, srcBoardAddr, size);
+    return HAL_NOT_IMPLEMENTED;
 }
 
-void HalAccessMC5103::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
-    if(!_board->check()) return;
-    //_board->plWriteMemBlock(access, (PL_Word *)srcHostAddr, dstBoardAddr, size);
+int HalAccessMC5103::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
+    if(!_board->check()) return HAL_ERROR;
+    //return _board->plWriteMemBlock(access, (PL_Word *)srcHostAddr, dstBoardAddr, size);
+    return HAL_NOT_IMPLEMENTED;
 }
 
-int HalAccessMC5103::getResult(){
+int HalAccessMC5103::getResult(int *error){
     return 0;
 }
 
-void HalAccessMC5103::loadProgramFile(const char* program_name){
+int HalAccessMC5103::loadProgramFile(const char* program_name){
+    return HAL_NOT_IMPLEMENTED;
 
 }
 
-int HalAccessMC5103::getStatus(){
+int HalAccessMC5103::getStatus(int *error){
     return 0;
 }
 

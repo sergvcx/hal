@@ -6,7 +6,6 @@
 LibraryHandle open_library(const char* name){
     char win_name[50];
     sprintf(win_name, "%s.dll", name);
-    printf("%s\n", win_name);
     return LoadLibrary(win_name);
 }
 
@@ -22,7 +21,6 @@ void close_library(LibraryHandle handle){
 LibraryHandle open_library(const char* name){
     char lin_name[50];
     sprintf(lin_name, "lib%s.so", name);
-    printf("%s\n", lin_name);
     return dlopen(lin_name, RTLD_LAZY);    
 }
 

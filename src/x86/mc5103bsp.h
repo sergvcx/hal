@@ -38,12 +38,12 @@ public:
     HalAccessMC5103(HalBoardMC5103 *board, HalAccessOptions *opt);
 
 
-    int sync(int value) override;
-    void readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size) override;
-    void writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size) override;
-    int getResult() override;
-    void loadProgramFile(const char* program_name) override;
-    int getStatus() override;
+    int sync(int value, int *error) override;
+    int readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size) override;
+    int writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size) override;
+    int getResult(int *error) override;
+    int loadProgramFile(const char* program_name) override;
+    int getStatus(int *error) override;
     ~HalAccessMC5103() override;
 };
 

@@ -9,11 +9,11 @@
             "toolchainFile": "${sourceDir}/cmake/nmc-gcc-compile.cmake",
             "cacheVariables": {
                 "HAL_TYPE": "TARGET",
-                "CMAKE_BUILD_TYPE":"Debug"
+                "CMAKE_BUILD_TYPE": "Debug"
             },
             "environment": {
-                "PATH":"$env{NMC_GCC_TOOLPATH}/nmc4-ide/bin;$env{NMC_GCC_TOOLPATH}/nmc4-ide/lib;$penv{PATH}",
-                "GCC_EXEC_PREFIX":"/cygdrive/c/Program Files/Module/NMC-SDK/nmc4-ide/lib/gcc/"
+                "PATH": "$env{NMC_GCC_TOOLPATH}/nmc4-ide/bin;$env{NMC_GCC_TOOLPATH}/nmc4-ide/lib;$penv{PATH}",
+                "GCC_EXEC_PREFIX": "/cygdrive/c/Program Files/Module/NMC-SDK/nmc4-ide/lib/gcc/"
             }
         },
         {
@@ -23,7 +23,7 @@
             "architecture": {
                 "value": "x64",
                 "strategy": "set"
-             },
+            },
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
@@ -58,7 +58,7 @@
             "displayName": "hal-mc12101 target",
             "inherits": "target-ninja",
             "cacheVariables": {
-                "HAL_MC12101": "ON"                
+                "HAL_MC12101": "ON"
             }
         },
         {
@@ -88,7 +88,7 @@
         {
             "name": "hal-x86-makefiles",
             "displayName": "hal x86 on makefiles",
-            "inherits": "host-makefile",            
+            "inherits": "host-makefile",
             "cacheVariables": {
                 "HAL_X86": "ON"
             }
@@ -96,11 +96,11 @@
         {
             "name": "hal-x86-msvc",
             "displayName": "hal x86 on msvc",
-            "inherits": "host-msvc", 
+            "inherits": "host-msvc",
             "cacheVariables": {
                 "HAL_X86": "ON"
             }
-        },        
+        },
         {
             "name": "hal-virtual-makefiles",
             "displayName": "hal-virtual on makefiles",
@@ -122,11 +122,18 @@
         {
             "name": "hal-virtual-msvc",
             "displayName": "hal-virtual on msvc",
-            "inherits": "host-msvc", 
+            "inherits": "host-msvc",
             "cacheVariables": {
                 "HAL_TYPE": "VIRTUAL"
             }
-
-        }        
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "test_x86_mc12101",
+            "description": "",
+            "displayName": "",
+            "configurePreset": "hal-x86-makefiles"
+        }
     ]
 }

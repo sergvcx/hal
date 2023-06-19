@@ -11,8 +11,8 @@ int main(){
     HalBoardOptions *options = halCreateBoardOptions();
     HalAccessOptions *accessOptions = halCreateAccessOptions();
 
-    halSetBoardOption(options, HAL_BOARD_TYPE, MC12101);
-    halSetBoardOption(options, HAL_BOARD_TYPE, MB7707);
+    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
+    //halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MB7707);
     halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
     halSetBoardOption(options, HAL_BOARD_MAC_ADDR, MAC_ADDRESS);
 
@@ -20,12 +20,12 @@ int main(){
     halSetAccessOption(accessOptions, HAL_CLUSTER, 0);
 
 
-    HalBoard *board = halGetBoardOpt(options);
+    HalBoard *board = halGetBoardOpt(options, NULL);
     if(!board){
         printf("Failed get board\n");
         return 0;
     }
-    HalAccess *access = halGetAccessOpt(board, accessOptions);
+    HalAccess *access = halGetAccessOpt(board, accessOptions, NULL);
     if(!access){
         printf("Failed get access\n");
         return 0;

@@ -11,28 +11,30 @@ typedef struct HalBoardOptions HalBoardOptions;
 typedef struct HalAccessOptions HalAccessOptions;
 typedef struct HalIO HalIO;
 
-struct HalCore{
+typedef struct{
     int core;
     int cluster;
-};
+}  HalCore;
 
 enum HalBoardType{
-    NO_BOARD,
-    MC12101,
-    MB7707,
-    MC7601,
-    MC5103,
-    MC12705,
-    VIRTUAL
+    HAL_NO_BOARD,
+    HAL_MC12101,
+    HAL_MB7707,
+    HAL_MC7601,
+    HAL_MC5103,
+    HAL_MC12705,
 };
 
 enum HalError{
     HAL_OK,
     HAL_ERROR,
+    HAL_FILE,
     HAL_BAD_ARGUMENT,
     HAL_WRONG_MEM,
     HAL_NOT_IMPLEMENTED
 };
+
+#define HAL_PROGRAM_FINISHED 2
 
 
 
@@ -47,8 +49,8 @@ extern "C" {
      * @return HalBoard* 
      * @details 
      */
-    HalBoard *halGetBoard(const char *options);
-    HalBoard *halGetBoardOpt(HalBoardOptions *board_options);
+    HalBoard *halGetBoard(const char *options, int *error);
+    HalBoard *halGetBoardOpt(HalBoardOptions *board_options, int *error);
 
     unsigned int halGetBoardCount(HalBoardOptions *board_options, int *error);
 
@@ -61,8 +63,8 @@ extern "C" {
     int halLoadInitCode(HalBoard *board);
 
  
-    HalAccess *halGetAccess(HalBoard *board, HalCore *core);
-    HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options);
+    HalAccess *halGetAccess(HalBoard *board, HalCore *core, int *error);
+    HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options, int *error);
     int halCloseAccess(HalAccess *access);
 
     //HalIO *halStartIO(HalAccess *access, FILE *file);

@@ -38,7 +38,7 @@ public:
     int close() override;
     int reset() override;
     HalAccess *getAccess(HalAccessOptions *options) override;
-    unsigned int count() override;
+    unsigned int count(int *error) override;
 };
 
 struct HalAccessMC12101 : public HalAccess, public IHalAccessIO{
@@ -63,13 +63,15 @@ public:
     // int (*plSync)(PL_Access *, int, int *);     
 
     PL_Access *getBspAccess() override;
-    int sync(int value) override;
-    void readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size) override;
-    void writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size) override;
-    int getResult() override;
-    void loadProgramFile(const char* program_name) override;
-    void loadProgramFile(const char* program_name, const char *mainArgs) override;
-    int getStatus() override;
+    int open() override;
+    int close() override;
+    int sync(int value, int *error) override;
+    int readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size) override;
+    int writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size) override;
+    int getResult(int *error) override;
+    int loadProgramFile(const char* program_name) override;
+    int loadProgramFile(const char* program_name, const char *mainArgs) override;
+    int getStatus(int *error) override;
     void *getOpsForIO() override;
     ~HalAccessMC12101() override;
 };

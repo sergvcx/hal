@@ -3,55 +3,16 @@
 #include "hal-core.h"
 #include "string.h"
 
-HalBoard *createBoard_MB7707(HalBoardOptions *board_options);
-HalBoard *createBoard_MC12101(HalBoardOptions *board_options);
-HalBoard *createBoard_MC12705(HalBoardOptions *board_options);
+
 
 
 extern "C" {
-    HalBoard *halGetBoardOpt(HalBoardOptions *board_options){
-        HalBoard *board = NULL;
-        switch (board_options->board_type)
-        {
-        case MC12101:
-            board = createBoard_MC12101(board_options);
-            break;
-        case MB7707:
-            board = createBoard_MB7707(board_options);
-            break;
-        case MC12705:
-            board = createBoard_MC12705(board_options);
-            break;
-        default:
-            break;
-        }
-        if(!board) return NULL;
-        if(board->is_initialized){
-            int error = board->open();
-            if(error){
-                delete board;
-                return 0;
-            }
-            return board;
-        } else {
-            delete board;
-            return NULL;
-        }
-    }
-
-    unsigned int halGetBoardCount(HalBoardOptions *board_options, int *error){
-        HalBoard *board = halGetBoardOpt(board_options);    
-        unsigned int count = board->count();
-        halCloseBoard(board);
-        return count;
-    }
-
-    HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options){
-        return board->getAccess(access_options);
-    }
+    
 
     HalBoardOptions *halCreateBoardOptions(){
-        return new HalBoardOptions();
+        HalBoardOptions *options = new HalBoardOptions();
+        options->board_type = HAL_NO_BOARD;
+        return options;
     }
     HalAccessOptions *halCreateAccessOptions(){
         return new HalAccessOptions();
@@ -107,7 +68,7 @@ extern "C" {
             builder->core = va_arg(ap, int);
             break;
         case HAL_CLUSTER:
-            builder->core = va_arg(ap, int);
+            builder->cluster = va_arg(ap, int);
             break;        
         default:
             break;

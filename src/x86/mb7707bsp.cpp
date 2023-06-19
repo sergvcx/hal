@@ -85,38 +85,35 @@ HalAccessMB7707::HalAccessMB7707(HalBoardMB7707 *board, HalAccessOptions *opt){
     board->plGetAccess(board->desc, core, &access);
 }
 
-int HalAccessMB7707::sync(int value){
+int HalAccessMB7707::sync(int value, int *error){
     if(!_board->check()) return 0;
     PL_Word result = 0;
     _board->plSync(access, value, &result);
     return result;
 }
 
-void HalAccessMB7707::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
-    if(!_board->check()) return;
-    error = _board->plReadMemBlock(access, (PL_Word *)dstHostAddr, srcBoardAddr, size);
+int HalAccessMB7707::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
+    if(!_board->check()) return HAL_ERROR;
+    return _board->plReadMemBlock(access, (PL_Word *)dstHostAddr, srcBoardAddr, size);
 }
 
-void HalAccessMB7707::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
-    if(!_board->check()) return;
-    error = _board->plWriteMemBlock(access, (PL_Word *)srcHostAddr, dstBoardAddr, size);
+int HalAccessMB7707::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
+    if(!_board->check()) return HAL_ERROR;
+    return _board->plWriteMemBlock(access, (PL_Word *)srcHostAddr, dstBoardAddr, size);
 }
 
-int HalAccessMB7707::getResult(){
+int HalAccessMB7707::getResult(int *error){
     return 0;
 }
 
-int HalAccessMB7707::getError(){
-    return error;
+
+int HalAccessMB7707::loadProgramFile(const char* program_name){
+    return _board->plLoadProgramFile(access, program_name);
 }
 
-void HalAccessMB7707::loadProgramFile(const char* program_name){
-    error = _board->plLoadProgramFile(access, program_name);
-}
-
-int HalAccessMB7707::getStatus(){
+int HalAccessMB7707::getStatus(int *error){
     PL_Word result;
-    error = _board->plGetStatus(access, &result);
+    int _error = _board->plGetStatus(access, &result);
     return (int)result;
 }
 

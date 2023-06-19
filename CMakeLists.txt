@@ -9,9 +9,10 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 project(hal 
 	LANGUAGES C CXX
 	DESCRIPTION "Hal library"
-	VERSION 0.2.2)
+	VERSION 0.3.2)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 
 add_library(hal STATIC)
 add_library(hal::hal ALIAS hal)
@@ -43,7 +44,6 @@ target_include_directories(hal
 	PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/src)
 
-
 if(HAL_X86)
 	set(arch x86)
 	target_sources(hal PRIVATE ${x86_sources})
@@ -58,6 +58,8 @@ if(HAL_X86)
 	else()
 	target_link_libraries(hal PUBLIC dl)
 	endif()
+	enable_testing()
+	add_subdirectory(test)
 endif()
 if(HAL_MC12101)
 	set(arch mc12101)
@@ -105,7 +107,9 @@ set_target_properties(hal PROPERTIES
 	OUTPUT_NAME hal_${arch}
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib
     ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_LIST_DIR}/lib
-    ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_LIST_DIR}/lib)
+    ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_LIST_DIR}/lib
+	VERSION ${PROJECT_VERSION}
+	SOVERSION ${PROJECT_VERSION})
 
 add_subdirectory(examples)
 
