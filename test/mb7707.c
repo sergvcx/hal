@@ -4,10 +4,10 @@
 #include "string.h"
 
 
-HalBoard *arrangeFirstBoardMC12101(){
+HalBoard *arrangeFirstBoardMB7707(){
     
     HalBoardOptions *options = halCreateBoardOptions();
-    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
+    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MB7707);
     halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
 
     int error = 1;    
@@ -50,10 +50,10 @@ void test_halGetBoard_whenNoBoard_shouldOccurError(){
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
-void test_halGetBoardCount_whenChooseMC12101_shouldGetCountOfBoards(){
+void test_halGetBoardCount_whenChooseMB7707_shouldGetCountOfBoards(){
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
-    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
+    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MB7707);
     int error = 1;
 
     // Act
@@ -63,14 +63,14 @@ void test_halGetBoardCount_whenChooseMC12101_shouldGetCountOfBoards(){
     assert(error == HAL_OK);
     assert(count >=0);
 
-    printf("mc12101 counts: %d\n", count);  
+    printf("MB7707 counts: %d\n", count);  
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
-void test_halGetBoard_whenChooseFirstBoardOfMC12101_shouldGetBoard(){
+void test_halGetBoard_whenChooseFirstBoardOfMB7707_shouldGetBoard(){
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
-    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
+    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MB7707);
     halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
     int error = 1;
 
@@ -88,9 +88,9 @@ void test_halGetBoard_whenChooseFirstBoardOfMC12101_shouldGetBoard(){
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
-void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore(){
+void test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessZeroCore(){
     // Arrange
-    HalBoard *board = arrangeFirstBoardMC12101();
+    HalBoard *board = arrangeFirstBoardMB7707();
     HalCore core;
     core.core = 0;
     int error = 1;
@@ -110,9 +110,9 @@ void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore(){
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
-void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessFirstCore(){
+void test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessFirstCore(){
     // Arrange
-    HalBoard *board = arrangeFirstBoardMC12101();
+    HalBoard *board = arrangeFirstBoardMB7707();
     HalCore core;
     core.core = 1;
     int error = 1;
@@ -132,9 +132,9 @@ void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessFirstCore(){
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
-void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessBothCores(){
+void test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessBothCores(){
     // Arrange
-    HalBoard *board = arrangeFirstBoardMC12101();
+    HalBoard *board = arrangeFirstBoardMB7707();
     HalCore core0;
     HalCore core1;
     int errorGetAccess0;
@@ -162,9 +162,9 @@ void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessBothCores(){
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
-void test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile_shouldReturnFailed(){
+void test_halLoadProgramFile_whenOpenedBoardMb7707ZeroCoreWrongProgramFile_shouldReturnFailed(){
     // Arrange
-    HalBoard *board = arrangeFirstBoardMC12101();
+    HalBoard *board = arrangeFirstBoardMB7707();
     HalCore core;
     core.core = 0;
     int error = 1;
@@ -186,65 +186,16 @@ void test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
-void test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldReturnSuccesful(){
+
+void test_halResult_whenOpenedBoardMb7707ZeroCoreLoadFactorial_shouldGetCorrectResult(){
     // Arrange
-    HalBoard *board = arrangeFirstBoardMC12101();
+    HalBoard *board = arrangeFirstBoardMB7707();
     HalCore core;
     core.core = 0;
     int error = 1;
     HalAccess *access = halGetAccess(board, &core, &error);
     assert(error == HAL_OK);
-
-    // Act
-    error = halLoadProgramFile(access, "mc12101/dummy.abs");
-
-    // Assert
-    assert(error == HAL_OK);
-
-    // Free
-    error = halCloseAccess(access);
-    assert(error == HAL_OK);
-    error = halCloseBoard(board);
-    assert(error == HAL_OK);
-
-    printf("[ OK ] %s\n", __FUNCTION__);
-}
-
-void test_halResult_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldGetResult(){
-    // Arrange
-    HalBoard *board = arrangeFirstBoardMC12101();
-    HalCore core;
-    core.core = 0;
-    int error = 1;
-    HalAccess *access = halGetAccess(board, &core, &error);
-    assert(error == HAL_OK);
-    error = halLoadProgramFile(access, "mc12101/dummy.abs");
-    assert(error == HAL_OK);
-
-    // Act
-    int value = halGetResult(access, &error);
-
-    // Assert
-    assert(value == 0);
-    
-    // Free
-    error = halCloseAccess(access);
-    assert(error == HAL_OK);
-    error = halCloseBoard(board);
-    assert(error == HAL_OK);
-
-    printf("[ OK ] %s\n", __FUNCTION__);
-}
-
-void test_halResult_whenOpenedFirstBoardMC12101ZeroCoreLoadFactorial_shouldGetCorrectResult(){
-    // Arrange
-    HalBoard *board = arrangeFirstBoardMC12101();
-    HalCore core;
-    core.core = 0;
-    int error = 1;
-    HalAccess *access = halGetAccess(board, &core, &error);
-    assert(error == HAL_OK);
-    error = halLoadProgramFile(access, "mc12101/factorial.abs");
+    error = halLoadProgramFile(access, "mb7707/factorial.abs");
     assert(error == HAL_OK);
     
     // Act
@@ -278,14 +229,12 @@ int check_param(int argc, char *argv[], const char *board){
 int main(int argc, char *argv[]){
     test_halGetBoardCount_whenNoBoard_shouldOccurError();
     test_halGetBoard_whenNoBoard_shouldOccurError();
-    test_halGetBoardCount_whenChooseMC12101_shouldGetCountOfBoards();
-    test_halGetBoard_whenChooseFirstBoardOfMC12101_shouldGetBoard();
-    test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore();    
-    test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessFirstCore();   
-    test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessBothCores();
-    test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile_shouldReturnFailed();
-    test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldReturnSuccesful();
-    test_halResult_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldGetResult();
-    test_halResult_whenOpenedFirstBoardMC12101ZeroCoreLoadFactorial_shouldGetCorrectResult();
+    test_halGetBoardCount_whenChooseMB7707_shouldGetCountOfBoards();
+    test_halGetBoard_whenChooseFirstBoardOfMB7707_shouldGetBoard();
+    test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessZeroCore();    
+    test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessFirstCore();   
+    test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessBothCores();
+    test_halLoadProgramFile_whenOpenedBoardMb7707ZeroCoreWrongProgramFile_shouldReturnFailed();
+    test_halResult_whenOpenedBoardMb7707ZeroCoreLoadFactorial_shouldGetCorrectResult();
     return 0;
 }
