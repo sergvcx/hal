@@ -178,7 +178,7 @@ int main(int argc, char **argv)
 			{
 				cout << "Done.\n";
 
-				if (halLoadInitCode(Board) != PL_OK)
+				if (0) if (halLoadInitCode(Board) != PL_OK)
 				{
 					cout << "ERROR: Failed load init code!\n";
 					halCloseBoard(Board);

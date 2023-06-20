@@ -136,8 +136,11 @@ extern "C" {
     }
 
     int halLoadProgramFileArgs(HalAccess *access, const char *program_name, const char *args){
-        access->loadProgramFile(program_name, args);
-        return 0;
+         int error = access->loadProgramFile(program_name, args);
+        if(error != 0){
+            return HAL_FILE;
+        }
+        return HAL_OK;
     }
 
     int halSync(HalAccess *access, int value, int *error){

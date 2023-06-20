@@ -3,7 +3,7 @@ SHELL=cmd
 space := $(subst ,, )
 NMC_TOOLPATH=$(subst $(space),\$(space),$(NMC_GCC_TOOLPATH))
 X64_PLATFORM=-A\ x64
--include $(NMC_TOOLPATH)\nmc4-ide\include\nmc4vars_win.mk
+#-include $(NMC_TOOLPATH)\nmc4-ide\include\nmc4vars_win.mk
 NMC_TOOLCHAIN="Ninja"
 else 
 NMC_TOOLCHAIN="Ninja"
