@@ -4,7 +4,7 @@
 
 #ifdef _WIN32
 LibraryHandle open_library(const char* name){
-    char win_name[50];
+    char win_name[150];
     sprintf(win_name, "%s.dll", name);
     return LoadLibrary(win_name);
 }

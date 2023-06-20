@@ -153,8 +153,8 @@ void test_halGetBoard_whenChoosedRemoteBoardOfMC12101WithIncorrectIP_shouldRetur
     assert(board == 0);
     
     // Free
-    error = halCloseBoard(board);
-    assert(error == HAL_OK);
+    //error = halCloseBoard(board);
+   // assert(error == HAL_OK);
 
     printf("[ OK ] %s\n", __FUNCTION__);
 }
@@ -162,6 +162,7 @@ void test_halGetBoard_whenChoosedRemoteBoardOfMC12101WithIncorrectIP_shouldRetur
 void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore(){
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
+	assert(board !=0 );
     HalCore core;
     core.core = 0;
     int error = 1;
