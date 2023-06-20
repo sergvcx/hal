@@ -24,6 +24,6 @@ endforeach()
 
 foreach(target ${test_targets})
     add_test(NAME ${target}
-        COMMAND ${target}
+        COMMAND mc12101run -p ${target}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
