@@ -212,6 +212,54 @@ void test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_should
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
+void test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile_shouldReturnFailed(){
+    // Arrange
+    HalBoard *board = arrangeFirstBoardMC12101();
+    HalCore core;
+    core.core = 0;
+    int error = 1;
+    HalAccess *access = halGetAccess(board, &core, &error);
+    assert(error == HAL_OK);
+
+    // Act
+    error = halLoadProgramFileArgs(access, "not_existing_file.abs", "");
+
+    // Assert
+    assert(error == HAL_FILE);
+
+    // Free
+    error = halCloseAccess(access);
+    assert(error == HAL_OK);
+    error = halCloseBoard(board);
+    assert(error == HAL_OK);
+
+    printf("[ OK ] %s\n", __FUNCTION__);
+}
+
+void test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldReturnSuccesful(){
+    // Arrange
+    HalBoard *board = arrangeFirstBoardMC12101();
+    HalCore core;
+    core.core = 0;
+    int error = 1;
+    HalAccess *access = halGetAccess(board, &core, &error);
+    assert(error == HAL_OK);
+
+    // Act
+    error = halLoadProgramFileArgs(access, "mc12101/dummy.abs", "");
+
+    // Assert
+    assert(error == HAL_OK);
+
+    // Free
+    error = halCloseAccess(access);
+    assert(error == HAL_OK);
+    error = halCloseBoard(board);
+    assert(error == HAL_OK);
+
+    printf("[ OK ] %s\n", __FUNCTION__);
+}
+
 void test_halResult_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldGetResult(){
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
@@ -287,6 +335,8 @@ int main(int argc, char *argv[]){
     test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessBothCores();
     test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile_shouldReturnFailed();
     test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldReturnSuccesful();
+    test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile_shouldReturnFailed();
+    test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldReturnSuccesful();
     test_halResult_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldGetResult();
     test_halResult_whenOpenedFirstBoardMC12101ZeroCoreLoadFactorial_shouldGetCorrectResult();
     return 0;
