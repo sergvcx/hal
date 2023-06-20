@@ -12,8 +12,8 @@ HalBoard *createBoard_MC12101(HalBoardOptions *options){
 HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
     remoted = 0;
     is_opened = 0;
+    handle = 0;
     if(options->server_enabled){
-        remoted = 1;
         handle = open_library("mc12101load_proxy");
         if(handle == 0){
             INF_LOG("Library mc12101load_proxy not found");
@@ -21,6 +21,7 @@ HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
         }
         auto rplConnectToHost = (int (*)(const char *, int))library_get_addr(handle, "PL_ConnectToHost");
         int error = rplConnectToHost(options->server_ip, options->server_port);        
+        remoted = 1;
     } else {
         handle = open_library("mc12101load");
         if(handle == 0){
@@ -61,7 +62,9 @@ HalBoardMC12101::~HalBoardMC12101(){
         auto rplDisconnect = (int (*)())library_get_addr(handle, "RPL_DisconnectFromHost");
         rplDisconnect();
     } else {
-        close_library(handle);
+        if(handle){
+            close_library(handle);
+        }
     }
 }
 
