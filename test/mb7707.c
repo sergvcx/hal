@@ -2,13 +2,17 @@
 #include "hal/hal.h"
 #include "hal/hal-options.h"
 #include "string.h"
+#include "stdlib.h"
 
+static unsigned char MAC_ADDRESS[] = { 0x10,0x62,0xEB,0xDF,0x42,0x74};
 
-HalBoard *arrangeFirstBoardMB7707(){
+HalBoard *arrangeBoardMB7707(){
     
     HalBoardOptions *options = halCreateBoardOptions();
     halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MB7707);
-    halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
+    //char *getenv("MB7707_IP");
+    const char *mac_addr = MAC_ADDRESS;
+    halSetBoardOption(options, HAL_BOARD_MAC_ADDR, mac_addr);
 
     int error = 1;    
     HalBoard *board = halGetBoardOpt(options, &error);
@@ -54,16 +58,18 @@ void test_halGetBoardCount_whenChooseMB7707_shouldGetCountOfBoards(){
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
     halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MB7707);
+    //char *getenv("MB7707_IP");
+    const char *mac_addr = MAC_ADDRESS;
+    halSetBoardOption(options, HAL_BOARD_MAC_ADDR, mac_addr);
     int error = 1;
 
     // Act
     int count = halGetBoardCount(options, &error);
 
     // Assert
-    assert(error == HAL_OK);
-    assert(count >=0);
-
-    printf("MB7707 counts: %d\n", count);  
+    assert(error == HAL_NOT_IMPLEMENTED);
+    assert(count == 0);
+    
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
@@ -71,7 +77,9 @@ void test_halGetBoard_whenChooseFirstBoardOfMB7707_shouldGetBoard(){
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
     halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MB7707);
-    halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
+    //char *getenv("MB7707_IP");
+    const char *mac_addr = MAC_ADDRESS;
+    halSetBoardOption(options, HAL_BOARD_MAC_ADDR, mac_addr);
     int error = 1;
 
     // Act
@@ -90,7 +98,7 @@ void test_halGetBoard_whenChooseFirstBoardOfMB7707_shouldGetBoard(){
 
 void test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessZeroCore(){
     // Arrange
-    HalBoard *board = arrangeFirstBoardMB7707();
+    HalBoard *board = arrangeBoardMB7707();
     HalCore core;
     core.core = 0;
     int error = 1;
@@ -110,9 +118,9 @@ void test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessZeroCore(){
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
-void test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessFirstCore(){
+void test_halGetAccess_whenMB7707FirstBoardOpened_shouldFailedGetAccess(){
     // Arrange
-    HalBoard *board = arrangeFirstBoardMB7707();
+    HalBoard *board = arrangeBoardMB7707();
     HalCore core;
     core.core = 1;
     int error = 1;
@@ -121,57 +129,46 @@ void test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessFirstCore(){
     HalAccess *access = halGetAccess(board, &core, &error);
 
     // Assert
-    assert(error == HAL_OK);
+    assert(error == HAL_ERROR);
 
     // Free
-    error = halCloseAccess(access);
-    assert(error == HAL_OK);
     error = halCloseBoard(board);
     assert(error == HAL_OK);
 
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
-void test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessBothCores(){
+void test_halLoadInitCode_whenMB7707FirstBoardOpened_shouldReturnSuccessful(){
     // Arrange
-    HalBoard *board = arrangeFirstBoardMB7707();
-    HalCore core0;
-    HalCore core1;
-    int errorGetAccess0;
-    int errorGetAccess1;
-    core0.core = 0;
-    core1.core = 1;
-
-    // Act
-    HalAccess *access0 = halGetAccess(board, &core0, &errorGetAccess0);
-    HalAccess *access1 = halGetAccess(board, &core1, &errorGetAccess1);
-    
-    // Assert
-    assert(errorGetAccess0 == HAL_OK);
-    assert(errorGetAccess1 == HAL_OK);
-
-    // Free
-    int error;
-    error = halCloseAccess(access0);
-    assert(error == HAL_OK);
-    error = halCloseAccess(access1);
-    assert(error == HAL_OK);
-    error = halCloseBoard(board);
-    assert(error == HAL_OK);
-
-    printf("[ OK ] %s\n", __FUNCTION__);
-}
-
-void test_halLoadProgramFile_whenOpenedBoardMb7707ZeroCoreWrongProgramFile_shouldReturnFailed(){
-    // Arrange
-    HalBoard *board = arrangeFirstBoardMB7707();
+    HalBoard *board = arrangeBoardMB7707();
     HalCore core;
     core.core = 0;
     int error = 1;
+
+    // Act
+    error = halLoadInitCode(board);
+
+    // Assert
+    assert(error == HAL_OK);
+
+    // Free
+    error = halCloseBoard(board);
+    assert(error == HAL_OK);
+}
+
+
+void test_halLoadProgramFile_whenOpenedBoardMb7707ZeroCoreWrongProgramFile_shouldReturnFailed(){
+    // Arrange
+    HalBoard *board = arrangeBoardMB7707();
+    HalCore core;
+    core.core = 0;
+    int error = 1;
+    error = halLoadInitCode(board);
+    assert(error == HAL_OK);
     HalAccess *access = halGetAccess(board, &core, &error);
     assert(error == HAL_OK);
 
-    // Act
+    // Act    
     error = halLoadProgramFile(access, "not_existing_file.abs");
 
     // Assert
@@ -189,10 +186,12 @@ void test_halLoadProgramFile_whenOpenedBoardMb7707ZeroCoreWrongProgramFile_shoul
 
 void test_halResult_whenOpenedBoardMb7707ZeroCoreLoadFactorial_shouldGetCorrectResult(){
     // Arrange
-    HalBoard *board = arrangeFirstBoardMB7707();
+    HalBoard *board = arrangeBoardMB7707();
     HalCore core;
     core.core = 0;
     int error = 1;
+    error = halLoadInitCode(board);
+    assert(error == HAL_OK);
     HalAccess *access = halGetAccess(board, &core, &error);
     assert(error == HAL_OK);
     error = halLoadProgramFile(access, "mb7707/factorial.abs");
@@ -229,11 +228,11 @@ int check_param(int argc, char *argv[], const char *board){
 int main(int argc, char *argv[]){
     test_halGetBoardCount_whenNoBoard_shouldOccurError();
     test_halGetBoard_whenNoBoard_shouldOccurError();
-    test_halGetBoardCount_whenChooseMB7707_shouldGetCountOfBoards();
-    test_halGetBoard_whenChooseFirstBoardOfMB7707_shouldGetBoard();
+    test_halGetBoardCount_whenChooseMB7707_shouldGetCountOfBoards();  
+    test_halGetBoard_whenChooseFirstBoardOfMB7707_shouldGetBoard();      
     test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessZeroCore();    
-    test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessFirstCore();   
-    test_halGetAccess_whenMB7707FirstBoardOpened_shouldGetAccessBothCores();
+    test_halGetAccess_whenMB7707FirstBoardOpened_shouldFailedGetAccess();
+    test_halLoadInitCode_whenMB7707FirstBoardOpened_shouldReturnSuccessful();
     test_halLoadProgramFile_whenOpenedBoardMb7707ZeroCoreWrongProgramFile_shouldReturnFailed();
     test_halResult_whenOpenedBoardMb7707ZeroCoreLoadFactorial_shouldGetCorrectResult();
     return 0;

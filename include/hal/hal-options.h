@@ -5,9 +5,6 @@ typedef struct HalBoard HalBoard;        //for nm and x86 different realizations
 typedef struct HalAccess HalAccess;       //for nm and x86 different realizations
 
 
-
-
-
 enum HAL_BOARD_OPTIONS{
     HAL_BOARD_NUMBER,
     HAL_BOARD_TYPE,

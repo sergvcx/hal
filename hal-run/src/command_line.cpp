@@ -201,9 +201,9 @@ int Parse_extended_option(char *ex_opt)
 		}
 
 		if(strcmp(kind.c_str(), "mc12101") == 0){
-			Board_type = MC12101;
+			Board_type = HAL_MC12101;
 		} else if(strcmp(kind.c_str(), "mb7707") == 0){
-			Board_type = MB7707;
+			Board_type = HAL_MB7707;
 		}else {
 			cout << "Error: Wrong kind of board";
 			return 1;

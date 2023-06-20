@@ -23,7 +23,7 @@ void test_halGetBoardCount_whenNoBoard_shouldOccurError(){
     int error = 0;
 
     // Act
-    int count = halGetBoardCount(options, &error);
+    int count = halGetBoardOpt(options, &error);
 
     // Assert
     assert(error == HAL_BAD_ARGUMENT);
@@ -63,6 +63,8 @@ void test_halGetBoardCount_whenChooseMC12101_shouldGetCountOfBoards(){
     assert(error == HAL_OK);
     assert(count >=0);
 
+    // Free
+    halDestroyBoardOptions(options);
     printf("mc12101 counts: %d\n", count);  
     printf("[ OK ] %s\n", __FUNCTION__);
 }
@@ -278,8 +280,8 @@ int check_param(int argc, char *argv[], const char *board){
 int main(int argc, char *argv[]){
     test_halGetBoardCount_whenNoBoard_shouldOccurError();
     test_halGetBoard_whenNoBoard_shouldOccurError();
-    test_halGetBoardCount_whenChooseMC12101_shouldGetCountOfBoards();
-    test_halGetBoard_whenChooseFirstBoardOfMC12101_shouldGetBoard();
+    test_halGetBoardCount_whenChooseMC12101_shouldGetCountOfBoards();    
+    test_halGetBoard_whenChooseFirstBoardOfMC12101_shouldGetBoard();    
     test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore();    
     test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessFirstCore();   
     test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessBothCores();

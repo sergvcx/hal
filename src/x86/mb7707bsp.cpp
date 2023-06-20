@@ -64,8 +64,31 @@ int HalBoardMB7707::close(){
     } else {
         return HAL_OK;
     }
-    
 }
+
+int HalBoardMB7707::loadInitCode(){
+    HalAccessOptions opt;
+    opt.core = 0;
+    HalAccessMB7707 *access = new HalAccessMB7707(this, &opt);
+    if(!access) return HAL_ERROR;
+    int error;
+    error = access->open();
+    if(error) {
+        delete access;
+        return error;
+    }
+    error = plLoadInitCode(access->access);
+    int close_error = access->close();
+    delete access;
+    return error;
+}
+
+// unsigned int HalBoardMB7707::count(int *error){
+//     if(error != NULL){
+//         *error = 0;
+//     }
+//     return 0;
+// }
 
 int HalBoardMB7707::reset(){
     if(!check()) return HAL_ERROR;
@@ -82,7 +105,19 @@ HalAccessMB7707::HalAccessMB7707(HalBoardMB7707 *board, HalAccessOptions *opt){
     if(!board->check()) return;
     core = opt->core;
     _board = board;
-    board->plGetAccess(board->desc, core, &access);
+    
+}
+
+HalAccessMB7707::~HalAccessMB7707(){
+
+}
+
+int HalAccessMB7707::open(){
+    return _board->plGetAccess(_board->desc, core, &access);
+}
+int HalAccessMB7707::close(){
+    if(!_board->check()) return HAL_ERROR;
+    return _board->plCloseAccess(access);    
 }
 
 int HalAccessMB7707::sync(int value, int *error){
@@ -103,7 +138,12 @@ int HalAccessMB7707::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAd
 }
 
 int HalAccessMB7707::getResult(int *error){
-    return 0;
+    PL_Word result;
+    int _error = _board->plGetResult(access, &result);
+    if(error != NULL){
+        *error = _error;
+    }
+    return (int)result;
 }
 
 
@@ -115,9 +155,4 @@ int HalAccessMB7707::getStatus(int *error){
     PL_Word result;
     int _error = _board->plGetStatus(access, &result);
     return (int)result;
-}
-
-HalAccessMB7707::~HalAccessMB7707(){
-    if(!_board->check()) return;
-    _board->plCloseAccess(access);
 }

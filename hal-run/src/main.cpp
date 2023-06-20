@@ -17,7 +17,7 @@ using namespace std;
 
 unsigned int Board_number = 0;
 unsigned int Core_number = 0;
-int Board_type = MC12101;
+int Board_type = HAL_MC12101;
 
 unsigned long Serial_number;
 
@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 
 			halSetBoardOption(board_options, HAL_BOARD_NUMBER, Board_number);
 
-			if( (Board = halGetBoardOpt(board_options) ) == 0){
+			if( (Board = halGetBoardOpt(board_options, NULL) ) == 0){
 				cout << "ERROR: Failed open board " << Board_number << "!\n";
 				exit(1);
 			}
@@ -198,7 +198,7 @@ int main(int argc, char **argv)
 		
 		HalAccessOptions *access_options = halCreateAccessOptions();
 		halSetAccessOption(access_options, HAL_CORE, Core_number);
-		if ( (Access = halGetAccessOpt(Board, access_options) ) == 0)
+		if ( (Access = halGetAccessOpt(Board, access_options, NULL) ) == 0)
 		{
 			cout << "ERROR: Failed access core " << Core_number << "!\n";
 			halCloseBoard(Board);
@@ -265,7 +265,7 @@ int main(int argc, char **argv)
 
 			if (f_Use_print)
 			{
-				if ( (servAccess = halGetAccessOpt(Board, serv_access_options)) == 0)
+				if ( (servAccess = halGetAccessOpt(Board, serv_access_options, NULL)) == 0)
 				{
 					cout << "ERROR: Failed access processor for printf service!\n";
 					halCloseAccess(Access);

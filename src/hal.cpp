@@ -10,10 +10,11 @@ HalBoard *createBoard_MB7707(HalBoardOptions *board_options);
 HalBoard *createBoard_MC12101(HalBoardOptions *board_options);
 HalBoard *createBoard_MC12705(HalBoardOptions *board_options);
 
+
 #ifndef DEPRECATED
 extern "C" {
 
-    HalBoard *halGetBoardOpt(HalBoardOptions *board_options, int *error){
+    HalBoard *halCreateBoard(HalBoardOptions *board_options){
         HalBoard *board = NULL;
         switch (board_options->board_type)
         {
@@ -29,6 +30,11 @@ extern "C" {
         default:
             break;
         }
+        return board;
+    }
+
+    HalBoard *halGetBoardOpt(HalBoardOptions *board_options, int *error){
+        HalBoard *board = halCreateBoard(board_options);
         if(!board) {
             HAL_SET_ERROR(error, HAL_BAD_ARGUMENT);
             return NULL;
@@ -66,6 +72,10 @@ extern "C" {
         halSetBoardOption(&opt, HAL_BOARD_NUMBER, 0);
         return halGetBoardOpt(&opt, error);
     }
+
+    int halOpenBoard(HalBoard *board){
+        return board->open();
+    }
     
     HalAccess *halGetAccess(HalBoard *board, HalCore *core, int *error){
         HalAccessOptions opt;
@@ -90,13 +100,12 @@ extern "C" {
 
     unsigned int halGetBoardCount(HalBoardOptions *board_options, int *error){
         int getBoardError;
-        HalBoard *board = halGetBoardOpt(board_options, &getBoardError);
-        if(getBoardError != 0){
+        HalBoard *board = halCreateBoard(board_options);
+        if(!board) {
             HAL_SET_ERROR(error, HAL_BAD_ARGUMENT);
             return 0;
         }
         unsigned int count = board->count(error);
-        
         halCloseBoard(board);
         return count;
     }
@@ -108,6 +117,7 @@ extern "C" {
  
 
     int halCloseAccess(HalAccess *access){
+        access->close();
         delete access;
         //return access->getError();
         return 0;

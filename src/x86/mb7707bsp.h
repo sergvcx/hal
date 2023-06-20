@@ -9,7 +9,27 @@ struct PL_Board;
 typedef unsigned long PL_Word;
 typedef unsigned long PL_Addr;
 
-
+struct IMB7707BoardInterface{
+    int (*plGetVersion)(int *, int *);
+    int (*plGetBoardDesc)(const unsigned char *, PL_Board **);
+	int (*plCloseBoardDesc)(PL_Board *);
+	int (*plResetBoard)(PL_Board *);
+	int (*plLoadInitCode)(PL_Access *);
+	int (*plGetAccess)(PL_Board *, int procNo, PL_Access **);
+	int (*plCloseAccess)(PL_Access *);
+	int (*plLoadProgramFile)(PL_Access *, const char *);
+	int (*plReadMemBlock)(PL_Access *, PL_Word *, PL_Addr, PL_Word);
+	int (*plWriteMemBlock)(PL_Access *, PL_Word *, PL_Addr, PL_Word);
+	int (*plSync)(PL_Access *, PL_Word, PL_Word *);
+	int (*plSyncArray)(PL_Access *,PL_Word, PL_Addr ,PL_Word ,PL_Word *,PL_Addr *, PL_Word *);
+	int (*plSetTimeout)(int);
+	int (*plGetStatus)(PL_Access *, PL_Word *);
+	int (*plGetResult)(PL_Access *, PL_Word *);
+	int (*plFirstLightOn)(PL_Board *);
+	int (*plFirstLightOff)(PL_Board *);
+	int (*plSecondLightOn)(PL_Board *);
+	int (*plSecondLightOff)(PL_Board *);
+};
 
 struct HalBoardMB7707: public HalBoard{
 private:
@@ -19,6 +39,7 @@ public:
     PL_Board *desc;
     LibraryHandle handle;
     unsigned char mac_addr[7];
+    //IMB7707BoardInterface iBoard;
     int (*plGetVersion)(int *, int *);
     int (*plGetBoardDesc)(const unsigned char *, PL_Board **);
 	int (*plCloseBoardDesc)(PL_Board *);
@@ -43,8 +64,10 @@ public:
     HalBoardMB7707(const unsigned char *host_mac_addr);
     ~HalBoardMB7707() override;
     
-
+    void setInterface(const char *libraryname);
     int open() override;
+    int loadInitCode() override;
+    //unsigned int count(int *error) override;
     int close() override;
     int reset() override;
     HalAccess *getAccess(HalAccessOptions *options) override;
@@ -66,7 +89,8 @@ public:
     int (*plGetResult)(PL_Access *, unsigned int *);
     int (*plSync)(PL_Access *, int, int *); 
 
-
+    int open() override;
+    int close() override;
     int sync(int value, int *error) override;
     int readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size) override;
     int writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size) override;

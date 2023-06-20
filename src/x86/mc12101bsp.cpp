@@ -11,6 +11,7 @@ HalBoard *createBoard_MC12101(HalBoardOptions *options){
 
 HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
     remoted = 0;
+    is_opened = 0;
     if(options->server_enabled){
         remoted = 1;
         handle = open_library("mc12101load_proxy");
@@ -44,7 +45,6 @@ HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
     plSync = (int (*)(PL_Access *, int, int *))library_get_addr(handle, "PL_Sync");
     plReset = (int (*)(PL_Board *))library_get_addr(handle, "PL_ResetBoard");
     is_initialized = 1;
-
     
 }
 
@@ -68,11 +68,21 @@ HalBoardMC12101::~HalBoardMC12101(){
 
 int HalBoardMC12101::open(){
     //INF_LOG
-    return plGetDesc(board_no, &desc);    
+    if(!is_opened){
+        is_opened = 1;
+        return plGetDesc(board_no, &desc);    
+    } else {
+        return HAL_ERROR;
+    }
 }
 
 int HalBoardMC12101::close(){
-    return plCloseDesc(desc);
+    if(is_opened){
+        is_opened = 0;
+        return plCloseDesc(desc);
+    } else {
+        return HAL_ERROR;
+    }
 }
 
 int HalBoardMC12101::reset(){

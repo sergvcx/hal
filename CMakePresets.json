@@ -134,6 +134,12 @@
             "description": "",
             "displayName": "",
             "configurePreset": "hal-x86-makefiles"
+        },
+        {
+            "name": "test_x86_mc12101_msvc",
+            "description": "",
+            "displayName": "",
+            "configurePreset": "hal-x86-msvc"
         }
     ]
 }

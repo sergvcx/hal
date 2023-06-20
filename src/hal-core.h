@@ -17,6 +17,7 @@ typedef struct PL_Access PL_Access;
 #   define   INF_LOG(message)
 #endif
 
+extern "C" int halOpenBoard(HalBoard *board);
 
 #ifdef __cplusplus
 struct HalBoard{

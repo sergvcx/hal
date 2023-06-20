@@ -16,6 +16,7 @@ public:
     LibraryHandle handle;
     int remoted;
     unsigned int board_count;
+    int is_opened;
    
     int (*plGetCount)(unsigned int*);
     int (*plGetDesc)(unsigned int, PL_Board **);
