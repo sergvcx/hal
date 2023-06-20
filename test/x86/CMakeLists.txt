@@ -6,10 +6,10 @@ set(test_targets )
 
 add_executable(mc12101-test mc12101.c)
 list(APPEND test_targets mc12101-test)
+add_executable(mc12101-remote-test mc12101_remote.c)
+list(APPEND test_targets mc12101-remote-test)
 add_executable(mb7707-test mb7707.c)
 list(APPEND test_targets mb7707-test)
-#add_executable(mc12101-halcp-test mc12101-halcp.c)
-#list(APPEND test_targets mc12101-halcp-test)
 
 foreach(target ${test_targets})
     target_link_libraries(${target} PRIVATE hal::hal)

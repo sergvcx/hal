@@ -14,7 +14,6 @@ HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
     is_opened = 0;
     handle = 0;
     if(options->server_enabled){
-        //handle = open_library("mc12101load_proxyd");
         handle = open_library("mc12101load_proxy");
         if(handle == 0){
             INF_LOG("Library mc12101load_proxy not found");

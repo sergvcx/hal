@@ -4,8 +4,6 @@
 #include "string.h"
 #include "stdlib.h"
 
-#define SERVER_IP 
-#define SERVER_PORT 
 
 HalBoard *arrangeFirstBoardMC12101(){
     
@@ -20,21 +18,6 @@ HalBoard *arrangeFirstBoardMC12101(){
     return board;
 }
 
-HalBoard *arrangeRemoteBoardMC12101(){
-    
-    HalBoardOptions *options = halCreateBoardOptions();
-    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
-    halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
-    halSetBoardOption(options, HAL_SERVER_IP, "");
-    halSetBoardOption(options, HAL_SERVER_PORT, 5557);
-    halSetBoardOption(options, HAL_SERVER_ENABLED, 1);
-
-    int error = 1;    
-    HalBoard *board = halGetBoardOpt(options, &error);
-
-    halDestroyBoardOptions(options);
-    return board;
-}
 
 void test_halGetBoardCount_whenNoBoard_shouldOccurError(){
     // Arrange
@@ -109,55 +92,6 @@ void test_halGetBoard_whenChoosedFirstBoardOfMC12101_shouldGetBoard(){
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
-void test_halGetBoard_whenChoosedRemoteBoardOfMC12101WithCorrectIP_shouldGetBoard(){
-    // Arrange
-    HalBoardOptions *options = halCreateBoardOptions();
-    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
-    halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
-    char *ip = getenv("NMSERVER_IP");
-    assert(ip != NULL);    
-    halSetBoardOption(options, HAL_SERVER_IP, ip);
-    halSetBoardOption(options, HAL_SERVER_PORT, 5557);
-    halSetBoardOption(options, HAL_SERVER_ENABLED, 1);
-    int error = 1;
-
-    // Act
-    HalBoard *board = halGetBoardOpt(options, &error);
-
-    // Assert
-    assert(error == HAL_OK);
-    assert(board != 0);
-    
-    // Free
-    error = halCloseBoard(board);
-    assert(error == HAL_OK);
-
-    printf("[ OK ] %s\n", __FUNCTION__);
-}
-
-void test_halGetBoard_whenChoosedRemoteBoardOfMC12101WithIncorrectIP_shouldReturnFailed(){
-    // Arrange
-    HalBoardOptions *options = halCreateBoardOptions();
-    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
-    halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
-    halSetBoardOption(options, HAL_SERVER_IP, "this.is.not.ip");
-    halSetBoardOption(options, HAL_SERVER_PORT, 5557);
-    halSetBoardOption(options, HAL_SERVER_ENABLED, 1);
-    int error = 1;
-
-    // Act
-    HalBoard *board = halGetBoardOpt(options, &error);
-
-    // Assert
-    assert(error != HAL_OK);
-    assert(board == 0);
-    
-    // Free
-    //error = halCloseBoard(board);
-   // assert(error == HAL_OK);
-
-    printf("[ OK ] %s\n", __FUNCTION__);
-}
 
 void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore(){
     // Arrange
@@ -399,8 +333,6 @@ int main(int argc, char *argv[]){
     test_halGetBoardCount_whenNoBoard_shouldOccurError();
     test_halGetBoard_whenNoBoard_shouldOccurError();
     test_halGetBoardCount_whenChoosedMC12101_shouldGetCountOfBoards();    
-    test_halGetBoard_whenChoosedRemoteBoardOfMC12101WithCorrectIP_shouldGetBoard();    
-    test_halGetBoard_whenChoosedRemoteBoardOfMC12101WithIncorrectIP_shouldReturnFailed();
     test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore();    
     test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessFirstCore();   
     test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessBothCores();
