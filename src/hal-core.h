@@ -25,8 +25,7 @@ protected:
     HalBoard(){};
 public:
     int is_initialized;
-    int board_type;    
-    static HalBoard *createHost(int index);
+    int board_type;
     HAL_VIRTUAL_FUNC int open();
     HAL_VIRTUAL_FUNC int loadInitCode();
     HAL_VIRTUAL_FUNC int close();

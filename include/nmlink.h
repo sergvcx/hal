@@ -18,7 +18,6 @@ typedef void (*LinkCallback)();
 #ifdef __cplusplus
 		extern "C" {
 #endif
-
 	/**
 	 *  \brief Инициализация линка
 	 */

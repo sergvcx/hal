@@ -2,82 +2,99 @@
 #include "hal/hal-options.h"
 #include <iostream>
 
-
-
-
-HalBoard *createBoard_MC12101(HalBoardOptions *options){
-    std::cout << "open board mc12101 not implemented" << std::endl;
-    return 0;
-}
-
-HalBoard *createBoard_MB7707(HalBoardOptions *options){
+HalBoard *createBoard_MB7707(HalBoardOptions *board_options){
     std::cout << "open board mb7707 not implemented" << std::endl;
     return 0;
 }
-
-int HalBoard::open(){
-    std::cout << "close not implemented" << std::endl;
-    return HAL_NOT_IMPLEMENTED;
+HalBoard *createBoard_MC12101(HalBoardOptions *board_options){
+    std::cout << "open board mc12101 not implemented" << std::endl;
+    return 0;
+}
+HalBoard *createBoard_MC12705(HalBoardOptions *board_options){
+    std::cout << "open board mc12705 not implemented" << std::endl;
+    return 0;
 }
 
 HalBoard::~HalBoard(){
     
 }
 
-unsigned int HalBoard::count(){
-    return 0;
+int HalBoard::open(){
+    return HAL_NOT_IMPLEMENTED;
+}
+
+int HalBoard::loadInitCode(){
+    return HAL_NOT_IMPLEMENTED;
 }
 
 int HalBoard::close(){
-    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
     return HAL_NOT_IMPLEMENTED;
 }
 
 int HalBoard::reset(){
-    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
     return HAL_NOT_IMPLEMENTED;
 }
 
+unsigned int HalBoard::count(int *error){
+    if(error != NULL){
+        *error = HAL_NOT_IMPLEMENTED;
+    }
+    return 0;
+}
+
 HalAccess *HalBoard::getAccess(HalAccessOptions *options){
-    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
     return 0;
 }
 
+int HalAccess::open(){
+    return HAL_NOT_IMPLEMENTED;
+}
 
-int HalAccess::sync(int value){
-    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
+int HalAccess::close(){
+    return HAL_NOT_IMPLEMENTED;
+}
+
+int HalAccess::sync(int value, int *error){
+    if(error != NULL){
+        *error = HAL_NOT_IMPLEMENTED;
+    }
     return 0;
 }
 
-void HalAccess::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
-    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
+int HalAccess::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
+    return HAL_NOT_IMPLEMENTED;
 }
 
-void HalAccess::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
-    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
+int HalAccess::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
+    return HAL_NOT_IMPLEMENTED;
 }
 
-int HalAccess::getResult(){
-    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
+int HalAccess::getResult(int *error){    
+    if(error != NULL){
+        *error = HAL_NOT_IMPLEMENTED;
+    }
     return 0;
 }
 
-void HalAccess::loadProgramFile(const char* program_name){
-    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
+int HalAccess::loadProgramFile(const char* program_name){
+    return HAL_NOT_IMPLEMENTED;
 }
-void HalAccess::loadProgramFile(const char* program_name, const char *mainArgs){
-    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
+int HalAccess::loadProgramFile(const char* program_name, const char *mainArgs){    
+    return HAL_NOT_IMPLEMENTED;
 }
 
-int HalAccess::getStatus(){
-    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
+int HalAccess::getStatus(int *error){
+    if(error != NULL){
+        *error = HAL_NOT_IMPLEMENTED;
+    }
     return 2;
 }
 
 HalAccess::~HalAccess(){
-    std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
+    
 }
 
 void *IHalAccessIO::getOpsForIO(){
     std::cout << "Warning: " << __FUNCTION__ << " not implemented" << std::endl;
+    return 0;
 }
