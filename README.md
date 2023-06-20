@@ -29,7 +29,11 @@
 
 * Сборка компонент (статические lib-библиотеки, тесты, примеры) построена на CMake. 
 
+## Сборка x86/x64
 
+	cmake --preset=hal-x86-msvc -A x64
+	cmake --build build/hal-x86-msvc --config Release
+	
 ## Сборка NeuroMatrix библиотек  NMC-GCC  компилятором 
   Генерация проект происходит с помощью CMake.  
   cmake -S . -B build -D HAL_BOARD=ON -D HAL_TYPE=TYPE
