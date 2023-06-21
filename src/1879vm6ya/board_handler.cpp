@@ -1,6 +1,7 @@
 #include "hal-core.h"
 #include "hal/hal-options.h"
 #include <iostream>
+#include "mc12101load_nm.h"
 
 HalBoard *createBoard_MB7707(HalBoardOptions *board_options){
     std::cout << "open board mb7707 not implemented" << std::endl;
@@ -20,18 +21,22 @@ HalBoard::~HalBoard(){
 }
 
 int HalBoard::open(){
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return HAL_NOT_IMPLEMENTED;
 }
 
 int HalBoard::loadInitCode(){
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return HAL_NOT_IMPLEMENTED;
 }
 
 int HalBoard::close(){
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return HAL_NOT_IMPLEMENTED;
 }
 
 int HalBoard::reset(){
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return HAL_NOT_IMPLEMENTED;
 }
 
@@ -43,14 +48,17 @@ unsigned int HalBoard::count(int *error){
 }
 
 HalAccess *HalBoard::getAccess(HalAccessOptions *options){
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return 0;
 }
 
 int HalAccess::open(){
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return HAL_NOT_IMPLEMENTED;
 }
 
 int HalAccess::close(){
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return HAL_NOT_IMPLEMENTED;
 }
 
@@ -58,14 +66,17 @@ int HalAccess::sync(int value, int *error){
     if(error != NULL){
         *error = HAL_NOT_IMPLEMENTED;
     }
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return 0;
 }
 
 int HalAccess::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return HAL_NOT_IMPLEMENTED;
 }
 
 int HalAccess::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return HAL_NOT_IMPLEMENTED;
 }
 
@@ -73,13 +84,17 @@ int HalAccess::getResult(int *error){
     if(error != NULL){
         *error = HAL_NOT_IMPLEMENTED;
     }
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return 0;
 }
 
 int HalAccess::loadProgramFile(const char* program_name){
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return HAL_NOT_IMPLEMENTED;
 }
+
 int HalAccess::loadProgramFile(const char* program_name, const char *mainArgs){    
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return HAL_NOT_IMPLEMENTED;
 }
 
@@ -87,6 +102,7 @@ int HalAccess::getStatus(int *error){
     if(error != NULL){
         *error = HAL_NOT_IMPLEMENTED;
     }
+    Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return 2;
 }
 

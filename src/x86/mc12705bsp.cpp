@@ -17,7 +17,7 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
         remoted = 1;
         handle = open_library("mc12705load_proxy");
         if(handle == 0){
-            INF_LOG("Library mc12705load_proxy not found");
+            Log(LOG_ERROR).get() << "Library mc12705load_proxy not found";
             return;
         }
         auto rplConnectToHost = (int (*)(const char *, int))library_get_addr(handle, "PL_ConnectToHost");
@@ -25,7 +25,7 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
     } else {
         handle = open_library("mc12705load");
         if(handle == 0){
-            INF_LOG("Library mc12705load not found");
+            Log(LOG_ERROR).get() << "Library mc12705load not found";
             return;
         }
     }

@@ -11,11 +11,11 @@ HalBoardMC5103::HalBoardMC5103(const unsigned char* host_mac_addr){
     //strcpy((char*)mac_addr, (const char*)host_mac_addr);
     handle = open_library("mc5103load");
     char *path = getenv("PATH");
-    INF_LOG(path);
+    Log(LOG_DEBUG).get() << path;
     path = getenv("MC5103");
-    INF_LOG(path);
+    Log(LOG_DEBUG).get() << path;
     if(handle == 0){
-        INF_LOG("Library not found");
+        Log(LOG_ERROR).get() << "Library not found";
         return;
     }
 

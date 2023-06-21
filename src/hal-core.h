@@ -2,6 +2,7 @@
 #define __HAL_CORE_H_INCLUDED__
 #include "hal/hal.h"
 #include <iostream>
+#include "logger.h"
 
 typedef struct PL_Access PL_Access;
 
@@ -9,12 +10,6 @@ typedef struct PL_Access PL_Access;
 #define HAL_VIRTUAL_FUNC
 #else
 #define HAL_VIRTUAL_FUNC virtual
-#endif
-
-#ifdef DEBUG
-#   define   INF_LOG(message) std::cout << message << std::endl
-#else
-#   define   INF_LOG(message)
 #endif
 
 extern "C" int halOpenBoard(HalBoard *board);

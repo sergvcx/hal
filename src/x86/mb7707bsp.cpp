@@ -13,7 +13,7 @@ HalBoardMB7707::HalBoardMB7707(const unsigned char* host_mac_addr){
     handle = open_library("mb7707load");
     
     if(handle == 0){
-        INF_LOG("Library not found");
+        Log(LOG_ERROR).get() << "Library mb7707load not found";
         return;
     }
 
