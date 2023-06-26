@@ -19,7 +19,8 @@ extern "C" {
     int halcpReadM(int desc, void *data, size_t size, int width, int stride);
 	int halcpWriteP(int desc, void *data, size_t size, int offset);
     int halcpReadP(int desc, void *data, size_t size, int offset);
-	int halcpSetCallback(int desc, void *user_data);
+	int halcpSetWriteCallback(int desc, void *user_data);
+	int halcpSetReadCallback(int desc, void *user_data);
     int halcpFlush(int desc);
     int halcpClose(int desc);
 
