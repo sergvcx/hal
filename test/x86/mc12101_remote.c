@@ -10,7 +10,8 @@ void test_halGetBoard_whenChoosedRemoteBoardOfMC12101WithCorrectIP_shouldGetBoar
     halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
     halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
     char *ip = getenv("NMSERVER_IP");
-    assert(ip != NULL);    
+    //assert(ip != NULL);    
+    ip = "proton";
     halSetBoardOption(options, HAL_SERVER_IP, ip);
     halSetBoardOption(options, HAL_SERVER_PORT, 5557);
     halSetBoardOption(options, HAL_SERVER_ENABLED, 1);

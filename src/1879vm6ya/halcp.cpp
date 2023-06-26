@@ -82,6 +82,19 @@ extern "C"{
     int halcpRead(int fd, void *data, size_t size){
         return -1;
     }
+	int halcpWriteM(int desc, void *data, size_t size, int width, int stride){
+		return -1;
+	}
+    int halcpReadM(int desc, void *data, size_t size, int width, int stride){
+		return -1;
+	}
+	int halcpWriteP(int desc, void *data, size_t size, int offset){
+		return -1;
+	}
+    int halcpReadP(int desc, void *data, size_t size, int offset){
+		return -1;
+	}
+	
     int halcpFlush(int cpd){
         return -1;
     }
