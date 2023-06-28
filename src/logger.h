@@ -18,9 +18,7 @@ public:
     std::ostringstream os;
     TLogLevel messageLevel;
 
-    Log(TLogLevel level = LOG_INFO){
-        messageLevel = level;
-    }
+    Log(TLogLevel level = TLogLevel::LOG_INFO);
 
     virtual ~Log();
 

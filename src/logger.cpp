@@ -2,6 +2,10 @@
 #include <iostream>
 #include <iomanip>
 
+Log::Log(TLogLevel level) {
+    messageLevel = level;
+}
+
 std::string toString(TLogLevel level){
     switch (level)
     {
