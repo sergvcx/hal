@@ -54,6 +54,10 @@ extern "C" {
         }
     }
 
+    void *halLoadExtensionFunction(HalBoard *board, const char* functionName){
+        return 0;
+    }
+
 
     HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options, int *error){
         int get_access_error = HAL_NOT_IMPLEMENTED;
