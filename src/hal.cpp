@@ -55,7 +55,7 @@ extern "C" {
     }
 
     void *halLoadExtensionFunction(HalBoard *board, const char* functionName){
-        return 0;
+        return board->loadExtensionFunc(functionName);
     }
 
 

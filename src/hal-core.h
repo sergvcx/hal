@@ -25,6 +25,7 @@ public:
     HAL_VIRTUAL_FUNC int loadInitCode();
     HAL_VIRTUAL_FUNC int close();
     HAL_VIRTUAL_FUNC int reset();    
+    HAL_VIRTUAL_FUNC void* loadExtensionFunc(const char* function_name);
     HAL_VIRTUAL_FUNC HalAccess *getAccess(HalAccessOptions *options);
     HAL_VIRTUAL_FUNC ~HalBoard();
     HAL_VIRTUAL_FUNC unsigned int count(int *error = NULL);
