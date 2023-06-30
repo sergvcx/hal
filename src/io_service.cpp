@@ -19,7 +19,7 @@ extern "C"{
         if(dynamic_cast<IHalAccessIO *>(access)){
             ops = dynamic_cast<IHalAccessIO *>(access)->getOpsForIO();
         }
-        PL_Access *a = (PL_Access *)access->getBspAccess();
+        PL_Access *a = (PL_Access *)access->native();
         io = IO_ServiceStart(program_file, a, file, ops);
         if(io == 0){
             std::cout << "Failed IO Service start" << std::endl;  

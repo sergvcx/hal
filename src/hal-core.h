@@ -4,7 +4,6 @@
 #include <iostream>
 #include "logger.h"
 
-typedef struct PL_Access PL_Access;
 
 #ifdef __NM__
 #define HAL_VIRTUAL_FUNC
@@ -25,6 +24,7 @@ public:
     HAL_VIRTUAL_FUNC int loadInitCode();
     HAL_VIRTUAL_FUNC int close();
     HAL_VIRTUAL_FUNC int reset();    
+    HAL_VIRTUAL_FUNC PL_Board *native();
     HAL_VIRTUAL_FUNC void* loadExtensionFunc(const char* function_name);
     HAL_VIRTUAL_FUNC HalAccess *getAccess(HalAccessOptions *options);
     HAL_VIRTUAL_FUNC ~HalBoard();
@@ -42,7 +42,7 @@ public:
     HalBoard *board;
 
     //HAL_VIRTUAL uintptr_t getBspAccess();
-    HAL_VIRTUAL_FUNC PL_Access *getBspAccess();
+    HAL_VIRTUAL_FUNC PL_Access *native();    
     HAL_VIRTUAL_FUNC int open();
     HAL_VIRTUAL_FUNC int close();
     HAL_VIRTUAL_FUNC int sync(int value, int *error = NULL);

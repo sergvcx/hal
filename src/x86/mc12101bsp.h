@@ -63,7 +63,7 @@ public:
     // int (*plGetResult)(PL_Access *, unsigned int *);
     // int (*plSync)(PL_Access *, int, int *);     
 
-    PL_Access *getBspAccess() override;
+    PL_Access *native() override;
     int open() override;
     int close() override;
     int sync(int value, int *error) override;

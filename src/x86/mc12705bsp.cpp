@@ -108,7 +108,7 @@ HalAccessMC12705::HalAccessMC12705(HalBoardMC12705 *board, HalAccessOptions *opt
     board->plGetAccess(board->desc, (PL_Core *)&core, &access);    
 }
 
-PL_Access *HalAccessMC12705::getBspAccess(){
+PL_Access *HalAccessMC12705::native(){
     return access;
 }
 

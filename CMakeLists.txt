@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 project(hal 
 	LANGUAGES C CXX
 	DESCRIPTION "Hal library"
-	VERSION 0.3.2)
+	)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
@@ -42,7 +42,20 @@ target_include_directories(hal
 	PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/include
 	PRIVATE
-		${CMAKE_CURRENT_LIST_DIR}/src)
+		${CMAKE_CURRENT_LIST_DIR}/src
+		${CMAKE_CURRENT_BINARY_DIR}
+	)
+add_custom_command(
+	TARGET hal
+	PRE_BUILD 
+	COMMAND ${CMAKE_COMMAND}
+		-D VERSION_FILE=${CMAKE_CURRENT_LIST_DIR}/version.txt
+		-D BUILD_DIR=${CMAKE_CURRENT_BINARY_DIR}
+		-D VERSION_NAME=HAL_VERSION
+		-P "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
+	DEPENDS version.txt "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
+	VERBATIM
+)
 
 if(HAL_X86)
 	set(arch x86)
@@ -110,8 +123,7 @@ set_target_properties(hal PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib
     ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_LIST_DIR}/lib
     ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_LIST_DIR}/lib
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION})
+)
 
 add_subdirectory(examples)
 

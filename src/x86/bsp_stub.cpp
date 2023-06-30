@@ -10,6 +10,11 @@ int HalBoard::loadInitCode(){
     return HAL_NOT_IMPLEMENTED;
 }
 
+PL_Board *HalBoard::native(){
+    std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
+    return 0;
+}
+
 int HalBoard::open(){
     std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
     return HAL_NOT_IMPLEMENTED;
@@ -55,12 +60,12 @@ int HalAccess::close(){
     return HAL_NOT_IMPLEMENTED;
 }
 
-int HalAccess::sync(int value, int *error){
+PL_Access *HalAccess::native(){
     std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
     return 0;
 }
 
-PL_Access *HalAccess::getBspAccess(){
+int HalAccess::sync(int value, int *error){
     std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
     return 0;
 }

@@ -2,6 +2,7 @@
 #include "hal/hal-options.h"
 #include "hal-core.h"
 #include <iostream>
+#include "version.h"
 
 #define HAL_SET_ERROR(pointer, err) if(pointer != NULL) *pointer = err
 //#define HAL_SET_ERROR(pointer, err) 
@@ -58,6 +59,23 @@ extern "C" {
         return board->loadExtensionFunc(functionName);
     }
 
+    PL_Board *halGetNativeBoard(HalBoard *board){
+        return board->native();
+    }
+    
+    PL_Access *halGetNativeAccess(HalAccess *access){
+        return access->native();
+    }
+
+    int halGetVersion(unsigned int *version_major, unsigned int *version_minor){
+        if(version_major != NULL){
+            *version_major = HAL_VERSION_MAJOR;
+        }
+        if(version_minor != NULL){
+            *version_minor = HAL_VERSION_MINOR;
+        }
+        return 0;
+    }
 
     HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options, int *error){
         int get_access_error = HAL_NOT_IMPLEMENTED;

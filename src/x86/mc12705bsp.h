@@ -70,7 +70,7 @@ public:
     } ops;
     HalAccessMC12705(HalBoardMC12705 *board, HalAccessOptions *opt);
 
-    PL_Access *getBspAccess() override;
+    PL_Access *native() override;
     int sync(int value, int *error) override;
     int readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size) override;
     int writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size) override;

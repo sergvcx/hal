@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include "stdio.h"
 
+typedef struct PL_Board PL_Board;
+typedef struct PL_Access PL_Access;
+
 
 typedef struct HalBoard HalBoard;        //for nm and x86 different realizations
 typedef struct HalAccess HalAccess;       //for nm and x86 different realizations
@@ -50,11 +53,14 @@ extern "C" {
      * @details 
      */
     HalBoard *halGetBoard(const char *options, int *error);
+    PL_Board *halGetNativeBoard(HalBoard *board);
     HalBoard *halGetBoardOpt(HalBoardOptions *board_options, int *error);
 
     unsigned int halGetBoardCount(HalBoardOptions *board_options, int *error);
 
     int halGetFirmwareVersion(HalBoard *board, unsigned int *version_major, unsigned int *version_minor);
+    int halGetVersion(unsigned int *version_major, unsigned int *version_minor);
+
     
 
     int halCloseBoard(HalBoard *board);
@@ -64,6 +70,7 @@ extern "C" {
 
  
     HalAccess *halGetAccess(HalBoard *board, HalCore *core, int *error);
+    PL_Access *halGetNativeAccess(HalAccess *access);
     HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options, int *error);
     int halCloseAccess(HalAccess *access);
 

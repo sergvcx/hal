@@ -121,7 +121,7 @@ int HalAccessMC12101::close(){
     return error;
 }
 
-PL_Access *HalAccessMC12101::getBspAccess(){
+PL_Access *HalAccessMC12101::native(){
     return access;
 }
 
