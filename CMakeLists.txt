@@ -74,7 +74,13 @@ if(HAL_X86)
 		PRIVATE 
 			src/x86
 			$ENV{MC12101}/include)
-	target_compile_definitions(hal PUBLIC _ITERATOR_DEBUG_LEVEL=0)
+if(MSVC)
+	target_compile_definitions(hal PUBLIC 
+		$<$<CONFIG:Release>:_ITERATOR_DEBUG_LEVEL=0> 
+        $<$<CONFIG:Debug>:_ITERATOR_DEBUG_LEVEL=2> 
+		$<$<CONFIG:Debug>:_DEBUG> 
+        _CRT_SECURE_NO_DEPRECATE)
+endif()
 	if(WIN32)
 	add_subdirectory(hal-run)
 	else()

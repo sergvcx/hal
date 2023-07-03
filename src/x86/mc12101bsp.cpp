@@ -68,6 +68,10 @@ HalBoardMC12101::~HalBoardMC12101(){
     }
 }
 
+void* HalBoardMC12101::loadExtensionFunc(const char* function_name) {
+    return library_get_addr(handle, function_name);
+}
+
 
 int HalBoardMC12101::open(){
     //INF_LOG

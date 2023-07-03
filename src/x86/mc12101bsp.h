@@ -40,6 +40,7 @@ public:
     int reset() override;
     HalAccess *getAccess(HalAccessOptions *options) override;
     unsigned int count(int *error) override;
+    void* loadExtensionFunc(const char* function_name) override;
 };
 
 struct HalAccessMC12101 : public HalAccess, public IHalAccessIO{
