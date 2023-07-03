@@ -56,6 +56,7 @@ add_custom_command(
 	DEPENDS version.txt "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
 	VERBATIM
 )
+
 add_custom_target(hal-version ALL
 	COMMAND ${CMAKE_COMMAND}
 	-D VERSION_FILE=${CMAKE_CURRENT_LIST_DIR}/version.txt
