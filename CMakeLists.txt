@@ -56,6 +56,14 @@ add_custom_command(
 	DEPENDS version.txt "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
 	VERBATIM
 )
+add_custom_target(hal-version ALL
+	COMMAND ${CMAKE_COMMAND}
+	-D VERSION_FILE=${CMAKE_CURRENT_LIST_DIR}/version.txt
+	-D BUILD_DIR=${CMAKE_CURRENT_BINARY_DIR}
+	-D VERSION_NAME=HAL_VERSION
+	-P "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
+	DEPENDS version.txt "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
+)
 
 if(HAL_X86)
 	set(arch x86)
@@ -80,7 +88,7 @@ if(HAL_MC12101)
 	enable_language(ASM)
 	add_nmc_compiler_type_option("${mc12101_sources}")
 	target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:ASM>:-mnmc4;-Wa,-W-111;-Wa,-W-109;-Wa,-split_sir>)
-	target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-Wall;-mnmc4>)
+	target_compile_options(hal PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>:-Wall;-mnmc4;-fpermissive>)
 	set_source_files_properties(src/printf_nmgcc/printf.cpp PROPERTY COMPILE_FLAGS -O0)
 	target_include_directories(hal PRIVATE src/1879vm6ya $ENV{MC12101}/include)
 	enable_testing()

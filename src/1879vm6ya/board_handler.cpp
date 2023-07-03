@@ -40,6 +40,14 @@ int HalBoard::reset(){
     return HAL_NOT_IMPLEMENTED;
 }
 
+void *HalBoard::loadExtensionFunc(const char *funcname){
+    return 0;
+}
+
+PL_Board *HalBoard::native(){
+    return 0;
+}
+
 unsigned int HalBoard::count(int *error){
     if(error != NULL){
         *error = HAL_NOT_IMPLEMENTED;
@@ -51,6 +59,11 @@ HalAccess *HalBoard::getAccess(HalAccessOptions *options){
     Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 
     return 0;
 }
+
+PL_Access *HalAccess::native(){
+    return 0;
+}
+
 
 int HalAccess::open(){
     Log(LOG_WARNING).get() << __FUNCTION__ << " not realized"; 

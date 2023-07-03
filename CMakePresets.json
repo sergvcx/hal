@@ -54,7 +54,7 @@
             }
         },
         {
-            "name": "hal-mc12101",
+            "name": "mc12101",
             "displayName": "hal-mc12101 target",
             "inherits": "target-ninja",
             "cacheVariables": {
@@ -62,7 +62,7 @@
             }
         },
         {
-            "name": "hal-mb7707",
+            "name": "mb7707",
             "displayName": "hal-mb7707 target",
             "inherits": "target-ninja",
             "cacheVariables": {
@@ -70,7 +70,7 @@
             }
         },
         {
-            "name": "hal-mc5103",
+            "name": "mc5103",
             "displayName": "hal-mc5103 target",
             "inherits": "target-ninja",
             "cacheVariables": {
@@ -78,7 +78,7 @@
             }
         },
         {
-            "name": "hal-mc7601",
+            "name": "mc7601",
             "displayName": "hal-mc7601 target",
             "inherits": "target-ninja",
             "cacheVariables": {
@@ -86,7 +86,7 @@
             }
         },
         {
-            "name": "hal-x86-makefiles",
+            "name": "x86-makefiles",
             "displayName": "hal x86 on makefiles",
             "inherits": "host-makefile",
             "cacheVariables": {
@@ -94,7 +94,7 @@
             }
         },
         {
-            "name": "hal-x86-msvc",
+            "name": "x86-msvc",
             "displayName": "hal x86 on msvc",
             "inherits": "host-msvc",
             "cacheVariables": {
@@ -110,7 +110,7 @@
             }
         },
         {
-            "name": "hal-virtual-mingw",
+            "name": "virtual-mingw",
             "displayName": "hal-virtual on mingw",
             "inherits": "host-makefile",
             "cacheVariables": {
@@ -120,7 +120,7 @@
             }
         },
         {
-            "name": "hal-virtual-msvc",
+            "name": "virtual-msvc",
             "displayName": "hal-virtual on msvc",
             "inherits": "host-msvc",
             "cacheVariables": {
@@ -133,13 +133,13 @@
             "name": "test_x86_mc12101",
             "description": "",
             "displayName": "",
-            "configurePreset": "hal-x86-makefiles"
+            "configurePreset": "x86-makefiles"
         },
         {
             "name": "test_x86_mc12101_msvc",
             "description": "",
             "displayName": "",
-            "configurePreset": "hal-x86-msvc"
+            "configurePreset": "x86-msvc"
         }
     ]
 }
