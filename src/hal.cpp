@@ -127,6 +127,7 @@ extern "C" {
         Log(LOG_DEBUG).get() << __FUNCTION__;
         return board->reset();
     }
+
     int halLoadInitCode(HalBoard *board){
         Log(LOG_DEBUG).get() << __FUNCTION__;
         return board->loadInitCode();

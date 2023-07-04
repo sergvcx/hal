@@ -45,6 +45,8 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
     plGetResult = (int (*)(PL_Access *, PL_Word *))library_get_addr(handle, "PL_GetResult");
     plSync = (int (*)(PL_Access *, int, int *))library_get_addr(handle, "PL_Sync");
     plReset = (int (*)(PL_Board *))library_get_addr(handle, "PL_ResetBoard");
+    plLoadInitCode = (int (*)(PL_Board*))library_get_addr(handle, "PL_LoadInitCode");
+
     is_initialized = 1;
 
     
@@ -53,6 +55,11 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
 unsigned int HalBoardMC12705::count(int *error){
     plGetCount(&board_count);
     return board_count;
+}
+
+PL_Board* HalBoardMC12705::native()
+{
+    return desc;
 }
 
 
@@ -84,13 +91,24 @@ int HalBoardMC12705::reset(){
 }
 
 int HalBoardMC12705::loadInitCode(){
-    assert(plLoadInitBoard);
-    return plLoadInitBoard(desc); 
+    assert(plLoadInitCode);
+    return plLoadInitCode(desc);
+}
+
+void* HalBoardMC12705::loadExtensionFunc(const char* function_name) {
+    return library_get_addr(handle, function_name);
 }
 
 HalAccess *HalBoardMC12705::getAccess(HalAccessOptions *options) {
     HalAccess *access = new HalAccessMC12705(this, options);
     return access;
+}
+
+int HalAccessMC12705::open() {
+    return _board->plGetAccess(_board->desc, (PL_Core*)&core, &access);
+}
+int HalAccessMC12705::close() {
+    return _board->plCloseAccess(access);
 }
 
 
@@ -103,9 +121,7 @@ HalAccessMC12705::HalAccessMC12705(HalBoardMC12705 *board, HalAccessOptions *opt
     ops.plWriteMemBlock = _board->plWriteMemBlock;
 
     core.core = opt->core;
-    core.cluster = opt->cluster;
-
-    board->plGetAccess(board->desc, (PL_Core *)&core, &access);    
+    core.cluster = opt->cluster;    
 }
 
 PL_Access *HalAccessMC12705::native(){
@@ -115,10 +131,10 @@ PL_Access *HalAccessMC12705::native(){
 
 int HalAccessMC12705::sync(int value, int *error){
     int result = 0;
-    // int _error = board->plSync(access, value, &result);
-    // if(error != NULL){
-    //     *error = _error;
-    // }
+    int _error = _board->plSync(access, value, &result);
+    if(error != NULL){
+        *error = _error;
+    }
     return result;
 }
 

@@ -28,7 +28,7 @@ public:
     int (*plCloseDesc)(PL_Board *);
     int (*plGetSerialNumber)(PL_Board *, unsigned long *);
     int (*plGetFirwareVersion)(PL_Board *, unsigned int *, unsigned int *);
-    int (*plLoadInitBoard)(PL_Board *board);
+    int (*plLoadInitCode)(PL_Board *board);
     int (*plGetAccess)(PL_Board *, PL_Core *, PL_Access**);
     int (*plCloseAccess)(PL_Access *);
     int (*plReadMemBlock)(PL_Access *, void *, int, int);
@@ -51,6 +51,8 @@ public:
     int reset() override;
     HalAccess *getAccess(HalAccessOptions *options) override;
     unsigned int count(int *error) override;
+    PL_Board* native() override;
+    void* loadExtensionFunc(const char* function_name) override;
 };
 
 struct HalAccessMC12705 : public HalAccess{
@@ -71,6 +73,8 @@ public:
     HalAccessMC12705(HalBoardMC12705 *board, HalAccessOptions *opt);
 
     PL_Access *native() override;
+    int open() override;
+    int close() override;
     int sync(int value, int *error) override;
     int readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size) override;
     int writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size) override;
