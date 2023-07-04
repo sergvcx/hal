@@ -45,17 +45,18 @@ target_include_directories(hal
 		${CMAKE_CURRENT_LIST_DIR}/src
 		${CMAKE_CURRENT_BINARY_DIR}
 	)
-add_custom_command(
-	TARGET hal
-	PRE_BUILD 
-	COMMAND ${CMAKE_COMMAND}
-		-D VERSION_FILE=${CMAKE_CURRENT_LIST_DIR}/version.txt
-		-D BUILD_DIR=${CMAKE_CURRENT_BINARY_DIR}
-		-D VERSION_NAME=HAL_VERSION
-		-P "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
-	DEPENDS version.txt "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
-	VERBATIM
-)
+#add_custom_command(
+#	TARGET hal
+#	PRE_BUILD 
+#	COMMAND ${CMAKE_COMMAND}
+#		-D VERSION_FILE=${CMAKE_CURRENT_LIST_DIR}/version.txt
+#		-D BUILD_DIR=${CMAKE_CURRENT_BINARY_DIR}
+#		-D VERSION_NAME=HAL_VERSION
+#		-P "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
+#	DEPENDS version.txt "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
+#	VERBATIM
+#)
+
 
 add_custom_target(hal-version ALL
 	COMMAND ${CMAKE_COMMAND}
@@ -66,6 +67,7 @@ add_custom_target(hal-version ALL
 	DEPENDS version.txt "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
 )
 
+add_dependencies(hal hal-version)
 if(HAL_X86)
 	set(arch x86)
 	target_sources(hal PRIVATE ${x86_sources})
@@ -82,9 +84,12 @@ if(MSVC)
         _CRT_SECURE_NO_DEPRECATE)
 endif()
 	if(WIN32)
-	add_subdirectory(hal-run)
+		add_subdirectory(hal-run)
 	else()
-	target_link_libraries(hal PUBLIC dl)
+		target_link_libraries(hal PUBLIC dl)
+	endif()
+	if(MINGW)
+		target_compile_options(hal PUBLIC -fpermissive)
 	endif()
 	enable_testing()
 	add_subdirectory(test/x86)

@@ -102,6 +102,18 @@
             }
         },
         {
+            "name": "x86-mingw",
+			"binaryDir": "${sourceDir}/build/${presetName}",
+            "displayName": "hal x86 on makefiles",
+            "cacheVariables": {
+                "HAL_X86": "ON",
+				"HAL_TYPE": "HOST",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release"
+            },
+			"generator": "Ninja Multi-Config"
+        },
+        {
             "name": "hal-virtual-makefiles",
             "displayName": "hal-virtual on makefiles",
             "inherits": "host-makefile",

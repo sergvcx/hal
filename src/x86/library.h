@@ -1,7 +1,11 @@
 #ifndef __LIBRARY_H_INCLUDED
 #define __LIBRARY_H_INCLUDED
 
-#ifdef _WIN32
+#ifdef __MINGW32__
+#   include <windows.h> 
+typedef  void* LibraryHandle;
+typedef long long int (*LibraryFuncAddr)();
+#elif _WIN32
 #   include <windows.h> 
 #   define LibraryHandle HINSTANCE 
 #   define LibraryFuncAddr void*
