@@ -50,6 +50,7 @@ HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
 }
 
 unsigned int HalBoardMC12101::count(int *error){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     int _error = plGetCount(&board_count);
     if(error != NULL) *error = _error;
     return board_count;
@@ -67,14 +68,21 @@ HalBoardMC12101::~HalBoardMC12101(){
         }
     }
 }
+PL_Board* HalBoardMC12101::native() {
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
+    return desc;
+}
 
 void* HalBoardMC12101::loadExtensionFunc(const char* function_name) {
-    return library_get_addr(handle, function_name);
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
+    void* result = library_get_addr(handle, function_name);
+    Log(LOG_DEBUG1).get() << "MC121.01 extension func " << function_name << ": " << result;
+    return result;
 }
 
 
 int HalBoardMC12101::open(){
-    //INF_LOG
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     if(!is_opened){
         is_opened = 1;
         return plGetDesc(board_no, &desc);    
@@ -84,6 +92,7 @@ int HalBoardMC12101::open(){
 }
 
 int HalBoardMC12101::close(){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     if(is_opened){
         is_opened = 0;
         return plCloseDesc(desc);
@@ -93,10 +102,12 @@ int HalBoardMC12101::close(){
 }
 
 int HalBoardMC12101::reset(){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     return plReset(desc);
 }
 
 HalAccess *HalBoardMC12101::getAccess(HalAccessOptions *options) {
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     HalAccess *access = new HalAccessMC12101(this, options);
     //if(access)
     return access;
@@ -113,10 +124,12 @@ HalAccessMC12101::HalAccessMC12101(HalBoardMC12101 *board, HalAccessOptions *opt
 }
 
 int HalAccessMC12101::open(){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     return _board->plGetAccess(_board->desc, core, &access);
 }
 
 int HalAccessMC12101::close(){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     if(access == 0) return HAL_OK;
     int error = _board->plCloseAccess(access);
     if(error == HAL_OK){
@@ -126,10 +139,12 @@ int HalAccessMC12101::close(){
 }
 
 PL_Access *HalAccessMC12101::native(){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     return access;
 }
 
 int HalAccessMC12101::sync(int value, int *error){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     int result;
     int _error = _board->plSync(access, value, &result);
     if(error != NULL){
@@ -139,14 +154,17 @@ int HalAccessMC12101::sync(int value, int *error){
 }
 
 int HalAccessMC12101::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     return _board->plReadMemBlock(access, dstHostAddr, (int)srcBoardAddr, size);
 }
 
 int HalAccessMC12101::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     return _board->plWriteMemBlock(access, srcHostAddr, (int)dstBoardAddr, size);
 }
 
 int HalAccessMC12101::getResult(int *error){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     unsigned int result;
     int _error = _board->plGetResult(access, &result);
     if(error != NULL){
@@ -156,16 +174,19 @@ int HalAccessMC12101::getResult(int *error){
 }
 
 int HalAccessMC12101::loadProgramFile(const char* program_name){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     strcpy(program, program_name);
     return _board->plLoadProgramFile(access, program_name);
 }
 
 int HalAccessMC12101::loadProgramFile(const char* program_name, const char *mainArgs){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     strcpy(program, program_name);
     return _board->plLoadProgramFileArgs(access, program_name, mainArgs);
 }
 
 int HalAccessMC12101::getStatus(int *error){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     unsigned int result;
     int _error = _board->plGetStatus(access, &result);
     if(_error){
@@ -175,10 +196,12 @@ int HalAccessMC12101::getStatus(int *error){
 }
 
 void *HalAccessMC12101::getOpsForIO(){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     return &ops;
 }
 
 
 HalAccessMC12101::~HalAccessMC12101(){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
     close();
 }

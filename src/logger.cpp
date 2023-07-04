@@ -29,7 +29,7 @@ std::string toString(TLogLevel level){
 }
 
 std::ostringstream &Log::get(){
-    os << "[" << std::setw(8) << toString(messageLevel) << "]";
+    os << "[" << std::setw(8) << toString(messageLevel) << "]: ";
     return os;
 }
 

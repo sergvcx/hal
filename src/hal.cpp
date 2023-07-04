@@ -16,6 +16,7 @@ HalBoard *createBoard_MC12705(HalBoardOptions *board_options);
 extern "C" {
 
     HalBoard *halCreateBoard(HalBoardOptions *board_options){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         HalBoard *board = NULL;
         switch (board_options->board_type)
         {
@@ -35,6 +36,7 @@ extern "C" {
     }
 
     HalBoard *halGetBoardOpt(HalBoardOptions *board_options, int *error){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         HalBoard *board = halCreateBoard(board_options);
         if(!board) {
             HAL_SET_ERROR(error, HAL_BAD_ARGUMENT);
@@ -56,18 +58,22 @@ extern "C" {
     }
 
     void *halLoadExtensionFunction(HalBoard *board, const char* functionName){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         return board->loadExtensionFunc(functionName);
     }
 
     PL_Board *halGetNativeBoard(HalBoard *board){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         return board->native();
     }
     
     PL_Access *halGetNativeAccess(HalAccess *access){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         return access->native();
     }
 
     int halGetVersion(unsigned int *version_major, unsigned int *version_minor){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         if(version_major != NULL){
             *version_major = HAL_VERSION_MAJOR;
         }
@@ -78,6 +84,7 @@ extern "C" {
     }
 
     HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options, int *error){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         int get_access_error = HAL_NOT_IMPLEMENTED;
         HalAccess *access = board->getAccess(access_options);
         if(access == 0) {
@@ -90,16 +97,19 @@ extern "C" {
     }
 
      HalBoard *halGetBoard(const char* options, int *error){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         HalBoardOptions opt;
         halSetBoardOption(&opt, HAL_BOARD_NUMBER, 0);
         return halGetBoardOpt(&opt, error);
     }
 
     int halOpenBoard(HalBoard *board){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         return board->open();
     }
     
     HalAccess *halGetAccess(HalBoard *board, HalCore *core, int *error){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         HalAccessOptions opt;
         halSetAccessOption(&opt, HAL_CORE, core->core);
         halSetAccessOption(&opt, HAL_CLUSTER, core->cluster);        
@@ -107,20 +117,24 @@ extern "C" {
     }
 
     int halCloseBoard(HalBoard *board){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         int error = board->close();
         delete board;
         return error;
     }
 
     int halResetBoard(HalBoard *board){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         return board->reset();
     }
     int halLoadInitCode(HalBoard *board){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         return board->loadInitCode();
     }
 
 
     unsigned int halGetBoardCount(HalBoardOptions *board_options, int *error){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         int getBoardError;
         HalBoard *board = halCreateBoard(board_options);
         if(!board) {
@@ -133,12 +147,14 @@ extern "C" {
     }
 
     int halGetFirmwareVersion(HalBoard *board, unsigned int *version_major, unsigned int *version_minor){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         std::cout << "WARNING: halGetFirmwareVersion not implemented" << std::endl;
         return HAL_NOT_IMPLEMENTED;
     }
  
 
     int halCloseAccess(HalAccess *access){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         access->close();
         delete access;
         //return access->getError();
@@ -146,6 +162,7 @@ extern "C" {
     }
 
     int halLoadProgramFile(HalAccess *access, const char *program_name){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         int error = access->loadProgramFile(program_name);
         if(error != 0){
             return HAL_FILE;
@@ -154,11 +171,13 @@ extern "C" {
     }
 
     int halLoadProgram(HalAccess *access, const void *addrProgram, unsigned int sizeProgram){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         return HAL_NOT_IMPLEMENTED;
     }
 
     int halLoadProgramFileArgs(HalAccess *access, const char *program_name, const char *args){
-         int error = access->loadProgramFile(program_name, args);
+        Log(LOG_DEBUG).get() << __FUNCTION__;
+        int error = access->loadProgramFile(program_name, args);
         if(error != 0){
             return HAL_FILE;
         }
@@ -166,6 +185,7 @@ extern "C" {
     }
 
     int halSync(HalAccess *access, int value, int *error){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         if(error != NULL){
             *error = 0;
         }
@@ -173,6 +193,7 @@ extern "C" {
     }
     
     uintptr_t halSyncAddr(HalAccess *access, uintptr_t value, int *error){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         if(error != NULL){
             *error = 0;
         }
@@ -180,16 +201,19 @@ extern "C" {
     }
 
     int halReadMemBlock (HalAccess *access, void* dstHostAddr, uintptr_t srcBoardAddr, size_t size32){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         access->readMemBlock(dstHostAddr, srcBoardAddr, size32);
         return 0;
     }
 
     int halWriteMemBlock(HalAccess *access, const void* srcHostAddr, uintptr_t dstBoardAddr, size_t size32){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         access->writeMemBlock(srcHostAddr, dstBoardAddr, size32);
         return 0;
     }
 
     int halGetResult(HalAccess *access, int* error){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         int _error;
         int result = access->getResult(&_error);
         HAL_SET_ERROR(error, _error);
@@ -197,6 +221,7 @@ extern "C" {
     }
 
     int halGetStatus(HalAccess *access, int* error){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         if(error != NULL){
             *error = 0;
         }
