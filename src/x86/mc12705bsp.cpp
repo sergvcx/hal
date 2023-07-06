@@ -105,9 +105,11 @@ HalAccess *HalBoardMC12705::getAccess(HalAccessOptions *options) {
 }
 
 int HalAccessMC12705::open() {
+    assert(_board->plGetAccess);
     return _board->plGetAccess(_board->desc, (PL_Core*)&core, &access);
 }
 int HalAccessMC12705::close() {
+    assert(_board->plCloseAccess);
     return _board->plCloseAccess(access);
 }
 
@@ -139,15 +141,18 @@ int HalAccessMC12705::sync(int value, int *error){
 }
 
 int HalAccessMC12705::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
+    assert(_board->plReadMemBlock);
     return _board->plReadMemBlock(access, dstHostAddr, (int)srcBoardAddr, size);    
 }
 
 int HalAccessMC12705::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
+    assert(_board->plWriteMemBlock);
     return _board->plWriteMemBlock(access, srcHostAddr, (int)dstBoardAddr, size);    
 }
 
 int HalAccessMC12705::getResult(int *error){
     PL_Word result;
+    assert(_board->plGetResult);
     int _error = _board->plGetResult(access, &result);
     if(_error){
         std::cout << "Failed get result" << std::endl;
@@ -157,16 +162,19 @@ int HalAccessMC12705::getResult(int *error){
 
 int HalAccessMC12705::loadProgramFile(const char* program_name){
     strcpy(program, program_name);
+    assert(_board->plLoadProgramFile);
     return _board->plLoadProgramFile(access, program_name);
 }
 
 int HalAccessMC12705::loadProgramFile(const char* program_name, const char *mainArgs){
     strcpy(program, program_name);
+    assert(_board->plLoadProgramFileArgs);
     return _board->plLoadProgramFileArgs(access, program_name, mainArgs);
 }
 
 int HalAccessMC12705::getStatus(int *error){
     PL_Word result;
+    assert(_board->plGetStatus);
     int _error = _board->plGetStatus(access, &result);
     if(_error){
         std::cout << "Failed get status" << std::endl;
@@ -176,5 +184,5 @@ int HalAccessMC12705::getStatus(int *error){
 
 
 HalAccessMC12705::~HalAccessMC12705(){
-    _board->plCloseAccess(access);
+    close();
 }

@@ -18,6 +18,7 @@ extern "C" {
     HalBoard *halCreateBoard(HalBoardOptions *board_options){
         Log(LOG_DEBUG).get() << __FUNCTION__;
         HalBoard *board = NULL;
+        Log(LOG_DEBUG).get() << "Board type: " << board_options->board_type;
         switch (board_options->board_type)
         {
         case HAL_MC12101:
@@ -39,6 +40,7 @@ extern "C" {
         Log(LOG_DEBUG).get() << __FUNCTION__;
         HalBoard *board = halCreateBoard(board_options);
         if(!board) {
+            Log(LOG_WARNING).get() << "Failed create board";
             HAL_SET_ERROR(error, HAL_BAD_ARGUMENT);
             return NULL;
         }
@@ -46,11 +48,13 @@ extern "C" {
             int _error = board->open();
             HAL_SET_ERROR(error, _error);
             if(_error){
+                Log(LOG_WARNING).get() << "Failed open board";
                 delete board;
                 return 0;
             }
             return board;
         } else {
+            Log(LOG_WARNING).get() << "Board not initialized";
             HAL_SET_ERROR(error, HAL_ERROR);
             delete board;
             return NULL;

@@ -37,5 +37,5 @@ Log::~Log()
 {
     os << std::endl;
     fprintf(stderr, "%s", os.str().c_str());
-    fflush(stderr);
+    fflush(stderr);    
 }

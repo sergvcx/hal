@@ -82,7 +82,8 @@ void* HalBoardMC12101::loadExtensionFunc(const char* function_name) {
 
 
 int HalBoardMC12101::open(){
-    Log(LOG_DEBUG1).get() << __FUNCTION__;
+    //Log(LOG_DEBUG1).get() << __FUNCTION__;
+    std::cout << __FUNCTION__;
     if(!is_opened){
         is_opened = 1;
         return plGetDesc(board_no, &desc);    
@@ -118,6 +119,7 @@ HalAccessMC12101::HalAccessMC12101(HalBoardMC12101 *board, HalAccessOptions *opt
     _board = board;
     core = opt->core;
     access = 0;
+    io = nullptr;
     
     ops.plReadMemBlock = _board->plReadMemBlock;
     ops.plWriteMemBlock = _board->plWriteMemBlock;

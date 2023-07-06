@@ -27,7 +27,7 @@ int HalBoard::reset(){
     std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
     return HAL_NOT_IMPLEMENTED;
 }
-void* HalBoard::loadExtensionFunc(const char *function_name) {
+void* IHalExtension::loadExtensionFunc(const char *function_name) {
     std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
     return 0;
 }

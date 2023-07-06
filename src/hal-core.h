@@ -13,8 +13,12 @@
 
 extern "C" int halOpenBoard(HalBoard *board);
 
+struct IHalExtension {
+    HAL_VIRTUAL_FUNC void* loadExtensionFunc(const char* function_name);
+};
+
 #ifdef __cplusplus
-struct HalBoard{
+struct HalBoard : public IHalExtension {
 protected:
     HalBoard(){};
 public:
@@ -25,7 +29,6 @@ public:
     HAL_VIRTUAL_FUNC int close();
     HAL_VIRTUAL_FUNC int reset();    
     HAL_VIRTUAL_FUNC PL_Board *native();
-    HAL_VIRTUAL_FUNC void* loadExtensionFunc(const char* function_name);
     HAL_VIRTUAL_FUNC HalAccess *getAccess(HalAccessOptions *options);
     HAL_VIRTUAL_FUNC ~HalBoard();
     HAL_VIRTUAL_FUNC unsigned int count(int *error = NULL);
@@ -34,6 +37,8 @@ public:
 struct IHalAccessIO{
     HAL_VIRTUAL_FUNC void *getOpsForIO();
 };
+
+
 
 struct HalAccess{
 protected:
