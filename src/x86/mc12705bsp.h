@@ -55,7 +55,7 @@ public:
     void* loadExtensionFunc(const char* function_name) override;
 };
 
-struct HalAccessMC12705 : public HalAccess{
+struct HalAccessMC12705 : public HalAccess, IHalAccessIO{
 public:
     HalBoardMC12705 *_board;
     PL_Access *access;
@@ -82,6 +82,7 @@ public:
     int loadProgramFile(const char* program_name) override;
     int loadProgramFile(const char* program_name, const char *mainArgs) override;
     int getStatus(int *error) override;
+    void* getOpsForIO() override;
     ~HalAccessMC12705() override;
 };
 

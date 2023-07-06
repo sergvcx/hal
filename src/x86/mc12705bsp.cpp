@@ -189,6 +189,11 @@ int HalAccessMC12705::getStatus(int *error){
     return (int)result;
 }
 
+void* HalAccessMC12705::getOpsForIO() {
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
+    return &ops;
+}
+
 
 HalAccessMC12705::~HalAccessMC12705(){
     close();

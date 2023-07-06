@@ -70,8 +70,8 @@ add_dependencies(hal hal-version)
 if(HAL_X86)
 	set(arch x86)
 	target_sources(hal PRIVATE ${x86_sources})
-	#target_compile_definitions(hal PUBLIC $<$<CONFIG:Debug>:DEBUG> HAL_IO_HOST)
-	target_compile_definitions(hal PUBLIC $<$<CONFIG:Debug>:DEBUG>)
+	target_compile_definitions(hal PUBLIC $<$<CONFIG:Debug>:DEBUG> HAL_IO_HOST)
+	# target_compile_definitions(hal PUBLIC $<$<CONFIG:Debug>:DEBUG>)
 	target_include_directories(hal 
 		PRIVATE 
 			src/x86
