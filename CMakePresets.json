@@ -22,7 +22,7 @@
             "binaryDir": "${sourceDir}/build/${presetName}",
             "architecture": {
                 "value": "x64",
-                "strategy": "set"
+                "strategy": "external"
             },
             "condition": {
                 "type": "equals",
@@ -31,11 +31,14 @@
             },
             "cacheVariables": {
                 "HAL_TYPE": "HOST",
-                "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                  "hostOS": [ "Windows" ]
+                }
             }
         },
         {
@@ -138,6 +141,22 @@
             "cacheVariables": {
                 "HAL_TYPE": "VIRTUAL"
             }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "build-x86-msvc-debug",
+            "description": "Debug x86-msvc",
+            "displayName": "Debug",
+            "configurePreset": "x86-msvc",
+            "configuration": "Debug"
+        },
+        {
+            "name": "build-x86-msvc-release",
+            "description": "Release x86-msvc",
+            "displayName": "Release",
+            "configurePreset": "x86-msvc",
+            "configuration": "Release"
         }
     ],
     "testPresets": [
