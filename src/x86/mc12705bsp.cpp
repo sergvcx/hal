@@ -13,6 +13,8 @@ HalBoard *createBoard_MC12705(HalBoardOptions *options){
 
 HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
     remoted = 0;
+    desc = 0;
+    is_initialized = 0;
     if(options->server_enabled){
         remoted = 1;
         handle = open_library("mc12705load_proxy");
@@ -53,7 +55,8 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
 }
 
 unsigned int HalBoardMC12705::count(int *error){
-    plGetCount(&board_count);
+    int _error = plGetCount(&board_count);
+    if(error) *error = _error;
     return board_count;
 }
 
@@ -82,7 +85,11 @@ int HalBoardMC12705::open(){
 
 int HalBoardMC12705::close(){
     assert(plCloseDesc);
-    return plCloseDesc(desc);
+    if(desc){
+        return plCloseDesc(desc);
+    } else {
+        return 0;
+    }
 }
 
 int HalBoardMC12705::reset(){

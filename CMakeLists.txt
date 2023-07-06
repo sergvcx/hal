@@ -11,12 +11,11 @@ project(hal
 	DESCRIPTION "Hal library"
 	)
 
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 add_library(hal STATIC)
 add_library(hal::hal ALIAS hal)
-
 
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"   is_top_level)
 
@@ -71,7 +70,8 @@ add_dependencies(hal hal-version)
 if(HAL_X86)
 	set(arch x86)
 	target_sources(hal PRIVATE ${x86_sources})
-	target_compile_definitions(hal PUBLIC $<$<CONFIG:Debug>:DEBUG> HAL_IO_HOST)
+	#target_compile_definitions(hal PUBLIC $<$<CONFIG:Debug>:DEBUG> HAL_IO_HOST)
+	target_compile_definitions(hal PUBLIC $<$<CONFIG:Debug>:DEBUG>)
 	target_include_directories(hal 
 		PRIVATE 
 			src/x86
@@ -81,10 +81,11 @@ if(MSVC)
 		$<$<CONFIG:Release>:_ITERATOR_DEBUG_LEVEL=0> 
         $<$<CONFIG:Debug>:_ITERATOR_DEBUG_LEVEL=2> 
 		$<$<CONFIG:Debug>:_DEBUG> 
-        _CRT_SECURE_NO_DEPRECATE)
+        #_CRT_SECURE_NO_DEPRECATE
+		)
 endif()
 	if(WIN32)
-		add_subdirectory(hal-run)
+		#add_subdirectory(hal-run)
 	else()
 		target_link_libraries(hal PUBLIC dl)
 	endif()
@@ -145,7 +146,7 @@ set_target_properties(hal PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_LIST_DIR}/lib
 )
 
-add_subdirectory(examples)
+#add_subdirectory(examples)
 
 
 # if(HAL_PACK)

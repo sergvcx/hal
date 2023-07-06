@@ -10,18 +10,28 @@ add_executable(mc12101-remote-test mc12101_remote.c)
 list(APPEND test_targets mc12101-remote-test)
 add_executable(mb7707-test mb7707.c)
 list(APPEND test_targets mb7707-test)
+add_executable(mc12705-test mc12705.c)
+list(APPEND test_targets mc12705-test)
 
 foreach(target ${test_targets})
     target_link_libraries(${target} PRIVATE hal::hal)
+    target_compile_definitions(${target} PRIVATE _DEBUG)
     set_target_properties(${target} PROPERTIES
-        VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+        VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+        
+
+    get_target_property(defs ${target} COMPILE_DEFINITIONS)
+    list(FILTER defs EXCLUDE REGEX [[^NDEBUG$]])
+    set_property(TARGET ${target} PROPERTY COMPILE_DEFINITIONS ${defs})
 endforeach()
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/mc12101/dummy.abs
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/data/mc12101/dummy.abs
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/mc12101)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/mc12101/factorial.abs
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/data/mc12101/factorial.abs
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/mc12101)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/mb7707/factorial.abs
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/data/mc12705/factorial.abs
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/mc12705)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/data/mb7707/factorial.abs
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/mb7707)
 
 foreach(target ${test_targets})

@@ -13,6 +13,7 @@ HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
     remoted = 0;
     is_opened = 0;
     handle = 0;
+    is_initialized = 0;
     if(options->server_enabled){
         handle = open_library("mc12101load_proxy");
         if(handle == 0){
@@ -25,7 +26,7 @@ HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
     } else {
         handle = open_library("mc12101load");
         if(handle == 0){
-            Log(LOG_ERROR).get() << "Library mc12101load_proxy not found"; 
+            Log(LOG_ERROR).get() << "Library mc12101load not found"; 
             return;
         }
     }
