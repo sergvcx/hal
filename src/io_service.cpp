@@ -1,8 +1,11 @@
 #include "hal/hal.h"
 #include "hal-core.h"
 #include <iostream>
+#include "logger.h"
+
 #ifdef HAL_IO_HOST
 #include "io_host.h"
+
 
 typedef struct IO_Service IO_Service;
 
@@ -15,7 +18,8 @@ struct HalIO{
 extern "C"{
 
     HalIO::HalIO(HalAccess *access, const char *program_file, FILE *file){
-        void *ops = NULL;
+        Log(LOG_DEBUG1).get() << __FUNCTION__;
+        void *ops = NULL;        
         if(dynamic_cast<IHalAccessIO *>(access)){
             ops = dynamic_cast<IHalAccessIO *>(access)->getOpsForIO();
         }
@@ -35,6 +39,7 @@ extern "C"{
 
 
     HalIO *halStartIO(HalAccess *access, const char *program_file, FILE *file){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         HalIO *result = new HalIO(access, program_file, file);
         if(result->io == 0){
             delete result;
@@ -45,6 +50,7 @@ extern "C"{
     }
 
     int halStopIO(HalIO *hal_io){
+        Log(LOG_DEBUG).get() << __FUNCTION__;
         delete hal_io;
         return 0;
     }

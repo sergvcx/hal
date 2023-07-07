@@ -13,17 +13,10 @@ list(APPEND test_targets mb7707-test)
 add_executable(mc12705-test mc12705.c)
 list(APPEND test_targets mc12705-test)
 
-foreach(target ${test_targets})
-    target_link_libraries(${target} PRIVATE hal::hal)
-    target_compile_definitions(${target} PRIVATE _DEBUG)
-    set_target_properties(${target} PROPERTIES
-        VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
-        
-
-    get_target_property(defs ${target} COMPILE_DEFINITIONS)
-    list(FILTER defs EXCLUDE REGEX [[^NDEBUG$]])
-    set_property(TARGET ${target} PROPERTY COMPILE_DEFINITIONS ${defs})
-endforeach()
+target_link_directories(mc12101-test PRIVATE $ENV{MC12101}/lib)
+target_include_directories(mc12101-test PRIVATE $ENV{MC12101}/include)
+target_link_libraries(mc12101-test PRIVATE mc12101load io_host$<$<CONFIG:Debug>:d>)
+#target_link_libraries(mc12101-test PRIVATE mc12101load )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/data/mc12101/dummy.abs
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/mc12101)
@@ -34,8 +27,27 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/data/mc12705/factorial.abs
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/data/mb7707/factorial.abs
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/mb7707)
 
+
+foreach(target ${test_targets})
+    target_link_libraries(${target} PRIVATE hal::hal)
+    #target_compile_definitions(${target} PRIVATE _DEBUG )
+    set_target_properties(${target} PROPERTIES
+        VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+    target_compile_definitions(${target} 
+        PRIVATE 
+            $<$<CONFIG:Release>:_ITERATOR_DEBUG_LEVEL=0>
+            $<$<CONFIG:Debug>:_ITERATOR_DEBUG_LEVEL=2>
+            )
+
+    get_target_property(defs ${target} COMPILE_DEFINITIONS)
+    list(FILTER defs EXCLUDE REGEX [[^NDEBUG$]])
+    set_property(TARGET ${target} PROPERTY COMPILE_DEFINITIONS ${defs})
+endforeach()
+
+
+
 foreach(target ${test_targets})
     add_test(NAME ${target}
         COMMAND ${target}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/data)
 endforeach()

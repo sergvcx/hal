@@ -4,6 +4,8 @@
 #include "mc12101bsp.h"
 #include <iostream>
 #include <cstring>
+#undef NDEBUG
+#include <assert.h>
 
 HalBoard *createBoard_MC12101(HalBoardOptions *options){
     return new HalBoardMC12101(options);
@@ -83,8 +85,7 @@ void* HalBoardMC12101::loadExtensionFunc(const char* function_name) {
 
 
 int HalBoardMC12101::open(){
-    //Log(LOG_DEBUG1).get() << __FUNCTION__;
-    std::cout << __FUNCTION__;
+    Log(LOG_DEBUG1).get() << __FUNCTION__;    
     if(!is_opened){
         is_opened = 1;
         return plGetDesc(board_no, &desc);    
@@ -148,6 +149,7 @@ PL_Access *HalAccessMC12101::native(){
 
 int HalAccessMC12101::sync(int value, int *error){
     Log(LOG_DEBUG1).get() << __FUNCTION__;
+    assert(_board->plSync);
     int result;
     int _error = _board->plSync(access, value, &result);
     if(error != NULL){
@@ -158,11 +160,13 @@ int HalAccessMC12101::sync(int value, int *error){
 
 int HalAccessMC12101::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
     Log(LOG_DEBUG1).get() << __FUNCTION__;
+    assert(_board->plReadMemBlock);
     return _board->plReadMemBlock(access, dstHostAddr, (int)srcBoardAddr, size);
 }
 
 int HalAccessMC12101::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
     Log(LOG_DEBUG1).get() << __FUNCTION__;
+    assert(_board->plWriteMemBlock);
     return _board->plWriteMemBlock(access, srcHostAddr, (int)dstBoardAddr, size);
 }
 
@@ -178,23 +182,39 @@ int HalAccessMC12101::getResult(int *error){
 
 int HalAccessMC12101::loadProgramFile(const char* program_name){
     Log(LOG_DEBUG1).get() << __FUNCTION__;
+    
     strcpy(program, program_name);
+    Log(LOG_DEBUG2).get() << "Loading " << program_name;
+    if ( FILE *file = fopen(program_name, "r") ){
+        fclose(file);
+        Log(LOG_DEBUG2).get() << program_name << " exist: " << true;
+    } else {
+        Log(LOG_DEBUG2).get() << program_name << " exist: " << false;
+    }
+    assert(_board->plLoadProgramFile);
     return _board->plLoadProgramFile(access, program_name);
 }
 
 int HalAccessMC12101::loadProgramFile(const char* program_name, const char *mainArgs){
     Log(LOG_DEBUG1).get() << __FUNCTION__;
     strcpy(program, program_name);
+    Log(LOG_DEBUG2).get() << "Loading " << program_name;
+    if ( FILE *file = fopen(program_name, "r") ){
+        fclose(file);
+        Log(LOG_DEBUG2).get() << program_name << " exist: " << true;
+    } else {
+        Log(LOG_DEBUG2).get() << program_name << " exist: " << false;
+    }
+    
+    assert(_board->plLoadProgramFileArgs);
     return _board->plLoadProgramFileArgs(access, program_name, mainArgs);
 }
 
 int HalAccessMC12101::getStatus(int *error){
-    Log(LOG_DEBUG1).get() << __FUNCTION__;
+    //Log(LOG_DEBUG1).get() << __FUNCTION__;
     unsigned int result;
     int _error = _board->plGetStatus(access, &result);
-    if(_error){
-        std::cout << "Failed get status" << std::endl;
-    }
+    if (error) *error = _error;
     return (int)result;
 }
 

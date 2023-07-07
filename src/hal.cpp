@@ -226,11 +226,8 @@ extern "C" {
     }
 
     int halGetStatus(HalAccess *access, int* error){
-        Log(LOG_DEBUG).get() << __FUNCTION__;
-        if(error != NULL){
-            *error = 0;
-        }
-        return access->getStatus();
+        //Log(LOG_DEBUG).get() << __FUNCTION__;
+        return access->getStatus(error);
     }
 
     int halSetTimeout(int msec){

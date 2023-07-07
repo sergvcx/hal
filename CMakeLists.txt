@@ -11,8 +11,13 @@ project(hal
 	DESCRIPTION "Hal library"
 	)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+#set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 
 add_library(hal STATIC)
 add_library(hal::hal ALIAS hal)
@@ -77,11 +82,12 @@ if(HAL_X86)
 			src/x86
 			$ENV{MC12101}/include)
 if(MSVC)
+	#target_compile_definitions(hal PUBLIC _ITERATOR_DEBUG_LEVEL=0)
 	target_compile_definitions(hal PUBLIC 
 		$<$<CONFIG:Release>:_ITERATOR_DEBUG_LEVEL=0> 
         $<$<CONFIG:Debug>:_ITERATOR_DEBUG_LEVEL=2> 
 		$<$<CONFIG:Debug>:_DEBUG> 
-        #_CRT_SECURE_NO_DEPRECATE
+    	_CRT_SECURE_NO_DEPRECATE
 		)
 endif()
 	if(WIN32)
