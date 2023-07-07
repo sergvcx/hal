@@ -16,7 +16,10 @@ list(APPEND test_targets mc12705-test)
 target_link_directories(mc12101-test PRIVATE $ENV{MC12101}/lib)
 target_include_directories(mc12101-test PRIVATE $ENV{MC12101}/include)
 target_link_libraries(mc12101-test PRIVATE mc12101load io_host$<$<CONFIG:Debug>:d>)
-#target_link_libraries(mc12101-test PRIVATE mc12101load )
+
+#target_link_directories(mc12705-test PRIVATE $ENV{MC12705}/lib)
+#target_include_directories(mc12705-test PRIVATE $ENV{MC12705}/include)
+#target_link_libraries(mc12705-test PRIVATE mc12705load io_host$<$<CONFIG:Debug>:d>)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/data/mc12101/dummy.abs
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/mc12101)

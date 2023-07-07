@@ -5,7 +5,7 @@
 #include "stdlib.h"
 //#include "io_host.h"
 
-#define PRINT_TEST() printf("[TEST]: %s\n", __FUNCTION__); fflush(stdout);
+#define PRINT_TEST_NAME() printf("[TEST]: %s\n", __FUNCTION__); fflush(stdout);
 
 HalBoard *arrangeFirstBoardMC12101(){
     
@@ -24,7 +24,7 @@ HalBoard *arrangeFirstBoardMC12101(){
 
 
 void test_halGetBoardCount_whenNoBoard_shouldOccurError(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
@@ -41,7 +41,7 @@ void test_halGetBoardCount_whenNoBoard_shouldOccurError(){
 }
 
 void test_halGetBoard_whenNoBoard_shouldOccurError(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
     int error = 0;
@@ -58,7 +58,7 @@ void test_halGetBoard_whenNoBoard_shouldOccurError(){
 }
 
 void test_halGetBoardCount_whenChoosedMC12101_shouldGetCountOfBoards(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
     halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
@@ -78,7 +78,7 @@ void test_halGetBoardCount_whenChoosedMC12101_shouldGetCountOfBoards(){
 }
 
 void test_halGetBoard_whenChoosedFirstBoardOfMC12101_shouldGetBoard(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
     halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
@@ -98,7 +98,7 @@ void test_halGetBoard_whenChoosedFirstBoardOfMC12101_shouldGetBoard(){
 }
 
 void test_halGetNativeAccess_whenMC12101FirstBoardOpened_shouldNonZeroValue(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
 	assert(board !=0 );
@@ -119,7 +119,7 @@ void test_halGetNativeAccess_whenMC12101FirstBoardOpened_shouldNonZeroValue(){
 }  
 
 void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
 	assert(board !=0 );
@@ -141,7 +141,7 @@ void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore(){
 }
 
 void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessFirstCore(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
     HalCore core;
@@ -162,7 +162,7 @@ void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessFirstCore(){
 }
 
 void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessBothCores(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
     HalCore core0;
@@ -191,7 +191,7 @@ void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessBothCores(){
 }
 
 void test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile_shouldReturnFailed(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
     HalCore core;
@@ -214,7 +214,7 @@ void test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile
 }
 
 void test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldReturnSuccesful(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
     HalCore core;
@@ -237,7 +237,7 @@ void test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_should
 }
 
 void test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile_shouldReturnFailed(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
     HalCore core;
@@ -260,7 +260,7 @@ void test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12101ZeroCoreWrongProgram
 }
 
 void test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldReturnSuccesful(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
     HalCore core;
@@ -283,7 +283,7 @@ void test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_sh
 }
 
 void test_halResult_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldGetResult(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
     HalCore core;
@@ -308,7 +308,7 @@ void test_halResult_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldGetResult
 }
 
 void test_factorial_whenOpenedFirstBoardMC12101ZeroCoreLoadFactorial_shouldGetCorrectResult(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
     HalCore core;
@@ -395,7 +395,7 @@ void test_factorial_whenOpenedFirstBoardMC12101ZeroCoreLoadFactorial_shouldGetCo
 // }
 
 void test_printf_whenUsedHalIO_shouldGetDoneCorrectly(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     HalCore core;
     core.core = 0;
     HalIO *io_service;
@@ -448,7 +448,7 @@ void test_printf_whenUsedHalIO_shouldGetDoneCorrectly(){
 }
 
 void test_mainArguments_shouldDoneCorrectly(){
-    PRINT_TEST();
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12101();
     HalCore core;

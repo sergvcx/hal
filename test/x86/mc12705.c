@@ -5,6 +5,7 @@
 #include "stdlib.h"
 #include "stdio.h"
 
+#define PRINT_TEST_NAME() printf("[TEST]: %s\n", __FUNCTION__); fflush(stdout);
 
 HalBoard *arrangeFirstBoardMC12705(){
     
@@ -22,7 +23,7 @@ HalBoard *arrangeFirstBoardMC12705(){
 
 
 void test_halGetBoardCount_whenNoBoard_shouldOccurError(){
-    printf("test: %s\n", __FUNCTION__);
+    PRINT_TEST_NAME();
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
     int error = 0;
@@ -35,11 +36,10 @@ void test_halGetBoardCount_whenNoBoard_shouldOccurError(){
 
     // Free
     halDestroyBoardOptions(options);
-    printf("[ OK ] %s\n", __FUNCTION__);
 }
 
 void test_halGetBoard_whenNoBoard_shouldOccurError(){
-    printf("test: %s\n", __FUNCTION__);
+    PRINT_TEST_NAME();
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
     int error = 0;
@@ -57,7 +57,7 @@ void test_halGetBoard_whenNoBoard_shouldOccurError(){
 }
 
 void test_halGetBoardCount_whenChoosedMC12705_shouldGetCountOfBoards(){
-    printf("test: %s\n", __FUNCTION__);
+    PRINT_TEST_NAME();
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
     halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12705);
@@ -73,11 +73,10 @@ void test_halGetBoardCount_whenChoosedMC12705_shouldGetCountOfBoards(){
     // Free
     halDestroyBoardOptions(options);
     printf("MC12705 counts: %d\n", count);  
-    printf("[ OK ] %s\n", __FUNCTION__);
 }
 
 void test_halGetBoard_whenChoosedFirstBoardOfMC12705_shouldGetBoard(){
-    printf("test: %s\n", __FUNCTION__);
+    PRINT_TEST_NAME();
     // Arrange
     HalBoardOptions *options = halCreateBoardOptions();
     halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12705);
@@ -100,7 +99,7 @@ void test_halGetBoard_whenChoosedFirstBoardOfMC12705_shouldGetBoard(){
 
 
 void test_halGetAccess_whenMC12705FirstBoardOpened_shouldGetAccessZeroCore(){
-    printf("test: %s\n", __FUNCTION__);
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12705();
 	assert(board !=0 );
@@ -121,11 +120,10 @@ void test_halGetAccess_whenMC12705FirstBoardOpened_shouldGetAccessZeroCore(){
     error = halCloseBoard(board);
     assert(error == HAL_OK);
 
-    printf("[ OK ] %s\n", __FUNCTION__);
 }
 
 void test_halGetAccess_whenMC12705FirstBoardOpened_shouldGetAccessFirstCore(){
-    printf("test: %s\n", __FUNCTION__);
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12705();
     HalCore core;
@@ -149,7 +147,7 @@ void test_halGetAccess_whenMC12705FirstBoardOpened_shouldGetAccessFirstCore(){
 }
 
 void test_halGetAccess_whenMC12705FirstBoardOpened_shouldGetAccessBothCores(){
-    printf("test: %s\n", __FUNCTION__);
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12705();
     HalCore core0;
@@ -182,7 +180,7 @@ void test_halGetAccess_whenMC12705FirstBoardOpened_shouldGetAccessBothCores(){
 }
 
 void test_halLoadProgramFile_whenOpenedFirstBoardMC12705ZeroCoreWrongProgramFile_shouldReturnFailed(){
-    printf("test: %s\n", __FUNCTION__);
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12705();
     HalCore core;
@@ -209,7 +207,7 @@ void test_halLoadProgramFile_whenOpenedFirstBoardMC12705ZeroCoreWrongProgramFile
 
 
 void test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12705ZeroCoreWrongProgramFile_shouldReturnFailed(){
-    printf("test: %s\n", __FUNCTION__);
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12705();
     HalCore core;
@@ -235,7 +233,7 @@ void test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12705ZeroCoreWrongProgram
 }
 
 void test_halResult_whenOpenedFirstBoardMC12705ZeroCoreLoadFactorial_shouldGetCorrectResult(){
-    printf("test: %s\n", __FUNCTION__);
+    PRINT_TEST_NAME();
     // Arrange
     HalBoard *board = arrangeFirstBoardMC12705();
     assert(board);
@@ -267,6 +265,60 @@ void test_halResult_whenOpenedFirstBoardMC12705ZeroCoreLoadFactorial_shouldGetCo
     printf("[ OK ] %s\n", __FUNCTION__);
 }
 
+void test_printf_whenUsedHalIO_shouldGetDoneCorrectly(){
+    // PRINT_TEST_NAME();
+    // HalCore core;
+    // core.core = 0;
+    // core.cluster = 0;
+    // HalIO *io_service;
+	// unsigned int boardCount;
+    // const char *program = "mc12705/main_arguments.abs";
+    // int error = 1;
+
+    // HalBoard *board = arrangeFirstBoardMC12705();
+
+	// HalAccess *access = halGetAccess(board, &core, &error);
+    // assert(error == 0);
+
+	// HalAccess *servAccess = halGetAccess(board, &core, &error);
+    // assert(error == 0);
+	
+	// error = halLoadProgramFile(access, program);
+    // assert(error == 0);
+
+    // HalIO *halIO = halStartIO(servAccess, program, NULL);
+    // assert(halIO);
+
+	// int status = 0x0;
+
+	// while (1)
+	// {
+	// 	Sleep(1);
+
+	// 	error = halGetStatus(access, &status);
+    //     assert(error == 0);
+
+	// 	if (status & HAL_PROGRAM_FINISHED);
+	// 		break;
+	// }
+
+    // int result = halGetResult(access, &error);
+    // assert(result == 4);
+
+    // halStopIO(halIO);
+
+	// error = halCloseAccess(servAccess);
+    // assert(error == 0);
+
+	// error = halCloseAccess(access);
+	// assert(error == 0);
+
+	// error = halCloseBoard(board);
+	// assert(error == 0);
+
+	// printf("Test Ok (if you can see print from NM).\n");
+}
+
 int check_param(int argc, char *argv[], const char *board){
     for(int i = 0; i < argc; i++){
         if(strcmp(board, argv[i]) == 0){
@@ -287,5 +339,6 @@ int main(int argc, char *argv[]){
     test_halLoadProgramFile_whenOpenedFirstBoardMC12705ZeroCoreWrongProgramFile_shouldReturnFailed();
     test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12705ZeroCoreWrongProgramFile_shouldReturnFailed();
     test_halResult_whenOpenedFirstBoardMC12705ZeroCoreLoadFactorial_shouldGetCorrectResult();
+    test_printf_whenUsedHalIO_shouldGetDoneCorrectly();
     return 0;
 }
