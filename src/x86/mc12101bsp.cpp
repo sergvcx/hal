@@ -48,6 +48,7 @@ HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
     plGetResult = (int (*)(PL_Access *, unsigned int *))library_get_addr(handle, "PL_GetResult");
     plSync = (int (*)(PL_Access *, int, int *))library_get_addr(handle, "PL_Sync");
     plReset = (int (*)(PL_Board *))library_get_addr(handle, "PL_ResetBoard");
+    plLoadInitCode = (int (*)(PL_Board *))library_get_addr(handle, "PL_LoadInitCode");
     is_initialized = 1;
     
 }
@@ -74,6 +75,10 @@ HalBoardMC12101::~HalBoardMC12101(){
 PL_Board* HalBoardMC12101::native() {
     Log(LOG_DEBUG1).get() << __FUNCTION__;
     return desc;
+}
+
+int HalBoardMC12101::loadInitCode() {
+    return plLoadInitCode(desc);
 }
 
 void* HalBoardMC12101::loadExtensionFunc(const char* function_name) {

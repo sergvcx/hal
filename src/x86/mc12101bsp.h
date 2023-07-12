@@ -20,7 +20,8 @@ public:
    
     int (*plGetCount)(unsigned int*);
     int (*plGetDesc)(unsigned int, PL_Board **);
-    int (*plReset)(PL_Board *board);
+    int (*plReset)(PL_Board *);
+    int (*plLoadInitCode)(PL_Board*);
     int (*plCloseDesc)(PL_Board *);
     int (*plGetAccess)(PL_Board *, int, PL_Access**);
     int (*plCloseAccess)(PL_Access *);
@@ -38,6 +39,7 @@ public:
     int open() override;
     int close() override;
     int reset() override;
+    int loadInitCode() override;
     HalAccess *getAccess(HalAccessOptions *options) override;
     unsigned int count(int *error) override;
     void* loadExtensionFunc(const char* function_name) override;
