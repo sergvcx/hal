@@ -161,6 +161,7 @@ int HalAccessMC12705::getResult(int *error){
     PL_Word result;
     assert(_board->plGetResult);
     int _error = _board->plGetResult(access, &result);
+    if (error) *error = _error;
     if(_error){
         std::cout << "Failed get result" << std::endl;
     }
@@ -183,6 +184,7 @@ int HalAccessMC12705::getStatus(int *error){
     PL_Word result;
     assert(_board->plGetStatus);
     int _error = _board->plGetStatus(access, &result);
+    if (error) *error = _error;
     if(_error){
         std::cout << "Failed get status" << std::endl;
     }
