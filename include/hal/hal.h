@@ -26,6 +26,7 @@ enum HalBoardType{
     HAL_MC7601,
     HAL_MC5103,
     HAL_MC12705,
+    HAL_HOST
 };
 
 enum HalError{
@@ -38,6 +39,12 @@ enum HalError{
 };
 
 #define HAL_PROGRAM_FINISHED 2
+
+typedef struct {
+    int value;
+    uintptr_t addr;
+    size_t length;
+} HalSyncArrayData;
 
 
 
@@ -69,7 +76,7 @@ extern "C" {
     int halLoadInitCode(HalBoard *board);
 
  
-    HalAccess *halGetAccess(HalBoard *board, HalCore *core, int *error);
+    HalAccess *halGetAccess(HalBoard *access, HalCore *core, int *error);
     PL_Access *halGetNativeAccess(HalAccess *access);
     HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options, int *error);
     int halCloseAccess(HalAccess *access);
@@ -86,7 +93,9 @@ extern "C" {
 
 
     int halSync(HalAccess *board, int value, int *error);
-    uintptr_t halSyncAddr(HalAccess *board, uintptr_t value, int *error);
+    //uintptr_t halSyncAddr(HalAccess *board, uintptr_t value, int *error);
+
+    int halSyncArray(HalAccess *access, HalSyncArrayData *src, HalSyncArrayData *dst);
 
     int halReadMemBlock (HalAccess *access, void* dstHostAddr, uintptr_t srcBoardAddr, size_t size32);
     int halWriteMemBlock(HalAccess *access, const void* srcHostAddr, uintptr_t dstBoardAddr, size_t size32);
@@ -97,7 +106,8 @@ extern "C" {
     
     int halSetTimeout(int msec);
 
-    void* halMalloc32(size_t size32);
+    int halGetProcessorNo();
+
 
 #ifdef __cplusplus
 }

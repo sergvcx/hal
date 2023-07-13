@@ -1,8 +1,9 @@
 #include "hal/hal-options.h"
 #include <stdarg.h>
-#include "hal-core.h"
 #include "string.h"
+#include "hal/hal.h"
 
+#include "options-core.h"
 
 
 

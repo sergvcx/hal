@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
-# set(HAL_TYPE "VIRTUAL" CACHE STRING "TARGET, HOST or VIRTUAL")
-# if(HAL_TYPE STREQUAL "TARGET")
-# 	set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/cmake/nmc-gcc-compile.cmake)
-# endif()
-
+#unset($ENV{LANG})
 
 project(hal 
 	LANGUAGES C CXX
@@ -49,18 +45,6 @@ target_include_directories(hal
 		${CMAKE_CURRENT_LIST_DIR}/src
 		${CMAKE_CURRENT_BINARY_DIR}
 	)
-#add_custom_command(
-#	TARGET hal
-#	PRE_BUILD 
-#	COMMAND ${CMAKE_COMMAND}
-#		-D VERSION_FILE=${CMAKE_CURRENT_LIST_DIR}/version.txt
-#		-D BUILD_DIR=${CMAKE_CURRENT_BINARY_DIR}
-#		-D VERSION_NAME=HAL_VERSION
-#		-P "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
-#	DEPENDS version.txt "${CMAKE_CURRENT_LIST_DIR}/cmake/increment_build.cmake"
-#	VERBATIM
-#)
-
 
 add_custom_target(hal-version ALL
 	COMMAND ${CMAKE_COMMAND}
@@ -100,6 +84,7 @@ endif()
 	endif()
 	enable_testing()
 	add_subdirectory(test/x86)
+	add_subdirectory(examples)
 endif()
 if(HAL_MC12101)
 	set(arch mc12101)
@@ -181,6 +166,37 @@ set_target_properties(hal PROPERTIES
 # 	endif()
 # else()
 # 	message(FATAL_ERROR "Wrong type of build (needed \"HOST\", \"TARGET\" or \"VIRTUAL\")")
+# endif()
+
+# if(HAL_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
+# 	configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/hal_target-config.cmake.in 
+# 		${config_dst}/hal_${board}-config.cmake
+# 		INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}
+# 		PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR)
+# 	write_basic_package_version_file(
+# 		${config_dst}/hal_${board}-config-version.cmake
+# 		VERSION "${PROJECT_VERSION}"
+# 		COMPATIBILITY SameMajorVersion
+# 		ARCH_INDEPENDENT)
+# 	install(TARGETS ${target_name} EXPORT hal_${board}_export
+# 		ARCHIVE 
+# 			COMPONENT hal_${board}-dev
+# 		PUBLIC_HEADER 
+# 			COMPONENT hal_${board}-dev
+# 			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+# 	install(EXPORT hal_${board}_export
+# 		COMPONENT hal_${board}-dev
+# 		FILE hal_${board}-targets.cmake
+# 		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}
+# 		NAMESPACE hal::)
+# 	export(TARGETS ${target_name}
+# 		NAMESPACE hal::
+# 		FILE ${config_dst}/hal_${board}-targets.cmake)
+# 	install(FILES
+# 		"${config_dst}/hal_${board}-config.cmake"
+# 		"${config_dst}/hal_${board}-config-version.cmake"
+# 		COMPONENT hal_${board}-dev
+# 		DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/hal_${board}")
 # endif()
 
 

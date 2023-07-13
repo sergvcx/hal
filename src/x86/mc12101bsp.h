@@ -31,7 +31,8 @@ public:
     int (*plLoadProgramFileArgs)(PL_Access *, const char *, const char *);
     int (*plGetStatus)(PL_Access *, unsigned int *);
     int (*plGetResult)(PL_Access *, unsigned int *);
-    int (*plSync)(PL_Access *, int, int *);    
+    int (*plSync)(PL_Access *, int, int *);
+    int (*plSyncArray)(PL_Access *, int, int, int, int *, int *, int *);
 
     HalBoardMC12101(HalBoardOptions *board_options);
     ~HalBoardMC12101() override;
@@ -71,6 +72,7 @@ public:
     int open() override;
     int close() override;
     int sync(int value, int *error) override;
+    int syncArray(HalSyncArrayData *src, HalSyncArrayData *dst) override;
     int readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size) override;
     int writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size) override;
     int getResult(int *error) override;

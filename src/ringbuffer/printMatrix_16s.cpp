@@ -1,7 +1,7 @@
 #include "stdio.h"
-#include "hal.h"
-//#include "nmtype.h"
-//#include "nmpp.h"
+#include "hal/nmtype.h"
+#include "hal/utils.h"
+
 extern "C" void printMatrix_16s(char* text, nm16s* matrix, int height,int width){
 	char address[16];
 	sprintf (address,"%x",matrix);

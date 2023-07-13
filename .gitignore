@@ -29,3 +29,5 @@ nmc4vars_win.mk
 make_*/
 .vs/
 .vscode/
+
+__pycache__/

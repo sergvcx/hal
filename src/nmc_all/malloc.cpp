@@ -1,5 +1,5 @@
 #include "malloc.h"
-#include "section-hal.h" 
+#include "hal/section.h" 
 
 #ifdef __GNUC__
 extern "C"{

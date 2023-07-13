@@ -66,14 +66,14 @@ extern "C"
 //int halSetProcessorNo(int);
 #ifndef PROCESSOR_ID
 	#ifdef __NM__
-	#define halGetProcessorNo() ncl_getProcessorNo()
+	//#define halGetProcessorNo() ncl_getProcessorNo()
 
 	#else 
-	#define PROCESSOR_ID 0
-	#define halGetProcessorNo() PROCESSOR_ID
+	//#define PROCESSOR_ID 0
+	//#define halGetProcessorNo() PROCESSOR_ID
 	#endif
 #else 
-	#define halGetProcessorNo() PROCESSOR_ID
+	//#define halGetProcessorNo() PROCESSOR_ID
 #endif
 
 // Barrier sync with host PC

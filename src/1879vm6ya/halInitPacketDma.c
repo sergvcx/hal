@@ -1,6 +1,7 @@
-#include "hal.h"
-#include "led.h"
-#include "section-hal.h"
+#include "hal/hal.h"
+#include "hal/led.h"
+#include "hal/section.h"
+#include "hal/dma.h"
 
 #ifdef __cplusplus
 		extern "C" {

@@ -1,13 +1,11 @@
 #include <string.h>
 #include <time.h>
-#include "hal.h"
-#include "hal_host.h"
+#include "hal/hal.h"
 
-#include "dma.h"
-#include "sleep.h"
+#include "hal/dma.h"
+#include "hal/sleep.h"
 #include "stddef.h"
-#include "ringbuffer_host.h"
-
+#include "hal/ringbuffer_host.h"
 
 #ifdef __NM__
 #define bytesizeof(T) (sizeof(T)<<2)
@@ -21,6 +19,7 @@
 //#define sizeof32(t) (sizeof(t)*4)
 //#endif
 
+#ifdef DEPRECATED
 
 typedef  void (*memcpy_ptr)(const void *, void *, size_t) ;
 typedef  void *(*t_bytecpy)(void *to, int toIndex, void const *from, int fromIndex, size_t size) ;
@@ -64,10 +63,10 @@ int halHostRingBufferIsEmpty(HalHostRingBuffer* ringBuffer) {
 }
 
 #ifdef VIRTUAL_BOARD
-// если коннектимся к виртуальной плате то адресация в 4 раза меньше
+// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ 4 пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 #define SIZE_OF_INT 4
 #else 
-// если коннектимся к nmc плате то адресация в 4 раза меньше
+// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ nmc пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ 4 пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 #define SIZE_OF_INT 1
 #endif
 
@@ -174,5 +173,5 @@ void halHostRingBufferPop(HalHostRingBuffer* ringBuffer, void* dst, size_t count
 	ringBuffer->tail += count;
 	halWriteMemBlock(&ringBuffer->tail,ringBuffer->remoteTailAddr,1, ringBuffer->processor);
 }
-
+#endif
 

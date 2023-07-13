@@ -47,6 +47,7 @@ HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
     plGetStatus = (int (*)(PL_Access *, unsigned int *))library_get_addr(handle, "PL_GetStatus");
     plGetResult = (int (*)(PL_Access *, unsigned int *))library_get_addr(handle, "PL_GetResult");
     plSync = (int (*)(PL_Access *, int, int *))library_get_addr(handle, "PL_Sync");
+    plSyncArray = (int (*)(PL_Access *, int, int, int, int *, int *, int*))library_get_addr(handle, "PL_SyncArray");
     plReset = (int (*)(PL_Board *))library_get_addr(handle, "PL_ResetBoard");
     plLoadInitCode = (int (*)(PL_Board *))library_get_addr(handle, "PL_LoadInitCode");
     is_initialized = 1;
@@ -161,6 +162,17 @@ int HalAccessMC12101::sync(int value, int *error){
         *error = _error;
     }
     return result;
+}
+
+int HalAccessMC12101::syncArray(HalSyncArrayData *src, HalSyncArrayData *dst){
+    assert(_board->plSyncArray);
+    int srcAddr = src->addr;
+    int dstAddr;
+    int dstLength;
+    int error =  _board->plSyncArray(access, src->value, src->addr, src->length, &dst->value, &dstAddr, &dstLength);
+    dst->addr = dstAddr; 
+    dst->length = dstLength;
+    return error;
 }
 
 int HalAccessMC12101::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){

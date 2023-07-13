@@ -70,6 +70,11 @@ int HalAccess::sync(int value, int *error){
     return 0;
 }
 
+int HalAccess::syncArray(HalSyncArrayData *src, HalSyncArrayData *dst){
+    std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
+    return HAL_NOT_IMPLEMENTED;
+}
+
 int HalAccess::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
     std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
     return HAL_NOT_IMPLEMENTED;

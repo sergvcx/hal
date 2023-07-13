@@ -10,6 +10,7 @@ MEMORY
   C0_IMU7 : ORIGIN = 0x00038000<<2, LENGTH = 0x00008000<<2
   SHMEM0  : ORIGIN = 0x000A8000<<2, LENGTH = 0x00008000<<2
   EMI0    : ORIGIN = 0x20000000<<2, LENGTH = 0x03000000<<2
+  SYNCRO : ORIGIN = 0x9FFFFF00, LENGTH = 0x00000100
 }
 
 SECTIONS
@@ -164,6 +165,10 @@ SECTIONS
     *(.data_DDR)
   } > EMI0
 
+  .data.hal.syncro : ALIGN(0x8)
+  {
+    *(.data.hal.syncro);
+  } > SYNCRO
 
 
 

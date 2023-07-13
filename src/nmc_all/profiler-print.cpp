@@ -7,7 +7,7 @@
 #include "time.h"
 #include <stdio.h>
 #include "nmprofiler.h"
-#include "section-nmprofiler.h"
+#include "hal/section-nmprofiler.h"
 //#include "nmprofiler_nmcout.h"
 //#define MAX_FUNCNAME_LENGTH 64
 //#define MAX_FUNCNAME_LENGTH 16

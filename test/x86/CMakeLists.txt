@@ -15,7 +15,8 @@ list(APPEND test_targets mc12705-test)
 
 target_link_directories(mc12101-test PRIVATE $ENV{MC12101}/lib)
 target_include_directories(mc12101-test PRIVATE $ENV{MC12101}/include)
-target_link_libraries(mc12101-test PRIVATE mc12101load io_host$<$<CONFIG:Debug>:d>)
+#target_link_libraries(mc12101-test PRIVATE mc12101load io_host$<$<CONFIG:Debug>:d>)
+#target_link_libraries(mc12101-test PRIVATE mc12101load io_host>)
 
 #target_link_directories(mc12705-test PRIVATE $ENV{MC12705}/lib)
 #target_include_directories(mc12705-test PRIVATE $ENV{MC12705}/include)

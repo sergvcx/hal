@@ -1,6 +1,6 @@
-#include "led.h"
-#include "sleep.h"
-#include "section-hal.h"
+#include "hal/led.h"
+#include "hal/sleep.h"
+#include "hal/section.h"
 
 #ifdef __cplusplus
     extern "C" {

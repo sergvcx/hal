@@ -6,6 +6,7 @@ MEMORY
   C1_IMU3 : ORIGIN = 0x00018000<<2, LENGTH = 0x00008000<<2
   SHMEM1  : ORIGIN = 0x000B0000<<2, LENGTH = 0x00010000<<2
   EMI1    : ORIGIN = 0x23000000<<2, LENGTH = 0x01000000<<2
+  SYNCRO : ORIGIN = 0x9FFFFF00, LENGTH = 0x00000100
 }
 
 SECTIONS
@@ -119,6 +120,10 @@ SECTIONS
     *libnm6407_io_nmc.a:*(.rpc_services.bss);
   } > EMI1
 
+  .data.hal.syncro : ALIGN(0x8)
+  {
+    *(.data.hal.syncro);
+  } > SYNCRO
 
 
 

@@ -1,23 +1,17 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
-project(sync-host-1nmc)
+project(example-sync)
 
-string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"    is_top_level)
+add_executable(example-sync-host pc-main.cpp)
 
-if(is_top_level)
-	set(HAL_PATH "${CMAKE_CURRENT_LIST_DIR}/../.." CACHE PATH "Path to hal/lib/cmake/hal")
-	list(APPEND CMAKE_PREFIX_PATH "${HAL_PATH}/lib/cmake/hal")
-	find_package(hal COMPONENTS mc12101 REQUIRED)
+target_link_directories(example-sync-host PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../../lib)
+target_link_libraries(example-sync-host PUBLIC  hal_x86)
+if(UNIX)
+target_link_libraries(example-sync-host PUBLIC dl)
 endif()
+target_include_directories(example-sync-host PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../../include)
 
-add_subdirectory(host)
+add_custom_target(example-sync-nm ALL
+    COMMAND make mc12101 OUTPUT_DIR=${CMAKE_CURRENT_BINARY_DIR}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
-
-add_custom_target(nm-gen 
-	COMMAND "C:\Program Files\Module\NMC-SDK\nmc4cmd.bat" .
-	COMMAND ${CMAKE_COMMAND} -S ${CMAKE_CURRENT_LIST_DIR}/target -B ${CMAKE_CURRENT_LIST_DIR}/build_nm -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH} -G Ninja )
-
-add_custom_target(nm-build ALL
-	COMMAND "C:\Program Files\Module\NMC-SDK\nmc4cmd.bat" .
-	COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/build_nm
-	DEPENDS nm-gen)

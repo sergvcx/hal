@@ -1,4 +1,4 @@
-#include "section-hal.h"
+#include "hal/section.h"
 
 #ifdef __cplusplus
 		extern "C" {

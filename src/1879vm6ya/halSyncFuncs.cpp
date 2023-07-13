@@ -1,21 +1,21 @@
-#include "sleep.h"
+#include "hal/sleep.h"
 #include "hal_target.h"
-#include "led.h"
-#include "hal.h"
-#include "section-hal.h"
+//#include "led.h"
+//#include "hal.h"
+#include "hal/section.h"
+#include "hal/utils.h"
 
 #ifdef __cplusplus
 		extern "C" {
 #endif
 
 
-    extern SyncBuf halSyncro;
-
-#include "section-hal.h"
-	
-INSECTION(".data_hal")	static int procNo=-1;
 
 #ifdef DEPRECATED
+
+extern SyncBuf halSyncro;
+
+INSECTION(".data_hal")	static int procNo=-1;
 	
 INSECTION(".text_hal")	void halSetProcessorNo(int number){
 		procNo=number;

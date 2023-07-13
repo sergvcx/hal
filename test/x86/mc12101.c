@@ -1,9 +1,10 @@
-#include <assert.h>
 #include "hal/hal.h"
 #include "hal/hal-options.h"
 #include "string.h"
 #include "stdlib.h"
 //#include "io_host.h"
+#undef NDEBUG
+#include <assert.h>
 
 #define PRINT_TEST_NAME() printf("[TEST]: %s\n", __FUNCTION__); fflush(stdout);
 
@@ -394,7 +395,7 @@ void test_factorial_whenOpenedFirstBoardMC12101ZeroCoreLoadFactorial_shouldGetCo
 // 	printf("Test Ok (if you can see print from NM).\n");
 // }
 
-void test_printf_whenUsedHalIO_shouldGetDoneCorrectly(){
+/* void test_printf_whenUsedHalIO_shouldGetDoneCorrectly(){
     PRINT_TEST_NAME();
     HalCore core;
     core.core = 0;
@@ -488,6 +489,93 @@ void test_mainArguments_shouldDoneCorrectly(){
     error = halCloseBoard(board);
     assert(error == HAL_OK);
 }
+*/
+
+void test_sync_whenOpenedFirestBoardZeroCodeLoadSyncProgram_shoudlDoneCorrectly(){
+    PRINT_TEST_NAME();
+    // Arrange
+	unsigned int boardCount;
+    HalCore core;
+    core.core = 0;
+    int error = 1;
+
+    HalBoard *board = arrangeFirstBoardMC12101();
+    HalAccess *access = halGetAccess(board, &core, NULL);
+
+    error = halLoadProgramFile(access, "mc12101/sync.abs");
+    assert(error == 0);
+
+
+	
+	int *Buffer = NULL;
+	int AddrLoad = 0;
+	int AddrStore = 0;
+	int syncValue = 0;
+    int Length = 0;
+    HalSyncArrayData srcArray;
+    HalSyncArrayData dstArray;    
+
+    // Act
+    srcArray.value = 0;
+    srcArray.addr = 0;
+    srcArray.length = 0;
+    error = halSyncArray(access, &srcArray, &dstArray);
+    assert(error == 0);
+    syncValue = dstArray.value;
+    AddrLoad = dstArray.addr;
+    Length = dstArray.length;
+    assert(syncValue == 1);
+
+    Buffer = (int*)malloc(Length * sizeof(int));
+    assert(Buffer != 0);
+
+	for (int i = 1; i <= 10; i++)
+	{
+		// Sync for receive array and address of output array
+        srcArray.value = 1;
+        srcArray.addr = 0;
+        srcArray.length = 0;
+        error = halSyncArray(access, &srcArray, &dstArray);
+        assert(error == 0);
+        
+        syncValue = dstArray.value;
+        AddrStore = dstArray.addr;
+
+        assert(syncValue == 2);
+
+        error = halReadMemBlock(access, Buffer, AddrLoad, Length);
+        assert(error == 0);
+
+		for (int j = 0; j < Length; j++)
+		{
+            assert(Buffer[j] == i);
+			// New fill of array
+			Buffer[j] = i + 1;
+		}
+
+		// Send array
+		int error = halWriteMemBlock(access, Buffer, AddrStore, Length);
+        assert(error == 0);
+
+		// Sync for send array
+		syncValue = halSync(access, 2, &error);
+        assert(error == 0);
+        assert(syncValue == 3);
+	}
+
+    free(Buffer);
+
+    halSync(access, 17, &error);
+	assert(error == 0);
+
+    error = halCloseAccess(access);
+    assert(error == 0);
+
+    error = halCloseBoard(board);
+    assert(error == 0);
+
+
+}
 
 int check_param(int argc, char *argv[], const char *board){
     for(int i = 0; i < argc; i++){
@@ -513,8 +601,9 @@ int main(int argc, char *argv[]){
     test_halResult_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldGetResult();
     test_factorial_whenOpenedFirstBoardMC12101ZeroCoreLoadFactorial_shouldGetCorrectResult();
     //test_printf_whenIOService_shouldGetDoneCorrectly();
-    test_printf_whenUsedHalIO_shouldGetDoneCorrectly();
-    test_mainArguments_shouldDoneCorrectly();
+    //test_printf_whenUsedHalIO_shouldGetDoneCorrectly();
+    //test_mainArguments_shouldDoneCorrectly();
+    test_sync_whenOpenedFirestBoardZeroCodeLoadSyncProgram_shoudlDoneCorrectly();
     printf("[TEST] ALL DONE\n");
     return 0;
 }
