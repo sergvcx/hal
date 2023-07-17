@@ -12,7 +12,9 @@ struct PL_Core;
 typedef unsigned long PL_Word;
 typedef unsigned long PL_Addr;
 
-struct BoardInterfaceMC12705{
+struct BoardInterfaceMC12705 : public IHalBoard{
+    PL_Board *desc;
+    unsigned int index;
     int (*plGetCount)(unsigned int*);
     int (*plGetVersion)(unsigned int *, unsigned int *);
     int (*plGetDesc)(unsigned int, PL_Board **);
@@ -34,6 +36,8 @@ struct BoardInterfaceMC12705{
     int (*plGetResult)(PL_Access *, PL_Word *);
     int (*plSync)(PL_Access *, int, int *);
     void init(LibraryHandle handle);
+    unsigned int count(int *error) override;
+    int open() override;
 };
 
 
@@ -54,8 +58,7 @@ public:
     int loadInitCode() override;
     int close() override;
     int reset() override;
-    HalAccess *getAccess(HalAccessOptions *options) override;
-    unsigned int count(int *error) override;
+    HalAccess *getAccess(HalAccessOptions *options) override;    
     PL_Board* native() override;
     void* loadExtensionFunc(const char* function_name) override;
 };

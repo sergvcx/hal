@@ -39,13 +39,6 @@ HalBoard::~HalBoard() {
     //std::cout << __FUNCTION__ << ": HalBoard not reailized! Use derived structs" << std::endl;
 }
 
-unsigned int HalBoard::count(int *error){
-    std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
-    if(error != NULL){
-        *error = HAL_NOT_IMPLEMENTED;
-    }
-    return 0;
-}
 
 // HalAccess::HalAccess(){
 

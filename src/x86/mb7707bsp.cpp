@@ -27,6 +27,15 @@ void BoardInterfaceMB7707::init(LibraryHandle handle){
 	plSecondLightOn     = (int (*)(PL_Board *))library_get_addr(handle, "PL_SecondLightOn");
 	plSecondLightOff    = (int (*)(PL_Board *))library_get_addr(handle, "PL_SecondLightOff");
 }
+
+int BoardInterfaceMB7707::open(){
+    return HAL_NOT_IMPLEMENTED;
+}
+
+unsigned int BoardInterfaceMB7707::count(int *error){
+    if(error) *error = HAL_NOT_IMPLEMENTED;
+    return 0;
+}
     
 HalBoardMB7707::HalBoardMB7707(const unsigned char* host_mac_addr){
     is_initialized = 0;

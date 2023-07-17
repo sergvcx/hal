@@ -9,7 +9,7 @@ struct PL_Board;
 typedef unsigned long PL_Word;
 typedef unsigned long PL_Addr;
 
-struct BoardInterfaceMB7707{
+struct BoardInterfaceMB7707 : public IHalBoard{
     int (*plGetVersion)(int *, int *);
     int (*plGetBoardDesc)(const unsigned char *, PL_Board **);
 	int (*plCloseBoardDesc)(PL_Board *);
@@ -30,6 +30,9 @@ struct BoardInterfaceMB7707{
 	int (*plSecondLightOn)(PL_Board *);
 	int (*plSecondLightOff)(PL_Board *);
     void init(LibraryHandle handle);
+
+    unsigned int count(int *error) override;
+    int open() override;
 };
 
 struct HalBoardMB7707: public HalBoard{

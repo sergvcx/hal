@@ -24,6 +24,17 @@ void BoardInterfaceMC12705::init(LibraryHandle handle){
     plLoadInitCode = (int (*)(PL_Board*))library_get_addr(handle, "PL_LoadInitCode");
 }
 
+unsigned int BoardInterfaceMC12705::count(int *error){
+    unsigned int result;
+    int _error = plGetCount(&result);
+    if(error) *error = _error;
+    return result;
+}
+
+int BoardInterfaceMC12705::open(){
+    return plGetDesc(index, &desc);
+}
+
 HalBoard *createBoard_MC12705(HalBoardOptions *options){
     return new HalBoardMC12705(options);
 }
@@ -49,6 +60,7 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
         }
     }
     interface.init(handle);
+    board_interface = dynamic_cast<IHalBoard *>(&interface);
 
     board_type = HAL_MC12705;
     board_no = options->board_no;
@@ -58,11 +70,6 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
     
 }
 
-unsigned int HalBoardMC12705::count(int *error){
-    int _error = interface.plGetCount(&board_count);
-    if(error) *error = _error;
-    return board_count;
-}
 
 PL_Board* HalBoardMC12705::native()
 {

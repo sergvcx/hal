@@ -46,7 +46,7 @@ extern "C" {
             return NULL;
         }
         if(board->is_initialized){
-            int _error = board->open();
+            int _error = board->board_interface->open();
             HAL_SET_ERROR(error, _error);
             if(_error){
                 Log(LOG_WARNING).get() << "Failed open board";
@@ -114,7 +114,7 @@ extern "C" {
 
     int halOpenBoard(HalBoard *board){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        return board->open();
+        return board->board_interface->open();
     }
     
     HalAccess *halGetAccess(HalBoard *board, HalCore *core, int *error){
@@ -127,19 +127,19 @@ extern "C" {
 
     int halCloseBoard(HalBoard *board){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        int error = board->close();
+        int error = board->board_interface->close();
         delete board;
         return error;
     }
 
     int halResetBoard(HalBoard *board){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        return board->reset();
+        return board->board_interface->reset();
     }
 
     int halLoadInitCode(HalBoard *board){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        return board->loadInitCode();
+        return board->board_interface->loadInitCode();
     }
 
 
@@ -151,8 +151,8 @@ extern "C" {
             HAL_SET_ERROR(error, HAL_BAD_ARGUMENT);
             return 0;
         }
-        assert(board->countable);
-        unsigned int count = board->countable->count(error);
+        assert(board->board_interface);
+        unsigned int count = board->board_interface->count(error);
         halCloseBoard(board);
         return count;
     }

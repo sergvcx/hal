@@ -8,7 +8,9 @@ struct PL_Access;
 struct IO_Service;
 struct PL_Board;
 
-struct BoardInterfaceMC12101 : public IHalCountable{
+struct BoardInterfaceMC12101 : public IHalBoard{
+    PL_Board *desc;
+    unsigned int index;
     int (*plGetCount)(unsigned int*);
     int (*plGetDesc)(unsigned int, PL_Board **);
     int (*plReset)(PL_Board *);
@@ -26,12 +28,15 @@ struct BoardInterfaceMC12101 : public IHalCountable{
     int (*plSyncArray)(PL_Access *, int, int, int, int *, int *, int *);
     void init(LibraryHandle handle);
     unsigned int count(int *error) override;
+    int open() override;
+    int close() override;
+    int reset() override;
+    int loadInitCode() override;
 };
 
 
 struct HalBoardMC12101: public HalBoard{
 public:
-    PL_Board *desc;
     int board_no;
     LibraryHandle handle;
     int remoted;
@@ -43,19 +48,14 @@ public:
     HalBoardMC12101(HalBoardOptions *board_options);
     ~HalBoardMC12101() override;
 
-    int open() override;
-    int close() override;
-    int reset() override;
-    int loadInitCode() override;
-    HalAccess *getAccess(HalAccessOptions *options) override;
-    unsigned int count(int *error) override;
+    HalAccess *getAccess(HalAccessOptions *options) override;    
     void* loadExtensionFunc(const char* function_name) override;
     PL_Board* native() override;
 };
 
 struct HalAccessMC12101 : public HalAccess, public IHalAccessIO{
 public:
-    HalBoardMC12101 *_board;
+    BoardInterfaceMC12101 *interface;    
     PL_Access *access;
     IO_Service *io; 
     int core;

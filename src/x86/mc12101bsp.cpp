@@ -18,6 +18,24 @@ unsigned int BoardInterfaceMC12101::count(int *error){
     return result;
 }
 
+int BoardInterfaceMC12101::open(){
+    return plGetDesc(index, &desc);
+}
+
+int BoardInterfaceMC12101::close(){
+    return plCloseDesc(desc);    
+}
+
+
+int BoardInterfaceMC12101::reset(){
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
+    return plReset(desc);
+}
+
+int BoardInterfaceMC12101::loadInitCode() {
+    return plLoadInitCode(desc);
+}
+
 void BoardInterfaceMC12101::init(LibraryHandle handle){
     plGetCount = (int(*)(unsigned int*))library_get_addr(handle, "PL_GetBoardCount");
     plGetDesc = (int (*)(unsigned int, PL_Board **))library_get_addr(handle, "PL_GetBoardDesc");
@@ -58,7 +76,7 @@ HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
         }
     }
     interface.init(handle);
-    countable = &interface;
+    board_interface = dynamic_cast<IHalBoard *>(&interface);
 
     board_type = HAL_MC12101;
     board_no = options->board_no;
@@ -66,14 +84,6 @@ HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
     is_initialized = 1;
     
 }
-
-unsigned int HalBoardMC12101::count(int *error){
-    Log(LOG_DEBUG1).get() << __FUNCTION__;
-    int _error = interface.plGetCount(&board_count);
-    if(error != NULL) *error = _error;
-    return board_count;
-}
-
 
 HalBoardMC12101::~HalBoardMC12101(){
     close();
@@ -88,12 +98,10 @@ HalBoardMC12101::~HalBoardMC12101(){
 }
 PL_Board* HalBoardMC12101::native() {
     Log(LOG_DEBUG1).get() << __FUNCTION__;
-    return desc;
+    return interface.desc;
 }
 
-int HalBoardMC12101::loadInitCode() {
-    return interface.plLoadInitCode(desc);
-}
+
 
 void* HalBoardMC12101::loadExtensionFunc(const char* function_name) {
     Log(LOG_DEBUG1).get() << __FUNCTION__;
@@ -102,31 +110,6 @@ void* HalBoardMC12101::loadExtensionFunc(const char* function_name) {
     return result;
 }
 
-
-int HalBoardMC12101::open(){
-    Log(LOG_DEBUG1).get() << __FUNCTION__;    
-    if(!is_opened){
-        is_opened = 1;
-        return interface.plGetDesc(board_no, &desc);    
-    } else {
-        return HAL_ERROR;
-    }
-}
-
-int HalBoardMC12101::close(){
-    Log(LOG_DEBUG1).get() << __FUNCTION__;
-    if(is_opened){
-        is_opened = 0;
-        return interface.plCloseDesc(desc);
-    } else {
-        return HAL_ERROR;
-    }
-}
-
-int HalBoardMC12101::reset(){
-    Log(LOG_DEBUG1).get() << __FUNCTION__;
-    return interface.plReset(desc);
-}
 
 HalAccess *HalBoardMC12101::getAccess(HalAccessOptions *options) {
     Log(LOG_DEBUG1).get() << __FUNCTION__;
@@ -137,24 +120,24 @@ HalAccess *HalBoardMC12101::getAccess(HalAccessOptions *options) {
 
 
 HalAccessMC12101::HalAccessMC12101(HalBoardMC12101 *board, HalAccessOptions *opt){
-    _board = board;
+    interface = &board->interface;
     core = opt->core;
     access = 0;
     io = nullptr;
     
-    ops.plReadMemBlock = _board->interface.plReadMemBlock;
-    ops.plWriteMemBlock = _board->interface.plWriteMemBlock;
+    ops.plReadMemBlock = interface->plReadMemBlock;
+    ops.plWriteMemBlock = interface->plWriteMemBlock;
 }
 
 int HalAccessMC12101::open(){
     Log(LOG_DEBUG1).get() << __FUNCTION__;
-    return _board->interface.plGetAccess(_board->desc, core, &access);
+    return interface->plGetAccess(interface->desc, core, &access);
 }
 
 int HalAccessMC12101::close(){
     Log(LOG_DEBUG1).get() << __FUNCTION__;
     if(access == 0) return HAL_OK;
-    int error = _board->interface.plCloseAccess(access);
+    int error = interface->plCloseAccess(access);
     if(error == HAL_OK){
         access = 0;
     }    
@@ -168,9 +151,9 @@ PL_Access *HalAccessMC12101::native(){
 
 int HalAccessMC12101::sync(int value, int *error){
     Log(LOG_DEBUG1).get() << __FUNCTION__;
-    assert(_board->interface.plSync);
+    assert(interface->plSync);
     int result;
-    int _error = _board->interface.plSync(access, value, &result);
+    int _error = interface->plSync(access, value, &result);
     if(error != NULL){
         *error = _error;
     }
@@ -178,11 +161,11 @@ int HalAccessMC12101::sync(int value, int *error){
 }
 
 int HalAccessMC12101::syncArray(HalSyncArrayData *src, HalSyncArrayData *dst){
-    assert(_board->interface.plSyncArray);
+    assert(interface->plSyncArray);
     int srcAddr = src->addr;
     int dstAddr;
     int dstLength;
-    int error =  _board->interface.plSyncArray(access, src->value, src->addr, src->length, &dst->value, &dstAddr, &dstLength);
+    int error =  interface->plSyncArray(access, src->value, src->addr, src->length, &dst->value, &dstAddr, &dstLength);
     dst->addr = dstAddr; 
     dst->length = dstLength;
     return error;
@@ -190,20 +173,20 @@ int HalAccessMC12101::syncArray(HalSyncArrayData *src, HalSyncArrayData *dst){
 
 int HalAccessMC12101::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
     Log(LOG_DEBUG1).get() << __FUNCTION__;
-    assert(_board->interface.plReadMemBlock);
-    return _board->interface.plReadMemBlock(access, dstHostAddr, (int)srcBoardAddr, size);
+    assert(interface->plReadMemBlock);
+    return interface->plReadMemBlock(access, dstHostAddr, (int)srcBoardAddr, size);
 }
 
 int HalAccessMC12101::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
     Log(LOG_DEBUG1).get() << __FUNCTION__;
-    assert(_board->interface.plWriteMemBlock);
-    return _board->interface.plWriteMemBlock(access, srcHostAddr, (int)dstBoardAddr, size);
+    assert(interface->plWriteMemBlock);
+    return interface->plWriteMemBlock(access, srcHostAddr, (int)dstBoardAddr, size);
 }
 
 int HalAccessMC12101::getResult(int *error){
     Log(LOG_DEBUG1).get() << __FUNCTION__;
     unsigned int result;
-    int _error = _board->interface.plGetResult(access, &result);
+    int _error = interface->plGetResult(access, &result);
     if(error != NULL){
         *error = _error;
     }
@@ -221,8 +204,8 @@ int HalAccessMC12101::loadProgramFile(const char* program_name){
     } else {
         Log(LOG_DEBUG2).get() << program_name << " exist: " << false;
     }
-    assert(_board->interface.plLoadProgramFile);
-    return _board->interface.plLoadProgramFile(access, program_name);
+    assert(interface->plLoadProgramFile);
+    return interface->plLoadProgramFile(access, program_name);
 }
 
 int HalAccessMC12101::loadProgramFile(const char* program_name, const char *mainArgs){
@@ -236,14 +219,14 @@ int HalAccessMC12101::loadProgramFile(const char* program_name, const char *main
         Log(LOG_DEBUG2).get() << program_name << " exist: " << false;
     }
     
-    assert(_board->interface.plLoadProgramFileArgs);
-    return _board->interface.plLoadProgramFileArgs(access, program_name, mainArgs);
+    assert(interface->plLoadProgramFileArgs);
+    return interface->plLoadProgramFileArgs(access, program_name, mainArgs);
 }
 
 int HalAccessMC12101::getStatus(int *error){
     //Log(LOG_DEBUG1).get() << __FUNCTION__;
     unsigned int result;
-    int _error = _board->interface.plGetStatus(access, &result);
+    int _error = interface->plGetStatus(access, &result);
     if (error) *error = _error;
     return (int)result;
 }
