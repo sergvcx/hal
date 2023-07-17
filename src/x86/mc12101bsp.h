@@ -8,7 +8,7 @@ struct PL_Access;
 struct IO_Service;
 struct PL_Board;
 
-struct BoardInterfaceMC12101{
+struct BoardInterfaceMC12101 : public IHalCountable{
     int (*plGetCount)(unsigned int*);
     int (*plGetDesc)(unsigned int, PL_Board **);
     int (*plReset)(PL_Board *);
@@ -25,6 +25,7 @@ struct BoardInterfaceMC12101{
     int (*plSync)(PL_Access *, int, int *);
     int (*plSyncArray)(PL_Access *, int, int, int, int *, int *, int *);
     void init(LibraryHandle handle);
+    unsigned int count(int *error) override;
 };
 
 

@@ -11,6 +11,13 @@ HalBoard *createBoard_MC12101(HalBoardOptions *options){
     return new HalBoardMC12101(options);
 }
 
+unsigned int BoardInterfaceMC12101::count(int *error){
+    unsigned int result;
+    int _error = plGetCount(&result);
+    if(error != 0) *error = _error;
+    return result;
+}
+
 void BoardInterfaceMC12101::init(LibraryHandle handle){
     plGetCount = (int(*)(unsigned int*))library_get_addr(handle, "PL_GetBoardCount");
     plGetDesc = (int (*)(unsigned int, PL_Board **))library_get_addr(handle, "PL_GetBoardDesc");
@@ -51,6 +58,7 @@ HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
         }
     }
     interface.init(handle);
+    countable = &interface;
 
     board_type = HAL_MC12101;
     board_no = options->board_no;

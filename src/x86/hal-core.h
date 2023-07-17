@@ -18,11 +18,16 @@ struct IHalExtension {
     HAL_VIRTUAL_FUNC void* loadExtensionFunc(const char* function_name);
 };
 
+struct IHalCountable{
+    HAL_VIRTUAL_FUNC unsigned int count(int *error) = 0;
+};
+
 #ifdef __cplusplus
 struct HalBoard : public IHalExtension {
 protected:
     HalBoard(){};
 public:
+    IHalCountable *countable;
     int is_initialized;
     int board_type;
     HAL_VIRTUAL_FUNC int open();

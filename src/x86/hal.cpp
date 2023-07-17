@@ -3,6 +3,7 @@
 #include "hal-core.h"
 #include <iostream>
 #include "version.h"
+#include "assert.h"
 
 #define HAL_SET_ERROR(pointer, err) if(pointer != NULL) *pointer = err
 //#define HAL_SET_ERROR(pointer, err) 
@@ -150,7 +151,8 @@ extern "C" {
             HAL_SET_ERROR(error, HAL_BAD_ARGUMENT);
             return 0;
         }
-        unsigned int count = board->count(error);
+        assert(board->countable);
+        unsigned int count = board->countable->count(error);
         halCloseBoard(board);
         return count;
     }
