@@ -9,7 +9,7 @@ struct PL_Board;
 typedef unsigned long PL_Word;
 typedef unsigned long PL_Addr;
 
-struct IMB7707BoardInterface{
+struct BoardInterfaceMB7707{
     int (*plGetVersion)(int *, int *);
     int (*plGetBoardDesc)(const unsigned char *, PL_Board **);
 	int (*plCloseBoardDesc)(PL_Board *);
@@ -29,6 +29,7 @@ struct IMB7707BoardInterface{
 	int (*plFirstLightOff)(PL_Board *);
 	int (*plSecondLightOn)(PL_Board *);
 	int (*plSecondLightOff)(PL_Board *);
+    void init(LibraryHandle handle);
 };
 
 struct HalBoardMB7707: public HalBoard{
@@ -39,7 +40,7 @@ public:
     PL_Board *desc;
     LibraryHandle handle;
     unsigned char mac_addr[7];
-    //IMB7707BoardInterface iBoard;
+    BoardInterfaceMB7707 interface;
     int (*plGetVersion)(int *, int *);
     int (*plGetBoardDesc)(const unsigned char *, PL_Board **);
 	int (*plCloseBoardDesc)(PL_Board *);

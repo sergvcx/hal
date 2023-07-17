@@ -12,15 +12,7 @@ struct PL_Core;
 typedef unsigned long PL_Word;
 typedef unsigned long PL_Addr;
 
-
-struct HalBoardMC12705: public HalBoard{
-public:
-    PL_Board *desc;
-    int board_no;
-    LibraryHandle handle;
-    int remoted;
-    unsigned int board_count;
-   
+struct BoardInterfaceMC12705{
     int (*plGetCount)(unsigned int*);
     int (*plGetVersion)(unsigned int *, unsigned int *);
     int (*plGetDesc)(unsigned int, PL_Board **);
@@ -40,7 +32,20 @@ public:
     int (*plWriteRegister)(PL_Access *, PL_Word, PL_Addr);
     int (*plGetStatus)(PL_Access *, PL_Word *);
     int (*plGetResult)(PL_Access *, PL_Word *);
-    int (*plSync)(PL_Access *, int, int *);    
+    int (*plSync)(PL_Access *, int, int *);
+    void init(LibraryHandle handle);
+};
+
+
+struct HalBoardMC12705: public HalBoard{
+public:
+    PL_Board *desc;
+    int board_no;
+    LibraryHandle handle;
+    int remoted;
+    unsigned int board_count;
+   
+    BoardInterfaceMC12705 interface;
 
     HalBoardMC12705(HalBoardOptions *board_options);
     ~HalBoardMC12705() override;

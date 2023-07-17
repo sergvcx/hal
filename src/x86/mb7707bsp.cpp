@@ -5,18 +5,8 @@
 HalBoard *createBoard_MB7707(HalBoardOptions *board_options){
     return new HalBoardMB7707(board_options->host_mac_addr);
 }
-    
-HalBoardMB7707::HalBoardMB7707(const unsigned char* host_mac_addr){
-    is_initialized = 0;
-    is_opened = 0;
-    strcpy((char*)mac_addr, (const char*)host_mac_addr);
-    handle = open_library("mb7707load");
-    
-    if(handle == 0){
-        Log(LOG_ERROR).get() << "Library mb7707load not found";
-        return;
-    }
 
+void BoardInterfaceMB7707::init(LibraryHandle handle){
     plGetVersion        = (int (*)(int *, int *))library_get_addr(handle, "PL_GetVersion");
     plGetBoardDesc      = (int (*)(const unsigned char *, PL_Board **))library_get_addr(handle, "PL_GetBoardDesc");
 	plCloseBoardDesc    = (int (*)(PL_Board *))library_get_addr(handle, "PL_CloseBoardDesc");
@@ -36,6 +26,20 @@ HalBoardMB7707::HalBoardMB7707(const unsigned char* host_mac_addr){
 	plFirstLightOff     = (int (*)(PL_Board *))library_get_addr(handle, "PL_FirstLightOff");
 	plSecondLightOn     = (int (*)(PL_Board *))library_get_addr(handle, "PL_SecondLightOn");
 	plSecondLightOff    = (int (*)(PL_Board *))library_get_addr(handle, "PL_SecondLightOff");
+}
+    
+HalBoardMB7707::HalBoardMB7707(const unsigned char* host_mac_addr){
+    is_initialized = 0;
+    is_opened = 0;
+    strcpy((char*)mac_addr, (const char*)host_mac_addr);
+    handle = open_library("mb7707load");
+    
+    if(handle == 0){
+        Log(LOG_ERROR).get() << "Library mb7707load not found";
+        return;
+    }
+    interface.init(handle);
+    
     is_initialized = 1;
 }
 

@@ -11,6 +11,7 @@ typedef unsigned long PL_Addr;
 
 
 
+
 struct HalBoardMC5103: public HalBoard{
 private:
     bool check();

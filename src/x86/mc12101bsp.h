@@ -8,16 +8,7 @@ struct PL_Access;
 struct IO_Service;
 struct PL_Board;
 
-
-struct HalBoardMC12101: public HalBoard{
-public:
-    PL_Board *desc;
-    int board_no;
-    LibraryHandle handle;
-    int remoted;
-    unsigned int board_count;
-    int is_opened;
-   
+struct BoardInterfaceMC12101{
     int (*plGetCount)(unsigned int*);
     int (*plGetDesc)(unsigned int, PL_Board **);
     int (*plReset)(PL_Board *);
@@ -33,6 +24,20 @@ public:
     int (*plGetResult)(PL_Access *, unsigned int *);
     int (*plSync)(PL_Access *, int, int *);
     int (*plSyncArray)(PL_Access *, int, int, int, int *, int *, int *);
+    void init(LibraryHandle handle);
+};
+
+
+struct HalBoardMC12101: public HalBoard{
+public:
+    PL_Board *desc;
+    int board_no;
+    LibraryHandle handle;
+    int remoted;
+    unsigned int board_count;
+    int is_opened;
+   
+    BoardInterfaceMC12101 interface;
 
     HalBoardMC12101(HalBoardOptions *board_options);
     ~HalBoardMC12101() override;
