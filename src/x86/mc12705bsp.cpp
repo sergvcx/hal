@@ -31,10 +31,6 @@ unsigned int BoardInterfaceMC12705::count(int *error){
     return result;
 }
 
-int BoardInterfaceMC12705::open(){
-    return plGetDesc(index, &desc);
-}
-
 HalBoard *createBoard_MC12705(HalBoardOptions *options){
     return new HalBoardMC12705(options);
 }
@@ -70,8 +66,33 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
     
 }
 
+int BoardInterfaceMC12705::open(){
+    //INF_LOG
+    assert(plGetDesc);
+    return plGetDesc(index, &desc);    
+}
 
-PL_Board* HalBoardMC12705::native()
+int BoardInterfaceMC12705::close(){
+    assert(plCloseDesc);
+    if(desc){
+        return plCloseDesc(desc);
+    } else {
+        return 0;
+    }
+}
+
+int BoardInterfaceMC12705::reset(){
+    assert(plReset);
+    return plReset(desc);
+}
+
+int BoardInterfaceMC12705::loadInitCode(){
+    assert(plLoadInitCode);
+    return plLoadInitCode(desc);
+}
+
+
+PL_Board* BoardInterfaceMC12705::native()
 {
     return desc;
 }
@@ -88,30 +109,7 @@ HalBoardMC12705::~HalBoardMC12705(){
 }
 
 
-int HalBoardMC12705::open(){
-    //INF_LOG
-    assert(interface.plGetDesc);
-    return interface.plGetDesc(board_no, &desc);    
-}
 
-int HalBoardMC12705::close(){
-    assert(interface.plCloseDesc);
-    if(desc){
-        return interface.plCloseDesc(desc);
-    } else {
-        return 0;
-    }
-}
-
-int HalBoardMC12705::reset(){
-    assert(interface.plReset);
-    return interface.plReset(desc);
-}
-
-int HalBoardMC12705::loadInitCode(){
-    assert(interface.plLoadInitCode);
-    return interface.plLoadInitCode(desc);
-}
 
 void* HalBoardMC12705::loadExtensionFunc(const char* function_name) {
     return library_get_addr(handle, function_name);

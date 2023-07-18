@@ -11,6 +11,24 @@ HalBoard *createBoard_MC12101(HalBoardOptions *options){
     return new HalBoardMC12101(options);
 }
 
+void BoardInterfaceMC12101::init(LibraryHandle handle){
+    plGetCount = (int(*)(unsigned int*))library_get_addr(handle, "PL_GetBoardCount");
+    plGetDesc = (int (*)(unsigned int, PL_Board **))library_get_addr(handle, "PL_GetBoardDesc");
+    plCloseDesc = (int (*)(PL_Board *))library_get_addr(handle, "PL_CloseBoardDesc");
+    plGetAccess = (int (*)(PL_Board *, int, PL_Access**))library_get_addr(handle, "PL_GetAccess");
+    plCloseAccess = (int (*)(PL_Access *))library_get_addr(handle, "PL_CloseAccess");
+    plReadMemBlock = (int (*)(PL_Access *, void *, int addr, int))library_get_addr(handle, "PL_ReadMemBlock");
+    plWriteMemBlock = (int (*)(PL_Access *, const void *, int addr, int))library_get_addr(handle, "PL_WriteMemBlock");
+    plLoadProgramFile = (int (*)(PL_Access *, const char *))library_get_addr(handle, "PL_LoadProgramFile");
+    plLoadProgramFileArgs = (int (*)(PL_Access *, const char *, const char *))library_get_addr(handle, "PL_LoadProgramFileArgs");
+    plGetStatus = (int (*)(PL_Access *, unsigned int *))library_get_addr(handle, "PL_GetStatus");
+    plGetResult = (int (*)(PL_Access *, unsigned int *))library_get_addr(handle, "PL_GetResult");
+    plSync = (int (*)(PL_Access *, int, int *))library_get_addr(handle, "PL_Sync");
+    plSyncArray = (int (*)(PL_Access *, int, int, int, int *, int *, int*))library_get_addr(handle, "PL_SyncArray");
+    plReset = (int (*)(PL_Board *))library_get_addr(handle, "PL_ResetBoard");
+    plLoadInitCode = (int (*)(PL_Board *))library_get_addr(handle, "PL_LoadInitCode");
+}
+
 unsigned int BoardInterfaceMC12101::count(int *error){
     unsigned int result;
     int _error = plGetCount(&result);
@@ -36,23 +54,13 @@ int BoardInterfaceMC12101::loadInitCode() {
     return plLoadInitCode(desc);
 }
 
-void BoardInterfaceMC12101::init(LibraryHandle handle){
-    plGetCount = (int(*)(unsigned int*))library_get_addr(handle, "PL_GetBoardCount");
-    plGetDesc = (int (*)(unsigned int, PL_Board **))library_get_addr(handle, "PL_GetBoardDesc");
-    plCloseDesc = (int (*)(PL_Board *))library_get_addr(handle, "PL_CloseBoardDesc");
-    plGetAccess = (int (*)(PL_Board *, int, PL_Access**))library_get_addr(handle, "PL_GetAccess");
-    plCloseAccess = (int (*)(PL_Access *))library_get_addr(handle, "PL_CloseAccess");
-    plReadMemBlock = (int (*)(PL_Access *, void *, int addr, int))library_get_addr(handle, "PL_ReadMemBlock");
-    plWriteMemBlock = (int (*)(PL_Access *, const void *, int addr, int))library_get_addr(handle, "PL_WriteMemBlock");
-    plLoadProgramFile = (int (*)(PL_Access *, const char *))library_get_addr(handle, "PL_LoadProgramFile");
-    plLoadProgramFileArgs = (int (*)(PL_Access *, const char *, const char *))library_get_addr(handle, "PL_LoadProgramFileArgs");
-    plGetStatus = (int (*)(PL_Access *, unsigned int *))library_get_addr(handle, "PL_GetStatus");
-    plGetResult = (int (*)(PL_Access *, unsigned int *))library_get_addr(handle, "PL_GetResult");
-    plSync = (int (*)(PL_Access *, int, int *))library_get_addr(handle, "PL_Sync");
-    plSyncArray = (int (*)(PL_Access *, int, int, int, int *, int *, int*))library_get_addr(handle, "PL_SyncArray");
-    plReset = (int (*)(PL_Board *))library_get_addr(handle, "PL_ResetBoard");
-    plLoadInitCode = (int (*)(PL_Board *))library_get_addr(handle, "PL_LoadInitCode");
+
+PL_Board* BoardInterfaceMC12101::native() {
+    Log(LOG_DEBUG1).get() << __FUNCTION__;
+    return desc;
 }
+
+
 
 HalBoardMC12101::HalBoardMC12101(HalBoardOptions *options) {
     remoted = 0;
@@ -95,10 +103,6 @@ HalBoardMC12101::~HalBoardMC12101(){
             close_library(handle);
         }
     }
-}
-PL_Board* HalBoardMC12101::native() {
-    Log(LOG_DEBUG1).get() << __FUNCTION__;
-    return interface.desc;
 }
 
 

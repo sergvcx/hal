@@ -32,6 +32,7 @@ struct BoardInterfaceMC12101 : public IHalBoard{
     int close() override;
     int reset() override;
     int loadInitCode() override;
+    PL_Board* native() override;
 };
 
 
@@ -50,7 +51,7 @@ public:
 
     HalAccess *getAccess(HalAccessOptions *options) override;    
     void* loadExtensionFunc(const char* function_name) override;
-    PL_Board* native() override;
+    
 };
 
 struct HalAccessMC12101 : public HalAccess, public IHalAccessIO{

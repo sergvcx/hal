@@ -38,6 +38,10 @@ struct BoardInterfaceMC12705 : public IHalBoard{
     void init(LibraryHandle handle);
     unsigned int count(int *error) override;
     int open() override;
+    int loadInitCode() override;
+    int close() override;
+    int reset() override;
+    PL_Board* native() override;
 };
 
 
@@ -53,13 +57,9 @@ public:
 
     HalBoardMC12705(HalBoardOptions *board_options);
     ~HalBoardMC12705() override;
-
-    int open() override;
-    int loadInitCode() override;
-    int close() override;
-    int reset() override;
+    
     HalAccess *getAccess(HalAccessOptions *options) override;    
-    PL_Board* native() override;
+    
     void* loadExtensionFunc(const char* function_name) override;
 };
 

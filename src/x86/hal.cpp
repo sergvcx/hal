@@ -15,6 +15,9 @@ HalBoard *createBoard_MC12705(HalBoardOptions *board_options);
 
 #ifndef DEPRECATED
 extern "C" {
+    HalBoard *halAllocBoard(){
+        return new HalBoard();
+    }
 
     HalBoard *halCreateBoard(HalBoardOptions *board_options){
         Log(LOG_DEBUG).get() << __FUNCTION__;
@@ -39,6 +42,9 @@ extern "C" {
 
     HalBoard *halGetBoardOpt(HalBoardOptions *board_options, int *error){
         Log(LOG_DEBUG).get() << __FUNCTION__;
+        //HalBoard *board = halAllocBoard();
+        //board->board_type = board_options->board_type;
+        
         HalBoard *board = halCreateBoard(board_options);
         if(!board) {
             Log(LOG_WARNING).get() << "Failed create board";

@@ -25,7 +25,7 @@ struct IHalExtension {
 struct IHalBoard{
     HAL_VIRTUAL_FUNC unsigned int count(int *error){
         if(error) *error = HAL_NOT_IMPLEMENTED;
-    };
+    }
     HAL_VIRTUAL_FUNC int open(){
         return HAL_NOT_IMPLEMENTED;
     }
@@ -41,14 +41,22 @@ struct IHalBoard{
     HAL_VIRTUAL_FUNC int loadInitCode(){
         return HAL_NOT_IMPLEMENTED;
     }
+    HAL_VIRTUAL_FUNC PL_Board *native(){
+        return 0;
+    }
 
 };
 
 #ifdef __cplusplus
 struct HalBoard : public IHalExtension {
 protected:
-    HalBoard(){};
+    
 public:
+    HalBoard(){
+        board_interface = 0;
+        is_initialized = 0;
+        board_type = HAL_NO_BOARD;
+    };
     IHalBoard *board_interface;
     int is_initialized;
     int board_type;
