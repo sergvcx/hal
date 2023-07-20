@@ -62,14 +62,6 @@ HalBoardMB7707::~HalBoardMB7707(){
     close_library(handle);
 }
 
-int HalBoardMB7707::open(){
-    if(!check()) return HAL_ERROR;
-    int error = plGetBoardDesc(mac_addr, &desc);
-    if(error == 0){
-        is_opened = 1;
-    }
-    return error;
-}
 int HalBoardMB7707::close(){
     if(!check()) return HAL_ERROR;
     if(is_opened){

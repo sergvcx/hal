@@ -25,7 +25,6 @@ public:
     ~HalBoardMC5103() override;
     
 
-    int open() override;
     int close() override;
     int reset() override;
     HalAccess *getAccess(HalAccessOptions *options) override;

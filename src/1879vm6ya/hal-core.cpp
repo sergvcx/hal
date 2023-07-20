@@ -1,4 +1,3 @@
-#include "hal/hal-options.h"
 #include <iostream>
 #include "mc12101load_nm.h"
 #include "hal/sleep.h"
@@ -101,7 +100,7 @@ static __attribute__((section(".data.hal"))) HalBoard hostBoard;
     int halCloseBoard(HalBoard *board){
         return 0;
     }
-    int halResetBoard(HalBoard *board){
+    int halBoardReset(HalBoard *board){
         return 0;
     }
 
@@ -146,7 +145,7 @@ static __attribute__((section(".data.hal"))) HalBoard hostBoard;
     HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options, int *error){
         return 0;
     }
-    int halCloseAccess(HalAccess *access){
+    int halAccessClose(HalAccess *access){
         return 0;
     }
 

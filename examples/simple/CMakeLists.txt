@@ -5,7 +5,7 @@ project(example-simple)
 add_executable(example-simple-host host.cpp)
 
 target_link_directories(example-simple-host PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../../lib)
-target_link_libraries(example-simple-host PUBLIC hal_x86)
+target_link_libraries(example-simple-host PUBLIC hal::hal)
 if(UNIX)
 target_link_libraries(example-simple-host PUBLIC dl)
 endif()

@@ -1,6 +1,5 @@
 #include "hal-core.h"
 #include "library.h"
-#include "hal/hal-options.h"
 #include "mc12705bsp.h"
 #include <iostream>
 #include "assert.h"
@@ -56,7 +55,7 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
         }
     }
     interface.init(handle);
-    board_interface = dynamic_cast<IHalBoard *>(&interface);
+    board_interface = dynamic_cast<IPLoadInterface *>(&interface);
 
     board_type = HAL_MC12705;
     board_no = options->board_no;

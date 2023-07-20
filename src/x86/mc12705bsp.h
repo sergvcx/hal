@@ -2,7 +2,6 @@
 #define __MC12705BSP_H_INCLUDED
 #include "library.h"
 #include "hal-core.h"
-#include "hal/hal-options.h"
 
 struct PL_Access;
 struct IO_Service;
@@ -12,7 +11,7 @@ struct PL_Core;
 typedef unsigned long PL_Word;
 typedef unsigned long PL_Addr;
 
-struct BoardInterfaceMC12705 : public IHalBoard{
+struct BoardInterfaceMC12705 : public IPLoadInterface{
     PL_Board *desc;
     unsigned int index;
     int (*plGetCount)(unsigned int*);

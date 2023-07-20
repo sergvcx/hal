@@ -5,7 +5,7 @@ project(example-sync)
 add_executable(example-sync-host pc-main.cpp)
 
 target_link_directories(example-sync-host PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../../lib)
-target_link_libraries(example-sync-host PUBLIC  hal_x86)
+target_link_libraries(example-sync-host PUBLIC hal::hal)
 if(UNIX)
 target_link_libraries(example-sync-host PUBLIC dl)
 endif()

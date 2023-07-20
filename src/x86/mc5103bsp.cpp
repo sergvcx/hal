@@ -32,11 +32,6 @@ HalBoardMC5103::~HalBoardMC5103(){
     close_library(handle);
 }
 
-int HalBoardMC5103::open(){
-    if(!check()) return HAL_ERROR;
-    return 1;
-    //return plGetBoardDesc(mac_addr, &desc);
-}
 int HalBoardMC5103::close(){
     if(!check()) return HAL_ERROR;
     return 1;

@@ -1,23 +1,22 @@
 #include "hal/hal.h"
-#include "hal/hal-options.h"
+#include "hal/hal-host.h"
 #include <stdlib.h>
 #include "stdio.h"
 
 
 int main(){
-    HalBoardOptions *options = halCreateBoardOptions();    
-    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
-    halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
+    HalBoard *board = halAllocBoard();
+    halBoardSetOption(board, HAL_BOARD_TYPE, HAL_MC12101);
+    halBoardSetOption(board, HAL_BOARD_NUMBER, 0);
 
     HalCore core;
     core.core = 0;
 
-    HalBoard *board = halGetBoardOpt(options, NULL);
-    if(!board){
+    int error = halBoardOpen(board);
+    if(error){
         printf("Failed get board\n");
         return 0;
-    }
-    halDestroyBoardOptions(options); 
+    }    
 
     HalAccess *access = halGetAccess(board, &core, NULL);
     if(!access){
@@ -25,11 +24,11 @@ int main(){
         return 0;
     }
 
-    int error = halLoadProgramFile(access, "factorial_mc12101.abs");
+    error = halLoadProgramFile(access, "factorial_mc12101.abs");
     if(error){
         printf("Failed load program\n");
-        halCloseAccess(access);
-        halCloseBoard(board);
+        halAccessClose(access);
+        halBoardClose(board);
         return 1;
     }    
     
@@ -41,7 +40,7 @@ int main(){
     int result = halGetResult(access, NULL);
     printf("result: %d\n", result);
 
-    halCloseAccess(access);
-    halCloseBoard(board);
+    halAccessClose(access);
+    halBoardClose(board);
     return 0;
 }

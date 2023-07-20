@@ -1,7 +1,7 @@
 #include "hal/hal.h"
-#include "hal/hal-options.h"
 #include "string.h"
 #include "stdlib.h"
+#include "hal/hal-host.h"
 //#include "io_host.h"
 #undef NDEBUG
 #include <assert.h>
@@ -9,92 +9,85 @@
 #define PRINT_TEST_NAME() printf("[TEST]: %s\n", __FUNCTION__); fflush(stdout);
 
 HalBoard *arrangeFirstBoardMC12101(){
-    
-    HalBoardOptions *options = halCreateBoardOptions();
-    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
-    halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
+    HalBoard *board = halAllocBoard();
+    halBoardSetOption(board, HAL_BOARD_TYPE, HAL_MC12101);
+    halBoardSetOption(board, HAL_BOARD_NUMBER, 0);
 
     //int count = halGetBoardCount(options, &error);
 
-    int error = 1;    
-    HalBoard *board = halGetBoardOpt(options, &error);
+    int error = halBoardOpen(board);    
 
-    halDestroyBoardOptions(options);
     return board;
 }
 
 
-void test_halGetBoardCount_whenNoBoard_shouldOccurError(){
+void test_halBoardGetCount_whenNoBoard_shouldOccurError(){
     PRINT_TEST_NAME();
     
     // Arrange
-    HalBoardOptions *options = halCreateBoardOptions();
     int error = 0;
 
+    HalBoard *board = halAllocBoard();
+
     // Act
-    int count = halGetBoardOpt(options, &error);
+    int count = halBoardGetCount(board);
 
     // Assert
-    assert(error == HAL_BAD_ARGUMENT);
+    assert(count < 0);
 
     // Free
-    halDestroyBoardOptions(options);    
+    halFreeBoard(board);    
 }
 
-void test_halGetBoard_whenNoBoard_shouldOccurError(){
+
+void test_halBoardOpen_whenChoosedNoBoard_shoudReturnError(){
     PRINT_TEST_NAME();
     // Arrange
-    HalBoardOptions *options = halCreateBoardOptions();
-    int error = 0;
+    HalBoard *board = halAllocBoard();
 
     // Act
-    HalBoard *board = halGetBoardOpt(options, &error);
+    int error = halBoardOpen(board);
 
     // Assert
-    assert(error == HAL_BAD_ARGUMENT);
-    assert(board == 0);
+    assert(error == HAL_ERROR);
 
     // Free
-    halDestroyBoardOptions(options);
 }
 
-void test_halGetBoardCount_whenChoosedMC12101_shouldGetCountOfBoards(){
+void test_halBoardOpen_whenChoosedMC12101_shoudReturnSuccess(){
     PRINT_TEST_NAME();
     // Arrange
-    HalBoardOptions *options = halCreateBoardOptions();
-    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
-    int error = 1;
+    HalBoard *board = halAllocBoard();
+    halBoardSetOption(board, HAL_BOARD_TYPE, HAL_MC12101);
 
     // Act
-    int count = halGetBoardCount(options, &error);
+    int error = halBoardOpen(board);
 
     // Assert
-    assert(error == HAL_OK);
-    assert(count >=0);
+    assert(error == 0);
 
     // Free
-    halDestroyBoardOptions(options);
-    printf("mc12101 counts: %d\n", count);  
-    
+    halBoardClose(board);
 }
 
 void test_halGetBoard_whenChoosedFirstBoardOfMC12101_shouldGetBoard(){
     PRINT_TEST_NAME();
     // Arrange
-    HalBoardOptions *options = halCreateBoardOptions();
-    halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
-    halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
+    HalBoard *board = halAllocBoard();
+    halBoardSetOption(board, HAL_BOARD_TYPE, HAL_MC12101);
+    halBoardSetOption(board, HAL_BOARD_NUMBER, 0);
     int error = 1;
 
     // Act
-    HalBoard *board = halGetBoardOpt(options, &error);
+    error = halBoardOpen(board);
 
     // Assert
     assert(error == HAL_OK);
     assert(board != 0);
     
     // Free
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
+    halFreeBoard(board);
     assert(error == HAL_OK);
 }
 
@@ -115,8 +108,8 @@ void test_halGetNativeAccess_whenMC12101FirstBoardOpened_shouldNonZeroValue(){
     assert(native_access);
 
     //Free
-    halCloseAccess(access);
-    halCloseBoard(board);
+    halAccessClose(access);
+    halBoardClose(board);
 }  
 
 void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore(){
@@ -135,9 +128,9 @@ void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore(){
     assert(error == HAL_OK);
 
     // Free
-    error = halCloseAccess(access);
+    error = halAccessClose(access);
     assert(error == HAL_OK);
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
     assert(error == HAL_OK);
 }
 
@@ -156,9 +149,9 @@ void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessFirstCore(){
     assert(error == HAL_OK);
 
     // Free
-    error = halCloseAccess(access);
+    error = halAccessClose(access);
     assert(error == HAL_OK);
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
     assert(error == HAL_OK);
 }
 
@@ -183,11 +176,11 @@ void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessBothCores(){
 
     // Free
     int error;
-    error = halCloseAccess(access0);
+    error = halAccessClose(access0);
     assert(error == HAL_OK);
-    error = halCloseAccess(access1);
+    error = halAccessClose(access1);
     assert(error == HAL_OK);
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
     assert(error == HAL_OK);
 }
 
@@ -208,9 +201,9 @@ void test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile
     assert(error == HAL_FILE);
 
     // Free
-    error = halCloseAccess(access);
+    error = halAccessClose(access);
     assert(error == HAL_OK);
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
     assert(error == HAL_OK);
 }
 
@@ -231,9 +224,9 @@ void test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_should
     assert(error == HAL_OK);
 
     // Free
-    error = halCloseAccess(access);
+    error = halAccessClose(access);
     assert(error == HAL_OK);
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
     assert(error == HAL_OK);
 }
 
@@ -254,9 +247,9 @@ void test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12101ZeroCoreWrongProgram
     assert(error == HAL_FILE);
 
     // Free
-    error = halCloseAccess(access);
+    error = halAccessClose(access);
     assert(error == HAL_OK);
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
     assert(error == HAL_OK);
 }
 
@@ -277,9 +270,9 @@ void test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_sh
     assert(error == HAL_OK);
 
     // Free
-    error = halCloseAccess(access);
+    error = halAccessClose(access);
     assert(error == HAL_OK);
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
     assert(error == HAL_OK);
 }
 
@@ -302,9 +295,9 @@ void test_halResult_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldGetResult
     assert(value == 0);
     
     // Free
-    error = halCloseAccess(access);
+    error = halAccessClose(access);
     assert(error == HAL_OK);
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
     assert(error == HAL_OK);
 }
 
@@ -336,9 +329,9 @@ void test_factorial_whenOpenedFirstBoardMC12101ZeroCoreLoadFactorial_shouldGetCo
     assert(result == 3628800);
 
     // Free
-    error = halCloseAccess(access);
+    error = halAccessClose(access);
     assert(error == HAL_OK);
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
     assert(error == HAL_OK);
 }
 
@@ -389,7 +382,7 @@ void test_factorial_whenOpenedFirstBoardMC12101ZeroCoreLoadFactorial_shouldGetCo
 // 	error = halCloseAccess(access);
 // 	assert(error == 0);
 
-// 	error = halCloseBoard(board);
+// 	error = halBoardClose(board);
 // 	assert(error == 0);
 
 // 	printf("Test Ok (if you can see print from NM).\n");
@@ -442,7 +435,7 @@ void test_factorial_whenOpenedFirstBoardMC12101ZeroCoreLoadFactorial_shouldGetCo
 	error = halCloseAccess(access);
 	assert(error == 0);
 
-	error = halCloseBoard(board);
+	error = halBoardClose(board);
 	assert(error == 0);
 
 	printf("Test Ok (if you can see print from NM).\n");
@@ -486,7 +479,7 @@ void test_mainArguments_shouldDoneCorrectly(){
     assert(error == 0);
     error = halCloseAccess(access);
     assert(error == HAL_OK);
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
     assert(error == HAL_OK);
 }
 */
@@ -568,10 +561,10 @@ void test_sync_whenOpenedFirestBoardZeroCodeLoadSyncProgram_shoudlDoneCorrectly(
     halSync(access, 17, &error);
 	assert(error == 0);
 
-    error = halCloseAccess(access);
+    error = halAccessClose(access);
     assert(error == 0);
 
-    error = halCloseBoard(board);
+    error = halBoardClose(board);
     assert(error == 0);
 
 
@@ -587,9 +580,11 @@ int check_param(int argc, char *argv[], const char *board){
 }
 
 int main(int argc, char *argv[]){
-    test_halGetBoardCount_whenNoBoard_shouldOccurError();
-    test_halGetBoard_whenNoBoard_shouldOccurError();
-    test_halGetBoardCount_whenChoosedMC12101_shouldGetCountOfBoards();    
+    test_halBoardGetCount_whenNoBoard_shouldOccurError();
+    //test_halGetBoard_whenNoBoard_shouldOccurError();
+    //test_halGetBoardCount_whenChoosedMC12101_shouldGetCountOfBoards();    
+    test_halBoardOpen_whenChoosedNoBoard_shoudReturnError();
+    test_halBoardOpen_whenChoosedMC12101_shoudReturnSuccess();
     test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessZeroCore();    
     test_halGetNativeAccess_whenMC12101FirstBoardOpened_shouldNonZeroValue();    
     test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessFirstCore();   

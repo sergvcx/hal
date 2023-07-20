@@ -1,9 +1,17 @@
 #include "hal/hal.h"
-#include "hal/hal-options.h"
 #include "hal-core.h"
 #include <iostream>
 #include "version.h"
 #include "assert.h"
+#include <stdarg.h>
+#include "string.h"
+
+#include "mc12101bsp.h"
+#include "mc12705bsp.h"
+#include "mb7707bsp.h"
+#include "mc5103bsp.h"
+
+#include "library.h"
 
 #define HAL_SET_ERROR(pointer, err) if(pointer != NULL) *pointer = err
 //#define HAL_SET_ERROR(pointer, err) 
@@ -12,6 +20,10 @@ HalBoard *createBoard_MB7707(HalBoardOptions *board_options);
 HalBoard *createBoard_MC12101(HalBoardOptions *board_options);
 HalBoard *createBoard_MC12705(HalBoardOptions *board_options);
 
+static BoardInterfaceMC12101 board_interface_mc12101;
+static BoardInterfaceMC12705 board_interface_mc12705;
+static BoardInterfaceMB7707 board_interface_mb7707;
+//static BoardInterfaceMC5103 board_interface_mc5103;
 
 #ifndef DEPRECATED
 extern "C" {
@@ -19,68 +31,61 @@ extern "C" {
         return new HalBoard();
     }
 
-    HalBoard *halCreateBoard(HalBoardOptions *board_options){
-        Log(LOG_DEBUG).get() << __FUNCTION__;
-        HalBoard *board = NULL;
-        Log(LOG_DEBUG).get() << "Board type: " << board_options->board_type;
-        switch (board_options->board_type)
+    int halFreeBoard(HalBoard *board){
+        delete board;
+        return 0;
+    }
+
+    int halBoardSetOption(HalBoard *board, int option, ...){
+        va_list ap;
+        va_start(ap, option);
+        switch (option)
         {
-        case HAL_MC12101:
-            board = createBoard_MC12101(board_options);
+        case HAL_BOARD_TYPE:
+            board->options.board_type = va_arg(ap, int);
+            board->board_type = board->options.board_type;
+            //board->in
             break;
-        case HAL_MB7707:
-            board = createBoard_MB7707(board_options);
+        case HAL_BOARD_NUMBER:
+            board->options.board_no = va_arg(ap, int);
             break;
-        case HAL_MC12705:
-            board = createBoard_MC12705(board_options);
+        case HAL_BOARD_MAC_ADDR:{
+            const char *addr = va_arg(ap, const char*);
+            memcpy(board->options.host_mac_addr, addr, 6);
+            break;
+        }
+        case HAL_SERVER_IP:{
+            const char *server_ip = va_arg(ap, const char*);
+            strcpy(board->options.server_ip, server_ip);
+            break;
+        }
+        case HAL_SERVER_PORT:
+            board->options.server_port = va_arg(ap, int);
+            break;
+        case HAL_SERVER_ENABLED:
+            board->options.server_enabled = va_arg(ap, int);
             break;
         default:
-            break;
+            return HAL_BAD_ARGUMENT;
         }
-        return board;
+        va_end(ap);
+        return 0;
     }
 
-    HalBoard *halGetBoardOpt(HalBoardOptions *board_options, int *error){
-        Log(LOG_DEBUG).get() << __FUNCTION__;
-        //HalBoard *board = halAllocBoard();
-        //board->board_type = board_options->board_type;
-        
-        HalBoard *board = halCreateBoard(board_options);
-        if(!board) {
-            Log(LOG_WARNING).get() << "Failed create board";
-            HAL_SET_ERROR(error, HAL_BAD_ARGUMENT);
-            return NULL;
-        }
-        if(board->is_initialized){
-            int _error = board->board_interface->open();
-            HAL_SET_ERROR(error, _error);
-            if(_error){
-                Log(LOG_WARNING).get() << "Failed open board";
-                delete board;
-                return 0;
-            }
-            return board;
-        } else {
-            Log(LOG_WARNING).get() << "Board not initialized";
-            HAL_SET_ERROR(error, HAL_ERROR);
-            delete board;
-            return NULL;
-        }
-    }
-
+    
     void *halLoadExtensionFunction(HalBoard *board, const char* functionName){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        return board->loadExtensionFunc(functionName);
+        return board->board_interface->loadExtensionFunc(functionName);
     }
 
     PL_Board *halGetNativeBoard(HalBoard *board){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        return board->native();
+        return board->board_interface->native();
     }
     
     PL_Access *halGetNativeAccess(HalAccess *access){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        return access->native();
+        return access->access_interface->native();
     }
 
     int halGetVersion(unsigned int *version_major, unsigned int *version_minor){
@@ -97,48 +102,66 @@ extern "C" {
     HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options, int *error){
         Log(LOG_DEBUG).get() << __FUNCTION__;
         int get_access_error = HAL_NOT_IMPLEMENTED;
-        HalAccess *access = board->getAccess(access_options);
-        if(access == 0) {
+        if(board->board_type == HAL_NO_BOARD){
             HAL_SET_ERROR(error, HAL_ERROR);
             return 0;
         }
-        int _error = access->open();
+        
+        HalAccess *access = new HalAccess(board);
+        HalCore core;
+        core.cluster = access_options->cluster;
+        core.core = access_options->core;
+        access->access_interface = board->board_interface->getAccess(&core);
+        int _error = access->access_interface->open();
         HAL_SET_ERROR(error, _error);
         return access;
     }
 
     int halSyncArray(HalAccess *access, HalSyncArrayData *src, HalSyncArrayData *dst){
-        return access->syncArray(src, dst);
+        return access->access_interface->syncArray(src, dst);
     }
 
-    HalBoard *halGetBoard(const char* options, int *error){
-        Log(LOG_DEBUG).get() << __FUNCTION__;
-        HalBoardOptions opt;
-        halSetBoardOption(&opt, HAL_BOARD_NUMBER, 0);
-        return halGetBoardOpt(&opt, error);
-    }
 
-    int halOpenBoard(HalBoard *board){
+    int halBoardOpen(HalBoard *board){
         Log(LOG_DEBUG).get() << __FUNCTION__;
+        switch (board->board_type){
+            {
+            case HAL_MC12101:
+                board->board_interface = &board_interface_mc12101;
+                board_interface_mc12101.init("mc12101load");
+                break;
+            case HAL_MC12705:
+                //board->board_interface = &board_interface_mc12101;
+                //board_interface_mc12705.init("mc12705load");      
+            case HAL_MB7707:
+            case HAL_MC5103:
+                return HAL_NOT_IMPLEMENTED;
+            case HAL_NO_BOARD:
+            default:
+                return HAL_ERROR;
+                break;
+            }
+        }
         return board->board_interface->open();
     }
     
     HalAccess *halGetAccess(HalBoard *board, HalCore *core, int *error){
         Log(LOG_DEBUG).get() << __FUNCTION__;
         HalAccessOptions opt;
-        halSetAccessOption(&opt, HAL_CORE, core->core);
-        halSetAccessOption(&opt, HAL_CLUSTER, core->cluster);        
+        opt.core = core->core;
+        opt.cluster = core->cluster;
         return halGetAccessOpt(board, &opt, error);
     }
 
-    int halCloseBoard(HalBoard *board){
+    int halBoardClose(HalBoard *board){
         Log(LOG_DEBUG).get() << __FUNCTION__;
+        if(board->board_type == HAL_NO_BOARD) return HAL_ERROR;
         int error = board->board_interface->close();
         delete board;
         return error;
     }
 
-    int halResetBoard(HalBoard *board){
+    int halBoardReset(HalBoard *board){
         Log(LOG_DEBUG).get() << __FUNCTION__;
         return board->board_interface->reset();
     }
@@ -148,20 +171,17 @@ extern "C" {
         return board->board_interface->loadInitCode();
     }
 
-
-    unsigned int halGetBoardCount(HalBoardOptions *board_options, int *error){
-        Log(LOG_DEBUG).get() << __FUNCTION__;
-        int getBoardError;
-        HalBoard *board = halCreateBoard(board_options);
-        if(!board) {
-            HAL_SET_ERROR(error, HAL_BAD_ARGUMENT);
-            return 0;
+    int halBoardGetCount(HalBoard *board){
+        if(board->board_type == HAL_NO_BOARD){
+            return -1;
+        } else {
+            int error;
+            int result = board->board_interface->count(&error);
+            if(error) return -1;
+            else return result;
         }
-        assert(board->board_interface);
-        unsigned int count = board->board_interface->count(error);
-        halCloseBoard(board);
-        return count;
     }
+
 
     int halGetFirmwareVersion(HalBoard *board, unsigned int *version_major, unsigned int *version_minor){
         Log(LOG_DEBUG).get() << __FUNCTION__;
@@ -170,9 +190,9 @@ extern "C" {
     }
  
 
-    int halCloseAccess(HalAccess *access){
+    int halAccessClose(HalAccess *access){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        access->close();
+        access->access_interface->close();
         delete access;
         //return access->getError();
         return 0;
@@ -180,7 +200,7 @@ extern "C" {
 
     int halLoadProgramFile(HalAccess *access, const char *program_name){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        int error = access->loadProgramFile(program_name);
+        int error = access->access_interface->loadProgramFile(program_name);
         if(error != 0){
             return HAL_FILE;
         }
@@ -194,7 +214,7 @@ extern "C" {
 
     int halLoadProgramFileArgs(HalAccess *access, const char *program_name, const char *args){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        int error = access->loadProgramFile(program_name, args);
+        int error = access->access_interface->loadProgramFile(program_name, args);
         if(error != 0){
             return HAL_FILE;
         }
@@ -206,7 +226,7 @@ extern "C" {
         if(error != NULL){
             *error = 0;
         }
-        return access->sync(value);
+        return access->access_interface->sync(value);
     }
     
     uintptr_t halSyncAddr(HalAccess *access, uintptr_t value, int *error){
@@ -219,27 +239,27 @@ extern "C" {
 
     int halReadMemBlock (HalAccess *access, void* dstHostAddr, uintptr_t srcBoardAddr, size_t size32){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        access->readMemBlock(dstHostAddr, srcBoardAddr, size32);
+        access->access_interface->readMemBlock(dstHostAddr, srcBoardAddr, size32);
         return 0;
     }
 
     int halWriteMemBlock(HalAccess *access, const void* srcHostAddr, uintptr_t dstBoardAddr, size_t size32){
         Log(LOG_DEBUG).get() << __FUNCTION__;
-        access->writeMemBlock(srcHostAddr, dstBoardAddr, size32);
+        access->access_interface->writeMemBlock(srcHostAddr, dstBoardAddr, size32);
         return 0;
     }
 
     int halGetResult(HalAccess *access, int* error){
         Log(LOG_DEBUG).get() << __FUNCTION__;
         int _error;
-        int result = access->getResult(&_error);
+        int result = access->access_interface->getResult(&_error);
         HAL_SET_ERROR(error, _error);
         return result;
     }
 
     int halGetStatus(HalAccess *access, int* error){
         //Log(LOG_DEBUG).get() << __FUNCTION__;
-        return access->getStatus(error);
+        return access->access_interface->getStatus(error);
     }
 
     int halSetTimeout(int msec){

@@ -1,5 +1,5 @@
 #include "hal/hal.h"
-#include "hal/hal-options.h"
+#include "hal/hal-host.h"
 #include "stdio.h"
 
 const int SIZE32=1024;
@@ -15,12 +15,12 @@ int main(){
 	unsigned dstBoardAddr;
 	unsigned sync;
 	printf("Openning...\n");
-	HalBoardOptions *options = halCreateBoardOptions();
-	halSetBoardOption(options, HAL_BOARD_TYPE, HAL_MC12101);
-	halSetBoardOption(options, HAL_BOARD_NUMBER, 0);
+	HalBoard *board = halAllocBoard();
+	halBoardSetOption(board, HAL_BOARD_TYPE, HAL_MC12101);
+	halBoardSetOption(board, HAL_BOARD_NUMBER, 0);
 
-	HalBoard *board = halGetBoardOpt(options, NULL);
-	if (board == 0){			
+	int error = halBoardOpen(board);
+	if (error){			
 		return -1;
 	}
 
@@ -58,9 +58,9 @@ int main(){
 											
 	sync = halGetResult(access, NULL);					// get return value (0x600D)
 	// printf("Return value:%X\n",sync);
-	halCloseAccess(access);
-	halCloseBoard(board);								// close board, disconect from shared memory
-	printf("Sleep 5 sec...\n",sync);
+	halAccessClose(access);
+	halBoardClose(board);								// close board, disconect from shared memory
+	printf("Sleep 5 sec...\n");
 	//::Sleep(5000);
 	return sync;
 

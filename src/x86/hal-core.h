@@ -22,9 +22,28 @@ struct IHalExtension {
     HAL_VIRTUAL_FUNC void* loadExtensionFunc(const char* function_name);
 };
 
-struct IHalBoard{
+struct IHalAccess{
+    HAL_VIRTUAL_FUNC PL_Access *native() = 0;
+    HAL_VIRTUAL_FUNC int open() = 0;
+    HAL_VIRTUAL_FUNC int close() = 0;
+    HAL_VIRTUAL_FUNC int sync(int value, int *error = NULL) = 0;
+    HAL_VIRTUAL_FUNC int syncArray(HalSyncArrayData *src, HalSyncArrayData *dst) = 0;
+    HAL_VIRTUAL_FUNC int readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size) = 0;
+    HAL_VIRTUAL_FUNC int writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size) = 0;
+    HAL_VIRTUAL_FUNC int getResult(int *error = NULL) = 0;
+    HAL_VIRTUAL_FUNC int loadProgramFile(const char* filename) = 0;
+    HAL_VIRTUAL_FUNC int loadProgramFile(const char* filename, const char *mainArgs) = 0;
+    HAL_VIRTUAL_FUNC int getStatus(int *error = NULL) = 0;
+    ~IHalAccess(){};
+};
+
+struct IPLoadInterface{
     HAL_VIRTUAL_FUNC unsigned int count(int *error){
         if(error) *error = HAL_NOT_IMPLEMENTED;
+        return 0;
+    }
+    HAL_VIRTUAL_FUNC void *loadExtensionFunc(const char *funcname){
+        return 0;
     }
     HAL_VIRTUAL_FUNC int open(){
         return HAL_NOT_IMPLEMENTED;
@@ -45,6 +64,12 @@ struct IHalBoard{
         return 0;
     }
 
+    HAL_VIRTUAL_FUNC IHalAccess *getAccess(HalCore *core){
+        return 0;
+    }
+
+    HAL_VIRTUAL_FUNC ~IPLoadInterface(){}
+
 };
 
 #ifdef __cplusplus
@@ -57,14 +82,13 @@ public:
         is_initialized = 0;
         board_type = HAL_NO_BOARD;
     };
-    IHalBoard *board_interface;
+    HalBoardOptions options;
+    IPLoadInterface *board_interface;
     int is_initialized;
-    int board_type;
-    HAL_VIRTUAL_FUNC int open();
+    int board_type;    
     HAL_VIRTUAL_FUNC int loadInitCode();
     HAL_VIRTUAL_FUNC int close();
     HAL_VIRTUAL_FUNC int reset();    
-    HAL_VIRTUAL_FUNC PL_Board *native();
     HAL_VIRTUAL_FUNC HalAccess *getAccess(HalAccessOptions *options);
     HAL_VIRTUAL_FUNC ~HalBoard();
 };
@@ -79,6 +103,10 @@ struct HalAccess{
 protected:
     HalAccess(){};
 public:
+    IHalAccess *access_interface;
+    HalAccess(HalBoard *_board){
+        board = _board;
+    };
     HalBoard *board;
 
     //HAL_VIRTUAL uintptr_t getBspAccess();

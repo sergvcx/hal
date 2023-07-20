@@ -10,15 +10,6 @@ int HalBoard::loadInitCode(){
     return HAL_NOT_IMPLEMENTED;
 }
 
-PL_Board *HalBoard::native(){
-    std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
-    return 0;
-}
-
-int HalBoard::open(){
-    std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
-    return HAL_NOT_IMPLEMENTED;
-};
 int HalBoard::close(){
     std::cout << "Warning: " << __FUNCTION__ << " not reailized!" << std::endl;
     return HAL_NOT_IMPLEMENTED;
