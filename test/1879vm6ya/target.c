@@ -1,5 +1,4 @@
 #include "hal/hal.h"
-#include "hal/hal-options.h"
 #undef NDEBUG
 #include "hal/hassert.h"
 

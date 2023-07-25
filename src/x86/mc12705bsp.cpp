@@ -54,8 +54,8 @@ HalBoardMC12705::HalBoardMC12705(HalBoardOptions *options) {
             return;
         }
     }
-    interface.init(handle);
-    board_interface = dynamic_cast<IPLoadInterface *>(&interface);
+    binterface.init(handle);
+    board_interface = dynamic_cast<IPLoadInterface *>(&binterface);
 
     board_type = HAL_MC12705;
     board_no = options->board_no;
@@ -120,22 +120,22 @@ HalAccess *HalBoardMC12705::getAccess(HalAccessOptions *options) {
 }
 
 int HalAccessMC12705::open() {
-    assert(_board->interface.plGetAccess);
-    return _board->interface.plGetAccess(_board->desc, (PL_Core*)&core, &access);
+    assert(_board->binterface.plGetAccess);
+    return _board->binterface.plGetAccess(_board->desc, (PL_Core*)&core, &access);
 }
 int HalAccessMC12705::close() {
-    assert(_board->interface.plCloseAccess);
-    return _board->interface.plCloseAccess(access);
+    assert(_board->binterface.plCloseAccess);
+    return _board->binterface.plCloseAccess(access);
 }
 
 
 HalAccessMC12705::HalAccessMC12705(HalBoardMC12705 *board, HalAccessOptions *opt){
     _board = board;
     
-    assert(_board->interface.plReadMemBlock);
-    assert(_board->interface.plWriteMemBlock);
-    ops.plReadMemBlock = _board->interface.plReadMemBlock;
-    ops.plWriteMemBlock = _board->interface.plWriteMemBlock;
+    assert(_board->binterface.plReadMemBlock);
+    assert(_board->binterface.plWriteMemBlock);
+    ops.plReadMemBlock = _board->binterface.plReadMemBlock;
+    ops.plWriteMemBlock = _board->binterface.plWriteMemBlock;
 
     core.core = opt->core;
     core.cluster = opt->cluster;    
@@ -148,7 +148,7 @@ PL_Access *HalAccessMC12705::native(){
 
 int HalAccessMC12705::sync(int value, int *error){
     int result = 0;
-    int _error = _board->interface.plSync(access, value, &result);
+    int _error = _board->binterface.plSync(access, value, &result);
     if(error != NULL){
         *error = _error;
     }
@@ -156,19 +156,19 @@ int HalAccessMC12705::sync(int value, int *error){
 }
 
 int HalAccessMC12705::readMemBlock(void *dstHostAddr, uintptr_t srcBoardAddr, int size){
-    assert(_board->interface.plReadMemBlock);
-    return _board->interface.plReadMemBlock(access, dstHostAddr, (int)srcBoardAddr, size);    
+    assert(_board->binterface.plReadMemBlock);
+    return _board->binterface.plReadMemBlock(access, dstHostAddr, (int)srcBoardAddr, size);    
 }
 
 int HalAccessMC12705::writeMemBlock(const void *srcHostAddr, uintptr_t dstBoardAddr, int size){
-    assert(_board->interface.plWriteMemBlock);
-    return _board->interface.plWriteMemBlock(access, srcHostAddr, (int)dstBoardAddr, size);    
+    assert(_board->binterface.plWriteMemBlock);
+    return _board->binterface.plWriteMemBlock(access, srcHostAddr, (int)dstBoardAddr, size);    
 }
 
 int HalAccessMC12705::getResult(int *error){
     PL_Word result;
-    assert(_board->interface.plGetResult);
-    int _error = _board->interface.plGetResult(access, &result);
+    assert(_board->binterface.plGetResult);
+    int _error = _board->binterface.plGetResult(access, &result);
     if (error) *error = _error;
     if(_error){
         std::cout << "Failed get result" << std::endl;
@@ -178,20 +178,20 @@ int HalAccessMC12705::getResult(int *error){
 
 int HalAccessMC12705::loadProgramFile(const char* program_name){
     strcpy(program, program_name);
-    assert(_board->interface.plLoadProgramFile);
-    return _board->interface.plLoadProgramFile(access, program_name);
+    assert(_board->binterface.plLoadProgramFile);
+    return _board->binterface.plLoadProgramFile(access, program_name);
 }
 
 int HalAccessMC12705::loadProgramFile(const char* program_name, const char *mainArgs){
     strcpy(program, program_name);
-    assert(_board->interface.plLoadProgramFileArgs);
-    return _board->interface.plLoadProgramFileArgs(access, program_name, mainArgs);
+    assert(_board->binterface.plLoadProgramFileArgs);
+    return _board->binterface.plLoadProgramFileArgs(access, program_name, mainArgs);
 }
 
 int HalAccessMC12705::getStatus(int *error){
     PL_Word result;
-    assert(_board->interface.plGetStatus);
-    int _error = _board->interface.plGetStatus(access, &result);
+    assert(_board->binterface.plGetStatus);
+    int _error = _board->binterface.plGetStatus(access, &result);
     if (error) *error = _error;
     if(_error){
         std::cout << "Failed get status" << std::endl;
