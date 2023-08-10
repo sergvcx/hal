@@ -52,7 +52,8 @@ template <class T, int SIZE> struct HalRingBufferData{
 	//bool		tailLocked;
 	//long long	size;			/// long long because to do 64-bit align 
 	//#ifdef __NM__
-	T	 		data[SIZE];			///<  контейнер данных кольцевого буфера размера SIZE. SIZE - должен быть степенью двойки
+	//T*	 		data[SIZE];			///<  контейнер данных кольцевого буфера размера SIZE. SIZE - должен быть степенью двойки
+	T*	 		data;			///<  контейнер данных кольцевого буфера размера SIZE. SIZE - должен быть степенью двойки
 	//#else 
 	//T*	 		data;				///<  контейнер данных кольцевого буфера размера SIZE. SIZE - должен быть степенью двойки
 	//#endif
@@ -151,7 +152,7 @@ public:
 
 	int check(){
 		if (pHead==0 || pTail==0 || ((int)data&1)|| ((sizeofBufferInt !=4) &&  (sizeofBufferInt !=1))   ){
-			printf("Ring buffer %s error\n", typeid(T).name());
+			//printf("Ring buffer %s error\n", typeid(T).name());
 			printf("pHead=0x%x\n",pHead); 
 			printf("pTail=0x%x\n",pTail);
 			printf("data=0x%x\n",data);
@@ -167,8 +168,8 @@ public:
 		pTail=0;
 		data =0;
 		
-		memcopyPush=halCopyRISC;
-		memcopyPop =halCopyRISC;
+		memcopyPush=0;//halCopyRISC;
+		memcopyPop =0;//halCopyRISC;
 		polltime=10;
 		headExternalControl=false;
 	  	tailExternalControl=false;
@@ -176,7 +177,8 @@ public:
 		sizeof32Item = sizeof32(T);
 		
 	}
-	void* create(tmemcopy32 _memcopyPush= halCopyRISC, tmemcopy32 _memcopyPop= halCopyRISC){
+	//void* create(tmemcopy32 _memcopyPush= halCopyRISC, tmemcopy32 _memcopyPop= halCopyRISC){
+	void* create(tmemcopy32 _memcopyPush, tmemcopy32 _memcopyPop){
 		int size=sizeof(HalRingBufferData<T, SIZE>) / sizeof(int);
 		container = (HalRingBufferData<T,SIZE>*) halMalloc32(size);
 		
@@ -190,8 +192,8 @@ public:
 		//printf(" [%x] [%x]\n",memcopyPop, _memcopyPop);
 	}
 	
-	HalRingBufferConnector(HalRingBufferData<T,SIZE>* ringBufferData, tmemcopy32 _memcopyPush= halCopyRISC, tmemcopy32 _memcopyPop= halCopyRISC){
-	//HalRingBufferConnector(HalRingBufferData<T, SIZE>* ringBufferData, tmemcopy32 _memcopyPush , tmemcopy32 _memcopyPop ) {
+	//HalRingBufferConnector(HalRingBufferData<T,SIZE>* ringBufferData, tmemcopy32 _memcopyPush= halCopyRISC, tmemcopy32 _memcopyPop= halCopyRISC){
+	HalRingBufferConnector(HalRingBufferData<T, SIZE>* ringBufferData, tmemcopy32 _memcopyPush , tmemcopy32 _memcopyPop ) {
 		init(ringBufferData, _memcopyPush, _memcopyPop);
 		internalContainer = false;
 		//printf(" [%x] [%x]\n",memcopyPop, _memcopyPop);
@@ -203,18 +205,25 @@ public:
 				container =0;
 			}
 	}
-	int connect(void* ringBufferData, tmemcopy32 _memcopyPush = halCopyRISC, tmemcopy32 _memcopyPop = halCopyRISC) {
+	//int connect(void* ringBufferData, tmemcopy32 _memcopyPush = halCopyRISC, tmemcopy32 _memcopyPop = halCopyRISC) {
+	int connect(void* ringBufferData, tmemcopy32 _memcopyPush , tmemcopy32 _memcopyPop ) {
 		return init((HalRingBufferData<T, SIZE>*)ringBufferData, _memcopyPush, _memcopyPop);
 	}
-	int init(HalRingBufferData<T,SIZE>* ringBufferData, tmemcopy32 _memcopyPush= halCopyRISC, tmemcopy32 _memcopyPop= halCopyRISC){
-	//int init(HalRingBufferData<T,SIZE>* ringBufferData, tmemcopy32 _memcopyPush, tmemcopy32 _memcopyPop){
+	//int init(HalRingBufferData<T,SIZE>* ringBufferData, tmemcopy32 _memcopyPush= halCopyRISC, tmemcopy32 _memcopyPop= halCopyRISC){
+	int init(HalRingBufferData<T,SIZE>* ringBufferData, tmemcopy32 _memcopyPush, tmemcopy32 _memcopyPop){
 		//container=0;
 		memcopyPush=_memcopyPush;
 		memcopyPop =_memcopyPop;
-		memcopyPop(ringBufferData,&sizeofBufferInt,2);	// читаем заничение sizeof(int) на стороне ringbuffer
+		#ifdef __NM__
+			sizeofBufferInt = sizeof(int);
+		#else
+			memcopyPop(ringBufferData,&sizeofBufferInt,2);	// читаем заничение sizeof(int) на стороне ringbuffer
+		#endif
 		pHead=(unsigned*)	((unsigned)ringBufferData + 2 * sizeofBufferInt);
 		pTail=(unsigned*)	((unsigned)ringBufferData + 3 * sizeofBufferInt);
-		data =(T*)			((unsigned)ringBufferData + 16* sizeofBufferInt) ;
+		//data =(T*)			((unsigned)ringBufferData + 16* sizeofBufferInt) ;
+		memcopyPop(			(void*)((unsigned)ringBufferData + 16* sizeofBufferInt) ,&data,1);
+		
 		polltime=10;
 		headExternalControl=false;
 	  	tailExternalControl=false;
