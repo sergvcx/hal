@@ -184,6 +184,15 @@ void test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessBothCores(){
     assert(error == HAL_OK);
 }
 
+void test_halLoadProgramFile_shouldLoadNmPart(){
+    PRINT_TEST_NAME();
+    HalBoard *board = arrangeFirstBoardMC12101();
+    HalCore core0;
+    int errorGetAccess0 = -1;
+    HalAccess *access0 = halGetAccess(board, &core0, &errorGetAccess0);
+    assert(errorGetAccess0 == HAL_OK);
+}
+
 void test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile_shouldReturnFailed(){
     PRINT_TEST_NAME();
     // Arrange
@@ -589,6 +598,7 @@ int main(int argc, char *argv[]){
     test_halGetNativeAccess_whenMC12101FirstBoardOpened_shouldNonZeroValue();    
     test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessFirstCore();   
     test_halGetAccess_whenMC12101FirstBoardOpened_shouldGetAccessBothCores();
+    test_halLoadProgramFile_shouldLoadNmPart();
     test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile_shouldReturnFailed();
     test_halLoadProgramFile_whenOpenedFirstBoardMC12101ZeroCoreDummyFile_shouldReturnSuccesful();
     test_halLoadProgramFileArgs_whenOpenedFirstBoardMC12101ZeroCoreWrongProgramFile_shouldReturnFailed();

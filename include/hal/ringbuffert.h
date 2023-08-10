@@ -272,7 +272,11 @@ public:
 		return getHead() == getTail() + SIZE;
 	}
 
-	void 	push   (const T* src, 	size_t count){
+	void 
+	#ifdef __NM__
+	__attribute__((optimize("O0")))
+	#endif //__NM__
+	push   (const T* src, 	size_t count){
 		check();
 		volatile size_t fixHead= getHead();
 		volatile size_t fixTail;
@@ -310,7 +314,11 @@ public:
 	}
 
 
-	void pop(T* dst, size_t count){
+	void 
+#ifdef __NM__
+	__attribute__((optimize("O0")))
+#endif //__NM__
+	pop(T* dst, size_t count){
 		check();
 		//printf("----------\n");
 		//dst[0]=111;
@@ -319,11 +327,12 @@ public:
 		
 		
 		do {
-			//printf(" (%x) \n",memcopyPop);
+			
 			fixHead=getHead();
+			//printf("head=%d, tail=%d\n", fixHead, fixTail) ;
 			if (fixHead-fixTail >= count)
 				break;
-			halSleep(polltime);
+			//halSleep(polltime);
 		} while(1);
 		
 		volatile size_t posHead = fixHead & (SIZE-1);			

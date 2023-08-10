@@ -2,6 +2,7 @@
 #include "hal/hal.h"
 #include "string.h"
 #include "stdlib.h"
+#include "hal/hal-host.h"
 
 void test_halGetBoard_whenChoosedRemoteBoardOfMC12101WithCorrectIP_shouldGetBoard(){
     // Arrange

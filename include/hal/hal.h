@@ -12,7 +12,7 @@ typedef struct HalBoard HalBoard;        //for nm and x86 different realizations
 typedef struct HalAccess HalAccess;       //for nm and x86 different realizations
 typedef struct HalBoardOptions HalBoardOptions;
 typedef struct HalAccessOptions HalAccessOptions;
-typedef struct HalIO HalIO;
+
 
 typedef struct{
     int core;
@@ -65,27 +65,17 @@ typedef struct {
 #ifdef __cplusplus
 extern "C" {
 #endif //__cplusplus
-
-
-    int halGetFirmwareVersion(HalBoard *board, unsigned int *version_major, unsigned int *version_minor);
-    int halGetVersion(unsigned int *version_major, unsigned int *version_minor);
-
     
-    HalBoard *halAllocBoard();
-    int halBoardSetOption(HalBoard * board, int option, ...);
-    int halBoardOpen(HalBoard *board);
-    int halBoardClose(HalBoard *board);
-    int halBoardReset(HalBoard *board);
-    int halFreeBoard(HalBoard *board);
-
-    //HalAccess *halAllocAccess(HalBoard *board);
-    //int halAccessSetOption(HalAccess *access, int option, ...);
-    //int halFreeAccess(HalAccess *access);
  
     HalAccess *halGetAccess(HalBoard *access, HalCore *core, int *error);
     HalAccess *halGetAccessOpt(HalBoard *board, HalAccessOptions *access_options, int *error);
     int halAccessClose(HalAccess *access);
 
+    HalAccess *halAllocAccess();
+    int halAccessSetOption(HalAccess *access, int opt, ...);
+    int halAccessOpen(HalAccess *access);
+    int halAccessClose(HalAccess *access);
+    int halFreeAccess(HalAccess *access);
 
     int halSync(HalAccess *board, int value, int *error);
     //uintptr_t halSyncAddr(HalAccess *board, uintptr_t value, int *error);
@@ -96,6 +86,7 @@ extern "C" {
     int halWriteMemBlock(HalAccess *access, const void* srcHostAddr, uintptr_t dstBoardAddr, size_t size32);
 
     int halGetResult(HalAccess *access, int *error);
+    int halWaitForFinished(HalAccess *access);
     int halGetStatus(HalAccess *access, int *error);
 
     

@@ -36,6 +36,21 @@ extern "C" {
         return 0;
     }
 
+    HalAccess *halAllocAccess(){
+        //return new HalAccess();
+        return 0;
+    }
+    int halAccessSetOption(HalAccess *access, int opt, ...){
+        return HAL_NOT_IMPLEMENTED;
+    }
+    int halAccessOpen(HalAccess *access){
+        return HAL_NOT_IMPLEMENTED;
+    }    
+    int halFreeAccess(HalAccess *access){
+        //delete access;
+        return HAL_NOT_IMPLEMENTED;
+    }
+
     int halBoardSetOption(HalBoard *board, int option, ...){
         va_list ap;
         va_start(ap, option);

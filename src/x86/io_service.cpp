@@ -20,10 +20,10 @@ extern "C"{
     HalIO::HalIO(HalAccess *access, const char *program_file, FILE *file){
         Log(LOG_DEBUG1).get() << __FUNCTION__;
         void *ops = NULL;        
-        if(dynamic_cast<IHalAccessIO *>(access)){
-            ops = dynamic_cast<IHalAccessIO *>(access)->getOpsForIO();
+        if(dynamic_cast<IHalAccessIO *>(access->access_interface)){
+            ops = dynamic_cast<IHalAccessIO *>(access->access_interface)->getOpsForIO();
         }
-        PL_Access *a = (PL_Access *)access->native();
+        PL_Access *a = (PL_Access *)access->access_interface->native();
         io = IO_ServiceStart(program_file, a, file, ops);
         if(io == 0){
             std::cout << "Failed IO Service start" << std::endl;  
