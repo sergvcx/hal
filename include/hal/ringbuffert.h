@@ -38,13 +38,13 @@ typedef  void* (*tmemcopy32)(const void *src, void *dst, unsigned int size);
 //typedef  void *(*t_bytecpy)(void *to, int toIndex, void const *from, int fromIndex, size_t size) ;
 
 
-template <class T, int SIZE> struct HalRingBufferData{
+template <class T, int SIZE_> struct HalRingBufferData{
 	volatile unsigned 	sizeofInt;			///< sizeof на данной платформе (1-nm , 4- x86,arm)
 	volatile unsigned 	bufferId;			///
-	volatile unsigned 	head;				///<  сколько элементов ОТ НАЧАЛА ПОТОКА код MASTER уже записал в	буфер входных данных [заполняется MASTER]
-	volatile unsigned	tail;				///<  сколько элементов ОТ НАЧАЛА ПОТОКА код SLAVE  уже прочитал (обработал) 			 [заполняется SLAVE]
 	volatile unsigned 	size;
 	volatile unsigned 	size1;
+	volatile unsigned 	head;				///<  сколько элементов ОТ НАЧАЛА ПОТОКА код MASTER уже записал в	буфер входных данных [заполняется MASTER]
+	volatile unsigned	tail;				///<  сколько элементов ОТ НАЧАЛА ПОТОКА код SLAVE  уже прочитал (обработал) 			 [заполняется SLAVE]
 	volatile unsigned   auxtail[4]; 		///<  additional tails
 	volatile unsigned   service[6]; 		///<  service words for alignment address of data at 16-word boundary (neceassary for dma)
 	
@@ -68,8 +68,8 @@ template <class T, int SIZE> struct HalRingBufferData{
 		bufferId = 0x600DB00F;
 		head=0;
 		tail=0;
-		size=SIZE;
-		size1=SIZE-1;
+		size=0;//SIZE;
+		size1=-1;//SIZE-1;
 		//#endif
 	}
 	~HalRingBufferData(){
@@ -82,14 +82,15 @@ template <class T, int SIZE> struct HalRingBufferData{
 		tail=0xdeadb00f;
 		//#endif
 	}
-	inline void init(){
+	void init(int Size){
 		sizeofInt = sizeof(int);
 		bufferId = 0x600DB00F;
 		for (int i=0; i<6; i++)
 			service[i]=0xBABADEDA;
 		final[0]=0xBABADEDA;
 		final[1]=0xBABADEDA;
-		
+		size=Size;//Size;
+		size1=size-1;
 		head=0;
 		tail=0;
 	}
@@ -98,21 +99,21 @@ template <class T, int SIZE> struct HalRingBufferData{
 	}
 	
 	inline bool isFull() {
-		return head == tail + SIZE;
+		return head == tail + size;
 	}
 	
 	inline T* ptrHead(){
-		return data + (head & (SIZE-1));
+		return data + (head & (size1));
 		
 	}
 	
 	
 	inline T* ptrTail(){
-		return data + (tail & (SIZE-1));
+		return data + (tail & (size1));
 		
 	}
 	inline T* ptr(unsigned int idx){
-		return data + (idx & (SIZE-1));
+		return data + (idx & (size1));
 		
 	}
 
@@ -136,6 +137,8 @@ template <class T, int SIZE> struct HalRingBufferConnector{
 // Важен порядок полей, не менять!
 	unsigned 	sizeofBufferInt;///< значение sizeof(int) на стороне контейнера кольцевого буффера
 	unsigned 	_bufferId;		///< buffer id
+	unsigned 	size;
+	unsigned 	size1;
 	unsigned* 	pHead;			///< адрес head в RingBufferData|
 	unsigned*	pTail;			///< адрес tail в RingBufferData|
 	T*	 		data;
@@ -151,8 +154,9 @@ public:
 
 
 	int check(){
-		if (pHead==0 || pTail==0 || ((int)data&1)|| ((sizeofBufferInt !=4) &&  (sizeofBufferInt !=1))   ){
+		if (pHead==0 || pTail==0 || ((int)data&1)|| ((sizeofBufferInt !=4) &&  (sizeofBufferInt !=1)) && (size&&(size-1)==0)  ){
 			//printf("Ring buffer %s error\n", typeid(T).name());
+			printf("size=0x%x\n", size);
 			printf("pHead=0x%x\n",pHead); 
 			printf("pTail=0x%x\n",pTail);
 			printf("data=0x%x\n",data);
@@ -216,11 +220,21 @@ public:
 		memcopyPop =_memcopyPop;
 		#ifdef __NM__
 			sizeofBufferInt = sizeof(int);
+			_bufferId=ringBufferData->bufferId;
+			size=ringBufferData->size;
+			size1=ringBufferData->size1;
 		#else
-			memcopyPop(ringBufferData,&sizeofBufferInt,2);	// читаем заничение sizeof(int) на стороне ringbuffer
+			memcopyPop(ringBufferData,&sizeofBufferInt,4);	// читаем заничение sizeof(int) на стороне ringbuffer
+															// bufferid
+															// size
+															// size1 (size-1)
+			//memcopyPop((unsigned (ringBufferData) + 4 * sizeofBufferInt),&size,2); // читаем size и size1
 		#endif
-		pHead=(unsigned*)	((unsigned)ringBufferData + 2 * sizeofBufferInt);
-		pTail=(unsigned*)	((unsigned)ringBufferData + 3 * sizeofBufferInt);
+		pHead=(unsigned*)	((unsigned)ringBufferData + 4 * sizeofBufferInt);
+		pTail=(unsigned*)	((unsigned)ringBufferData + 5 * sizeofBufferInt);
+		
+		
+		
 		//data =(T*)			((unsigned)ringBufferData + 16* sizeofBufferInt) ;
 		memcopyPop(			(void*)((unsigned)ringBufferData + 16* sizeofBufferInt) ,&data,1);
 		
@@ -236,9 +250,9 @@ public:
 	inline unsigned getHead()				{ return *pHead; }
 	inline void     setTail(int value)		{ *pTail = value;}
 	inline unsigned	getTail()				{ return *pTail; }
-	inline T*       ptrItem(unsigned disp)	{ return (T*)(   data + (disp&(SIZE-1))); }
-	inline T*       ptrHead()				{ return (T*)(data + ((*pHead)&(SIZE - 1))); }
-	inline T*       ptrTail()				{ return (T*)(data + ((*pTail)&(SIZE - 1))); }
+	inline T*       ptrItem(unsigned disp)	{ return (T*)(   data + (disp&(size1))); }
+	inline T*       ptrHead()				{ return (T*)(data + ((*pHead)&(size1))); }
+	inline T*       ptrTail()				{ return (T*)(data + ((*pTail)&(size1))); }
 	//inline T*       ptrExtern(const T* base, unsigned disp) { return (T*)(base + disp); }
 #else
 	inline void     setHead(int value)		{ memcopyPush(&value, pHead, 1); }
@@ -246,9 +260,9 @@ public:
 	inline unsigned getHead()				{ unsigned res; 	memcopyPop(pHead, &res, 1); return res; }
 	inline unsigned	getTail()				{ unsigned res; 	memcopyPop(pTail, &res, 1); return res; }
 	
-	inline   T*     ptrItem(unsigned indx)	{ return (T*)((int)data + (     indx&(SIZE - 1))*sizeofBufferInt*sizeof32(T)); }
-	inline   T*     ptrHead()				{ return (T*)((int)data + (getHead()&(SIZE - 1))*sizeofBufferInt*sizeof32(T)); }
-	inline   T*     ptrTail()				{ return (T*)((int)data + (getTail()&(SIZE - 1))*sizeofBufferInt*sizeof32(T)); }
+	inline   T*     ptrItem(unsigned indx)	{ return (T*)((int)data + (     indx&(size1))*sizeofBufferInt*sizeof32(T)); }
+	inline   T*     ptrHead()				{ return (T*)((int)data + (getHead()&(size1))*sizeofBufferInt*sizeof32(T)); }
+	inline   T*     ptrTail()				{ return (T*)((int)data + (getTail()&(size1))*sizeofBufferInt*sizeof32(T)); }
 	//inline   T*     ptrExtern(const T* base, unsigned disp) { return (T*)(((int)base) +   disp*sizeofBufferInt*sizeof32(T)); }
 #endif
 	
@@ -260,7 +274,7 @@ public:
 	}
 	
 	inline int pushAvail(){
-		return SIZE-(getHead() - getTail());
+		return size-(getHead() - getTail());
 	}
 	inline bool isEmpty() {
 		check();
@@ -269,7 +283,7 @@ public:
 
 	inline bool isFull() {
 		check();
-		return getHead() == getTail() + SIZE;
+		return getHead() == getTail() + size;
 	}
 
 	void 
@@ -282,19 +296,19 @@ public:
 		volatile size_t fixTail;
 		do {
 			fixTail = getTail();
-			if (fixTail + SIZE - fixHead >= count)
+			if (fixTail + size - fixHead >= count)
 				break;
 			halSleep(polltime);
 		}  while (1);
 		
 		
-		volatile size_t posHead = fixHead & (SIZE-1);			
-		volatile size_t posTail = fixTail & (SIZE-1);
+		volatile size_t posHead = fixHead & (size1);			
+		volatile size_t posTail = fixTail & (size1);
 		T* addrHead    = ptrItem(posHead);
 		
 		// [.......<Tail>******<Head>.....]
 		if (posTail<posHead || fixHead==fixTail){
-			volatile size_t countToEnd = SIZE - posHead;
+			volatile size_t countToEnd = size - posHead;
 			if (count <= countToEnd){
 				memcopyPush(src,addrHead,count*sizeof32(T));
 			}
@@ -335,8 +349,8 @@ public:
 			//halSleep(polltime);
 		} while(1);
 		
-		volatile size_t posHead = fixHead & (SIZE-1);			
-		volatile size_t posTail = fixTail & (SIZE-1);
+		volatile size_t posHead = fixHead & (size1);			
+		volatile size_t posTail = fixTail & (size1);
 		T* addrTail    = ptrItem(posTail);
 		
 		// [.......<Tail>******<Head>.....]
@@ -346,7 +360,7 @@ public:
 		}
 		// [*******<Head>......<Tail>*****]
 		else {
-			volatile size_t countToEnd = SIZE - posTail;
+			volatile size_t countToEnd = size - posTail;
 			if (count <= countToEnd){
 				memcopyPop(addrTail, dst, count*sizeof32(T));
 				//printf("-----2-----\n");
@@ -364,7 +378,7 @@ public:
 	}
 };
 
-
+/*
 template <class T, int SIZE> struct HalRingBufferDataDMA{
 //	size_t 		maxCount;		///<  размер кольцевого буфера входных данных (в элементах; гарантируется что это степень двойки)
 //	size_t 		maxCountMinus1;	///<  размер кольцевого буфера входных данных (в элементах; гарантируется что это степень двойки)
@@ -395,11 +409,11 @@ template <class T, int SIZE> struct HalRingBufferDataDMA{
 	}
 
 	inline T* ptrHead(){
-		return data + head & (SIZE-1);
+		return data + head & (size1);
 	}
 	
 	inline T* ptrTail(){
-		return data + tail & (SIZE-1);
+		return data + tail & (size1);
 	}
 
 	void 	push   (const T* src, 	size_t count){
@@ -416,8 +430,8 @@ template <class T, int SIZE> struct HalRingBufferDataDMA{
 
 		
 		size_t tail    = this->tail;
-		size_t posHead = head & (SIZE-1);			
-		size_t posTail = tail & (SIZE-1);
+		size_t posHead = head & (size1);			
+		size_t posTail = tail & (size1);
 		T* addrHead    = data+posHead;
 		
 		// [.......<Tail>******<Head>.....]
@@ -455,8 +469,8 @@ template <class T, int SIZE> struct HalRingBufferDataDMA{
 		//}
 
 		size_t head = this->head;
-		size_t posHead = head & (SIZE-1);			
-		size_t posTail = tail & (SIZE-1);
+		size_t posHead = head & (size1);			
+		size_t posTail = tail & (size1);
 		T* addrTail    = data + posTail;
 	
 		// [.......<Tail>******<Head>.....]
@@ -481,6 +495,6 @@ template <class T, int SIZE> struct HalRingBufferDataDMA{
 };
 
 
-
+*/
 
 #endif //HAL_RINGBUFFERT_INCLUDED
