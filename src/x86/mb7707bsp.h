@@ -43,7 +43,7 @@ public:
     PL_Board *desc;
     LibraryHandle handle;
     unsigned char mac_addr[7];
-    BoardInterfaceMB7707 interface;
+    BoardInterfaceMB7707 binterface;
     int (*plGetVersion)(int *, int *);
     int (*plGetBoardDesc)(const unsigned char *, PL_Board **);
 	int (*plCloseBoardDesc)(PL_Board *);

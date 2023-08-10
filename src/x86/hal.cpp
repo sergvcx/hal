@@ -157,7 +157,6 @@ extern "C" {
         Log(LOG_DEBUG).get() << __FUNCTION__;
         if(board->board_type == HAL_NO_BOARD) return HAL_ERROR;
         int error = board->board_interface->close();
-        delete board;
         return error;
     }
 

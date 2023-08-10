@@ -52,7 +52,7 @@ public:
     int remoted;
     unsigned int board_count;
    
-    BoardInterfaceMC12705 interface;
+    BoardInterfaceMC12705 binterface;
 
     HalBoardMC12705(HalBoardOptions *board_options);
     ~HalBoardMC12705() override;

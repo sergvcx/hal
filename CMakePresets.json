@@ -9,7 +9,7 @@
             "toolchainFile": "${sourceDir}/cmake/nmc-gcc-compile.cmake",
             "cacheVariables": {
                 "HAL_TYPE": "TARGET",
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Release"
             },
             "environment": {
                 "PATH": "$env{NMC_GCC_TOOLPATH}/nmc4-ide/bin;$env{NMC_GCC_TOOLPATH}/nmc4-ide/lib;$penv{PATH}",

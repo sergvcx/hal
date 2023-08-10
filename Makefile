@@ -14,45 +14,25 @@ endif
 .PHONY: virtual
 
 mc12101:
-	cmake -S target -B build/$@/target/release -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
-	cmake -S target -B build/$@/target/debug   -D HAL_MC12101=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
-	cmake --build build/$@/target/release
-	cmake --build build/$@/target/debug
-	cmake -S host -B build/$@/host -D HAL_MC12101=ON $(X64_PLATFORM)
-	cmake --build build/$@/host --config Release
-	cmake --build build/$@/host --config Debug
+	cmake --preset mc12101
+	cmake --build build/mc12101
 
 mb7707:
-	cmake -S target -B build/$@/target/release -D HAL_MB7707=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
-	cmake -S target -B build/$@/target/debug   -D HAL_MB7707=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
-	cmake --build build/$@/target/release
-	cmake --build build/$@/target/debug
-	cmake -S host -B build/$@/host -D HAL_MB7707=ON $(X64_PLATFORM)
-	cmake --build build/$@/host --config Release
-	cmake --build build/$@/host --config Debug
+	cmake --preset mb7707
+	cmake --build build/mb7707
 
 mc5103:
-	cmake -S target -B build/$@/target/release -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
-	cmake -S target -B build/$@/target/debug   -D HAL_MC5103=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
-	cmake --build build/$@/target/release
-	cmake --build build/$@/target/debug
-	cmake -S host -B build/$@/host -D HAL_MC5103=ON $(X64_PLATFORM)
-	cmake --build build/$@/host --config Release
-	cmake --build build/$@/host --config Debug
+	cmake --preset mc5103
+	cmake --build build/mc5103
 
 mc7601: 
-	cmake -S target -B build/$@/target/release -D HAL_MC7601=ON -D CMAKE_BUILD_TYPE=Release -G $(NMC_TOOLCHAIN)
-	cmake -S target -B build/$@/target/debug   -D HAL_MC7601=ON -D CMAKE_BUILD_TYPE=Debug -G $(NMC_TOOLCHAIN)
-	cmake --build build/$@/target/release
-	cmake --build build/$@/target/debug
-	cmake -S host -B build/$@/host -D HAL_MC7601=ON $(X64_PLATFORM)
-	cmake --build build/$@/host --config Release
-	cmake --build build/$@/host --config Debug
+	cmake --preset mc7601
+	cmake --build build/mc7601
 
-virtual: 
-	cmake -S virtual -B build/$@/virtual $(X64_PLATFORM)
-	cmake --build build/$@/virtual --config Release
-	cmake --build build/$@/virtual --config Debug
+x86: 
+	cmake --preset x86-msvc
+	cmake --build build/x86-msvc
+
 
 
 pack-mc12101: mc12101

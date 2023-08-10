@@ -3,9 +3,9 @@
 #include "library.h"
 #include "hal-core.h"
 
-struct PL_Access;
-struct IO_Service;
-struct PL_Board;
+typedef struct PL_Access PL_Access;
+typedef struct IO_Service IO_Service;
+typedef struct PL_Board PL_Board;
 
 struct BoardInterfaceMC12101 : public IPLoadInterface{
 private:
@@ -49,7 +49,7 @@ public:
 
 struct HalAccessMC12101 : public IHalAccess, public IHalAccessIO{
 public:
-    BoardInterfaceMC12101 *interface;
+    BoardInterfaceMC12101 *binterface;
     IPLoadInterface *pload_interface;
 
     int (*plGetAccess)(PL_Board *, int, PL_Access**);

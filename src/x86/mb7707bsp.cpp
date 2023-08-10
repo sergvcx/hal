@@ -47,7 +47,7 @@ HalBoardMB7707::HalBoardMB7707(const unsigned char* host_mac_addr){
         Log(LOG_ERROR).get() << "Library mb7707load not found";
         return;
     }
-    interface.init(handle);
+    binterface.init(handle);
     
     is_initialized = 1;
 }
