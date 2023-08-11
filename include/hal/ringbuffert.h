@@ -65,7 +65,7 @@ template <class T, int SIZE_> struct HalRingBufferData{
 		//data = (T*)halMalloc32(SIZE*sizeof32(T));
 		//#else 
 		sizeofInt=sizeof(int);
-		bufferId = 0x600DB00F;
+		bufferId = 0xDEADBEEF;
 		head=0;
 		tail=0;
 		size=0;//SIZE;
