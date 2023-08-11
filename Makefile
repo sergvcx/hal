@@ -13,6 +13,9 @@ endif
 .DEFAULT_GOAL := mytarget
 .PHONY: virtual
 
+setenv:
+	setx HAL "%CD%"
+	
 mc12101:
 	cmake --preset mc12101
 	cmake --build build/mc12101
