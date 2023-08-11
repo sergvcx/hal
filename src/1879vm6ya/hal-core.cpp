@@ -164,12 +164,12 @@ static __attribute__((section(".data.hal"))) HalBoard hostBoard;
     int halLoadProgram(HalAccess *access, const void *addrProgram, unsigned int sizeProgram){
         return 0;
     }
-    HalIO *halStartIO(HalAccess *access, const char *program_file, FILE *file){
-        return 0;
-    }
-    int halStopIO(HalIO *hal_io){
-        return 0;
-    }
+    //HalIO *halStartIO(HalAccess *access, const char *program_file, FILE *file){
+    //    return 0;
+    //}
+    //int halStopIO(HalIO *hal_io){
+    //    return 0;
+    //}
 
 
     int halSync(HalAccess *access, int value, int *error){
