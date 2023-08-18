@@ -10,6 +10,7 @@
 #include "hal/sleep.h"
 
 #include "stdio.h"
+#include "nmassert.h"
 //#include "memory.h"
 
 
@@ -83,6 +84,7 @@ template <class T, int SIZE_> struct HalRingBufferData{
 		//#endif
 	}
 	void init(int Size){
+		NMASSERT((Size&(Size - 1)) == 0);
 		sizeofInt = sizeof(int);
 		bufferId = 0x600DB00F;
 		for (int i=0; i<6; i++)
@@ -156,6 +158,7 @@ public:
 	int check(){
 		if (pHead==0 || pTail==0 || ((int)data&1)|| ((sizeofBufferInt !=4) &&  (sizeofBufferInt !=1)) && (size&&(size-1)==0)  ){
 			//printf("Ring buffer %s error\n", typeid(T).name());
+			printf("Ring buffer error\n");
 			printf("size=0x%x\n", size);
 			printf("pHead=0x%x\n",pHead); 
 			printf("pTail=0x%x\n",pTail);
